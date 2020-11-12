@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "e Presidential hospital kz",
+    "description": "Мобильное приложение для Больницы Медицинского Центра УДП РК",
+    "slug": "medapp",
+    "version": "2.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/logo/logo-512.png",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "splash": {
+      "image": "./assets/logo/logo-splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "kz.bmcudp.med-app",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "kz.bmcudp.medapp",
+      "versionCode": 5,
+      "permissions": []
+    }
+  }
+}
