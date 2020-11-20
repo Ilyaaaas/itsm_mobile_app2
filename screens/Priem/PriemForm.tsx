@@ -374,7 +374,7 @@ export default function PriemForm({ navigation }) {
                   </ListItem>
                 )}
               </View>
-              <View style={{ marginVertical: 10 }}>
+              <View style={{ marginVertical: 10, zIndex: 1000 }}>
                 <Text style={{ marginBottom: 10 }}>Вид приема</Text>
                 <DropDownPicker
                     items={[
