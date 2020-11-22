@@ -374,7 +374,7 @@ export default function PriemForm({ navigation }) {
                   </ListItem>
                 )}
               </View>
-              <View style={{ marginVertical: 10, zIndex: 1000 }}>
+              <View style={{ marginVertical: 10 }}>
                 <Text style={{ marginBottom: 10 }}>Вид приема</Text>
                 <DropDownPicker
                     items={[
@@ -386,6 +386,7 @@ export default function PriemForm({ navigation }) {
                     containerStyle={{height: 40}}
                     onChangeItem={item => { setTypeURL(item.value); setVidPriem(item.label)}}
                     onClose={() => getSheduleDay()}
+                    dropDownStyle={{backgroundColor: '#fafafa', position: "absolute", zIndex: 1000, elevation: 1000}}
                 />
               </View>
               <CalendarStrip
@@ -402,6 +403,8 @@ export default function PriemForm({ navigation }) {
                   height: 100,
                   paddingTop: 20,
                   paddingBottom: 10,
+                  zIndex: 0,
+                  elevation: 0
                 }}
                 calendarHeaderStyle={{ color: '#000' }}
                 calendarColor={'#fff'}
