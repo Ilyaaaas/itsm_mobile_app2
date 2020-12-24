@@ -27,7 +27,8 @@ let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
 
 
-import { API } from '../constants';
+import { API, getToken } from '../constants';
+import {StackActions} from "@react-navigation/native";
 
 function About({ navigation, route }) {
 
@@ -35,18 +36,21 @@ function About({ navigation, route }) {
 
     useEffect(() => {
         (async () => {
-            const token = await AsyncStorage.getItem('token');
-
-            let API_URL = `${API}backend/about`
-            axios.get(API_URL, {
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'token': token,
+            getToken().then(token => {
+                if(token == null){
+                    navigation.dispatch(StackActions.replace('Login'));
                 }
-            }).then(res => {
-                setData(res.data)
-            }).catch(err => console.log('About data getting error: ', err))
+                let API_URL = `${API}backend/about`
+                axios.get(API_URL, {
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'token': token,
+                    }
+                }).then(res => {
+                    setData(res.data)
+                }).catch(err => console.log('About data getting error: ', err))
+            });
         }
         )();
 

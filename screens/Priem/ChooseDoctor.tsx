@@ -25,7 +25,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { setFormInfo } from '../../actions/form-actions';
 import { BaseBackendDataInterface } from '../../types/base-backend-data.interface';
-import { DOCTOR } from '../constants';
+import { DOCTOR, getToken } from '../constants';
 
 class ChooseDoctor extends React.Component {
   state = {
@@ -37,11 +37,9 @@ class ChooseDoctor extends React.Component {
 
   _getToken = async () => {
     try {
-      const value = await AsyncStorage.getItem('token');
-
-      if (value !== null) {
-        this.setState({ token: value }, this._getShedule);
-      }
+      await getToken().then(itoken => {
+        this.setState({ token: itoken }, this._getShedule);
+      });
     } catch (error) {
       console.log('error get Token' + error);
     }
@@ -80,11 +78,11 @@ class ChooseDoctor extends React.Component {
     this.props.setFormInfo(DOCTOR, data);
     this.props.navigation.goBack();
   };
-
+/*
   onDoctorDetailClicked = () => {
     this.props
   }
-
+*/
   render() {
     const items = this.state.list;
     return (

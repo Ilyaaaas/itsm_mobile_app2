@@ -21,7 +21,7 @@ import {
   AsyncStorage,
 } from 'react-native';
 
-import { API } from '../constants';
+import { API, getToken } from '../constants';
 
 class InfoDetails extends React.Component {
   state = {
@@ -33,20 +33,16 @@ class InfoDetails extends React.Component {
 
   _getToken = async () => {
     try {
-      const value = await AsyncStorage.getItem('token');
-
-      if (value !== null) {
-        const token = value.replace(/['"«»]/g, '');
-        this.setState({ token });
+      getToken().then(itoken => {
+        this.setState({ token: itoken });
         this._getRecommendationText();
-      }
+      });
     } catch (error) {
       console.log('error ' + error);
     }
   };
 
   _getRecommendationText = async () => {
-    //console.log(this.state.token)
     try {
       const API_URL = `${API}backend/getRecommendationText?h=ast2&rid=${this.state.props_data.recom_id}`;
 

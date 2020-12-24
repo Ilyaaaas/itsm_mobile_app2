@@ -77,9 +77,9 @@ export const RegistrationScreen = () => {
             <Text
               style={authScreenStyles.textPhone}
               onPress={() => {
-                Linking.openURL('tel:87172708090');
+                Linking.openURL('tel:87172707925');
               }}>
-              Телефон технической поддержки:{'\n'}8-(7172)-70-80-90
+              Телефон технической поддержки:{'\n'}8-(7172)-70-79-25
             </Text>
             <Text
               style={authScreenStyles.textPhone}

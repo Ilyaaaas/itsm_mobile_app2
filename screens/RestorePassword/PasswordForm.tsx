@@ -11,6 +11,8 @@ import { useTypedSelector } from '../../helpers/hooks/typed-selector.hook';
 import { authService } from '../../services/auth.service';
 import { inputStyle } from '../../styles/input.style';
 
+import {API} from '../constants';
+
 const styles = StyleSheet.create({
   inputDesc: {
     textAlign: 'center',
@@ -35,7 +37,10 @@ export const PasswordForm = () => {
 
   const handleSubmit = async () => {
     if (!confirmPassword) {
-      setIsConfirm(true);
+      const prov1 = await provPassword(password);
+      if(prov1) {
+        setIsConfirm(true);
+      }
     } else {
       const isSuccess = await authService.resetPassword({
         code: confirmCode,
@@ -75,6 +80,34 @@ export const PasswordForm = () => {
       }
     }
   };
+
+  const provPassword = async (pass) => {
+    const API_URL = `${API}backend/prov_password/${pass}`
+    try {
+      const response = await fetch(API_URL, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json'
+        },
+      });
+
+      const res = await response.text();
+      if(res !== ''){
+        Toast.show({
+          text: res,
+          type: 'danger',
+          duration: 7000,
+        });
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.log('Error when call API: ' + error.message);
+      return false;
+    }
+    return true;
+  }
 
   useEffect(() => {
     Toast.hide();

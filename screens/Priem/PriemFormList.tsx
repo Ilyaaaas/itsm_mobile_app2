@@ -18,7 +18,7 @@ import {Button} from "react-native-paper";
 import axios from 'axios';
 import * as _ from 'lodash';
 
-import { API } from '../constants';
+import { API, getToken } from '../constants';
 import { isNotUndefined } from '../helpers';
 import moment from "moment";
 
@@ -48,10 +48,9 @@ class PriemFormList extends React.Component {
 
     _getList = async () => {
         try {
-            const value = await AsyncStorage.getItem('token');
-            if (value !== null) {
-                this.setState({ token: value });
-            }
+            await getToken().then(itoken => {
+                this.setState({ token: itoken });
+            });
         } catch (error) {
             Toast.show({
                 text: error,
@@ -301,8 +300,10 @@ class PriemFormList extends React.Component {
                                     duration: 4000,
                                   })}
                                   else
-                                {this.setState({ modalVisible: false});
-                                this.getPriemChat();}
+                                {
+                                    this.setState({ modalVisible: false});
+                                    this.getPriemChat();
+                                }
                             }}
                             >
                             <Text style={styles.textStyle}>Начать конференцию</Text>

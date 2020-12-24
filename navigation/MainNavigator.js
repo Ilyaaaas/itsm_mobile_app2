@@ -28,7 +28,7 @@
 // };
 
 // const DoctorListStack = {
-//   DoctorList: {
+//   DoctorList_1: {
 //     screen: Doctors
 //   }
 // }
@@ -84,7 +84,7 @@
 //   DoctorListStack: {
 //     name: 'DoctorListStack',
 //     screen: createStackNavigator(DoctorListStack, {
-//       initialRouteName: 'DoctorList',
+//       initialRouteName: 'DoctorList_1',
 //       ...stackConfig,
 //     }),
 //     navigationOptions: () => ({

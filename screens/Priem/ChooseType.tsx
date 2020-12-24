@@ -20,7 +20,7 @@ import { StyleSheet, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 
 import { setFormInfo } from '../../actions/form-actions';
-import { SPEC_TYPE, API } from '../constants';
+import { SPEC_TYPE, API, getToken } from '../constants';
 
 class ChooseType extends React.Component {
   state = {
@@ -34,18 +34,15 @@ class ChooseType extends React.Component {
   };
 
   async UNSAFE_componentWillMount() {
-    this._getToken();
+    await this._getToken();
   }
 
   _getToken = async () => {
     try {
-      const value = await AsyncStorage.getItem('token');
-
-      if (value !== null) {
-        this.setState({ token: value }, () => {
-          this._getSpecList();
-        });
-      }
+      await getToken().then(itoken => {
+        this.setState({ token: itoken });
+        this._getSpecList()
+      });
     } catch (error) {
       console.log('error get Token' + error);
     }
@@ -66,7 +63,6 @@ class ChooseType extends React.Component {
       const responseJson = await response.json();
       if (responseJson !== null) {
         var data = responseJson;
-        // console.log('DOC Specialty: ', JSON.stringify(data));
         if (data) {
           this.setState({ list: data });
         } else {
