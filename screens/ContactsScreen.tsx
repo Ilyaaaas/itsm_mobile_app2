@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import {Entypo, Ionicons} from '@expo/vector-icons';
 import {
   Container,
   Content,
@@ -142,6 +142,13 @@ class ContactsScreen extends React.Component {
               </Text>
               <Text style={{ fontSize: 14, paddingVertical: 5 }}>
                 Автобусы: 12, 51, 40, 47, 53, 100 экспресс, 102 экспресс{' '}
+              </Text>
+              <Text
+                  style={{ fontSize: 16, paddingVertical: 5}}
+                  onPress={() => {Linking.openURL('https://2gis.kz/nur_sultan/geo/71.426232%2C51.07591?m=71.426499%2C51.075907%2F17.17')}}
+              >
+                <Entypo name="location-pin" size={24} color="black" />
+                2gis
               </Text>
             </Body>
           </ListItem>
