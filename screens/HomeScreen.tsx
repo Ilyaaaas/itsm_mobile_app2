@@ -1,36 +1,30 @@
 import { Ionicons } from '@expo/vector-icons';
 import {
-  Dimensions,
   Container,
   Content,
   Header,
   Left,
   Body,
   Title,
-  Button,
   Right,
   Icon,
   FooterTab,
   Footer,
   List,
   ListItem,
+  ActionSheet,
+  Toast,
 } from 'native-base';
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,  
-  TouchableOpacity,
-  AsyncStorage,
-  ImageBackground,
-  StatusBar,
-  Platform,
-  Linking,
-} from 'react-native';
-
+import {StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage, Linking} from 'react-native';
+import * as Location from 'expo-location';
 import Main from './Main';
 import { isNotUndefined } from './helpers';
+import {API, getToken} from './constants';
+
+var BUTTONS = ["Вызов", "Отправить геоданные", "Отмена"];
+var DESTRUCTIVE_INDEX = 2;
+var CANCEL_INDEX = 3;
 
 class HomeScreen extends React.Component {
   constructor(props) {
@@ -43,6 +37,7 @@ class HomeScreen extends React.Component {
         sname: '',
         section_txt: '',
       },
+      token: ''
     };
   }
 
@@ -61,15 +56,50 @@ class HomeScreen extends React.Component {
   };
 
   checkLogIn = async () => {
-    try {
-      const value = await AsyncStorage.getItem('token');
-      if (value === null || !value) {
-        //
-      }
-    } catch (error) {
-      console.log('error' + error);
-    }
+    getToken().then(itoken => {
+      this.setState({ token: itoken});
+    });
   };
+
+  call911 = async (id) => {
+    if(id == 0) {
+      Linking.openURL(`tel:+77172707903`);
+    }
+
+    if(id == 1){
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied');
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      let lat = location.coords.latitude;
+      let lon = location.coords.longitude;
+
+      const API_URL = `${API}backend/setgeodan`;
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'token' : this.state.token,
+        },
+        body: `longtitude=${lon}&latitude=${lat}`,
+      });
+
+      const responseJson = await response.json();
+
+      if (responseJson !== null) {
+        Toast.show({
+          text: responseJson.message,
+          type: 'success',
+          buttonText: 'Ok',
+          duration: 3000,
+        });
+      }
+
+    }
+  }
 
   render() {
     const { user } = this.state;
@@ -116,7 +146,16 @@ class HomeScreen extends React.Component {
                       height: 70,
                     }}
                     onPress={() => {
-                      Linking.openURL(`tel:+77172707903`);
+                      ActionSheet.show(
+                          {
+                            options: BUTTONS,
+                            cancelButtonIndex: CANCEL_INDEX,
+                            destructiveButtonIndex: DESTRUCTIVE_INDEX,
+                          },
+                          buttonIndex => {
+                            this.call911(buttonIndex);
+                          }
+                      )
                     }}>
                     <Image
                       style={{ width: 65, height: 65 }}

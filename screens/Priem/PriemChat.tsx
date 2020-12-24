@@ -7,13 +7,24 @@ import {
     RefreshControl,
     TextInput,
     TouchableOpacity,
-    ScrollView, Dimensions, SafeAreaView, Linking, Modal, Vibration
+    Dimensions, Linking, Vibration,
 } from "react-native";
-import {Body, Content, Header, Footer, Left, List, ListItem, Right, Title, Input, Toast, Container,} from "native-base";
+import {
+    Body,
+    Content,
+    Header,
+    Footer,
+    Left,
+    List,
+    ListItem,
+    Right,
+    Title,
+    Toast,
+    Container,
+} from "native-base";
 import {AntDesign, Entypo, FontAwesome, Fontisto, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import * as DocumentPicker from 'expo-document-picker';
-import * as _ from 'lodash';
-import {API, WsAPI} from "../constants";
+import {API, WsAPI, getToken} from "../constants";
 import {fileTypes, typeIcons} from '../fileTypes';
 import moment from 'moment';
 
@@ -49,13 +60,10 @@ class PriemChat extends React.Component {
 
     _getToken = async () => {
         try {
-            const value = await AsyncStorage.getItem('token');
-
-            if (value !== null) {
-                const token = value.replace(/['"«»]/g, '');
-                this.setState({ token });
+            getToken().then(itoken => {
+                this.setState({ token: itoken });
                 this._getUserData();
-            }
+            });
         } catch (error) {
             console.log('error' + error);
         }
@@ -82,10 +90,11 @@ class PriemChat extends React.Component {
         this.setState({ room: this.props.route.params.roomUrl});
 
         this.ws.onopen = () => {
+            console.log(this.state.user);
             this.ws.send(JSON.stringify({
                 roomId: this.state.room,
                 token: this.state.token,
-                userName: this.state.user.fname+' '+this.state.user.lname,
+                userName: this.state.user.fname+' '+this.state.user.sname,
                 action: 'connect'
             }));
         };
@@ -120,6 +129,7 @@ class PriemChat extends React.Component {
             }
         };
 
+
         this.ws.onerror = (e) => {
             if(e.message == "Expected HTTP 101 response but was '502 Bad Gateway'"){
                 Toast.show({
@@ -141,6 +151,7 @@ class PriemChat extends React.Component {
                 this.props.navigation.goBack();
             }
         };
+
     }
 
     _getListMessage = async (room, name) => {
@@ -186,7 +197,7 @@ class PriemChat extends React.Component {
         this.setState({refreshing: true});
         this._getUserData();
         this._getToken();
-        this._getListMessage(this.props.route.params.roomUrl, this.state.user.fname+' '+this.state.user.lname);
+        this._getListMessage(this.props.route.params.roomUrl, this.state.user.fname+' '+this.state.user.sname);
     }
 
     UNSAFE_componentWillMount() {
@@ -234,10 +245,10 @@ class PriemChat extends React.Component {
         this.setState({countUsers: users.length});
     }
 
-    _message = (name, messageText, datetime) => {
+    _message = async (name, messageText, datetime) => {
         if(messageText.trim() !== '') {
             let pos = true;
-            if (name == this.state.user.fname + ' ' + this.state.user.lname) {
+            if (name == this.state.user.fname + ' ' + this.state.user.sname) {
                 pos = false;
             }else{
                 Vibration.vibrate()
@@ -249,12 +260,13 @@ class PriemChat extends React.Component {
                 pos: pos,
                 file: false
             };
-            this.setState({message: [...this.state.message, msgText]});
+            await this.setState({message: [...this.state.message, msgText]});
+            await this.component._root.scrollToEnd();
         }
     }
     _messageFile = (name, filename, datetime) => {
         let pos = true;
-        if (name == this.state.user.fname + ' ' + this.state.user.lname) {
+        if (name == this.state.user.fname + ' ' + this.state.user.sname) {
             pos = false;
         }
         let msgText = {
@@ -265,6 +277,7 @@ class PriemChat extends React.Component {
             file: true
         };
         this.setState({message: [...this.state.message, msgText]});
+        this.component._root.scrollToEnd();
     }
 
     _changeMessageInput = (text) => {
@@ -276,8 +289,9 @@ class PriemChat extends React.Component {
             let params = JSON.stringify( {'action': 'stop-typing'});
             this.ws.send(params);
         }
+        this.component._root.scrollToEnd();
     }
-    _sendMessage = () => {
+    _sendMessage = async () => {
         let text = this.state.msgText;
         let params = JSON.stringify({
             'message': text,
@@ -322,6 +336,7 @@ class PriemChat extends React.Component {
             this.ws.send(params);
 
         }catch (error) {
+            console.log(error);
             Toast.show({
                 text: 'Ошибка загрузки файла. Максимальный размер 50 мб ',
                 buttonText: 'Ok',
@@ -363,68 +378,53 @@ class PriemChat extends React.Component {
                         />
                     </Right>
                 </Header>
-                <Content>
+                <Content
+                    ref={c => (this.component = c)}
+                    onContentSizeChange={() => {
+                        this.component._root.scrollToEnd();
+                    }}
+                >
                 {this.state.refreshing ? (
                     <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
                 ) : (
                     <List>
-                        <ListItem style={{
-                            height: this.state.wh.height-140,
-                        }}>
-                            <ScrollView
-                                contentContainerStyle={{
-                                    flexGrow: 1,
-                                    justifyContent: "flex-end",
-                                    width: this.state.wh.width
-                                }}
-                                scrollEnabled={true}
-                                style={{flex: 2, zIndex: 1000}}
-                                ref={ref => scrollView = ref}
-                                onContentSizeChange={() => scrollView.scrollToEnd({ animated: true })}
-                            >
-                                {
-                                    this.state.message.map((item) => (
-                                        <View
-                                            style={styles.messageBlock}
-                                        >
-                                            <Text style={item.pos ? styles.messageLeftTextHead : styles.messageRightTextHead}>
-                                                <Text style={styles.messageUsername}>{item.name}</Text> <Text style={styles.messageTime}>({item.datetime})</Text>
-                                            </Text>
-                                            <View
-                                                style={item.pos ? styles.messageLeftBody : styles.messageRightBody}
+                        {this.state.message.map((item, id) => (
+                            <ListItem noBorder key={id}>
+                                <Body style={styles.messageBlock}>
+                                    <Text style={item.pos ? styles.messageLeftTextHead : styles.messageRightTextHead}>
+                                        <Text style={styles.messageUsername}>{item.name}</Text> <Text style={styles.messageTime}>({item.datetime})</Text>
+                                    </Text>
+                                    <View style={item.pos ? styles.messageLeftBody : styles.messageRightBody}>
+                                        {item.file ? (
+                                            <TouchableOpacity
+                                                style={{ flex: 1, flexDirection: "row"}}
+                                                onPress={() => {
+                                                    Linking.openURL(`${API}${item.text.url_path}`);
+                                                }}
                                             >
-                                                {item.file ? (
-                                                    <TouchableOpacity
-                                                        style={{ flex: 1, flexDirection: "row"}}
-                                                        onPress={() => {
-                                                            Linking.openURL(`${API}${item.text.url_path}`);
-                                                        }}
-                                                    >
-                                                        <AntDesign name="save" size={50} color="black" style={{  justifyContent: "flex-start", marginRight: 10 }} />
-                                                        <Text style={{ justifyContent: "flex-end", marginTop: 10, fontSize: 14, width: '80%' }} >{item.text.name}</Text>
-                                                    </TouchableOpacity>
-                                                ):(
-                                                    <Text>{item.text}</Text>
-                                                )}
-                                            </View>
-                                        </View>
-                                    ))
-                                }
-
-                            </ScrollView>
-                            {this.state.typingUser !== '' ? (
-                                <Text style={styles.textTyping} >{this.state.typingUser} {this.state.typingText}</Text>
-                            ) : (
-                                <Text style={{ display: "none" }}></Text>
-                            )}
-                        </ListItem>
+                                                <AntDesign name="save" size={50} color="black" style={{  justifyContent: "flex-start", marginRight: 10 }} />
+                                                <Text style={{ justifyContent: "flex-end", marginTop: 10, fontSize: 14, width: '80%' }} >{item.text.name}</Text>
+                                            </TouchableOpacity>
+                                        ):(
+                                            <Text style={{ textAlign: item.pos ? 'left' : 'right' }}>{item.text}</Text>
+                                        )}
+                                    </View>
+                                </Body>
+                            </ListItem>
+                            ))
+                        }
                     </List>
                 )}
                 </Content>
                 <Footer style={{
-                    backgroundColor: "#fff"
+                    backgroundColor: "#fff",
+                    borderWidth: 0
                 }}>
-
+                    {this.state.typingUser !== '' ? (
+                        <Text style={styles.textTyping} >{this.state.typingUser} {this.state.typingText}</Text>
+                    ) : (
+                        <Text style={{ display: "none" }}></Text>
+                    )}
                         <TouchableOpacity
                             style={styles.btnSendFile}
                             onPress={this._pickDocument}
@@ -441,7 +441,10 @@ class PriemChat extends React.Component {
                         />
                         <TouchableOpacity
                             style={styles.btnSendMessage}
-                            onPress={this._sendMessage}
+                            onPress={async () => {
+                                await this._sendMessage();
+                                await this.component._root.scrollToEnd();
+                            }}
                         >
                             <Ionicons name="ios-send" size={24} color="black" />
                         </TouchableOpacity>
@@ -505,7 +508,8 @@ const styles = StyleSheet.create({
     },
 
     messageBlock: {
-        marginBottom: 15,
+        marginBottom: 5,
+        width: '100%',
     },
 
     messageLeftTextHead: {
@@ -521,17 +525,16 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 10,
         borderBottomRightRadius: 10,
         padding: 5,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#e7e7e7"
     },
 
     messageRightTextHead: {
         fontSize: 10,
         textAlign: "right",
-        paddingRight: 50
     },
     messageRightBody: {
         width: '80%',
-        marginLeft: '10%',
+        marginLeft: '20%',
         marginTop: 5,
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
@@ -542,8 +545,9 @@ const styles = StyleSheet.create({
 
     textTyping: {
         position: "absolute",
-        bottom: 0,
+        bottom: 70,
         left: 20,
+        zIndex: 1000,
         width: '90%',
         padding: 5,
         textAlign: "center",

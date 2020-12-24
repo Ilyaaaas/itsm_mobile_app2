@@ -2,13 +2,16 @@ import { useNavigation, StackActions } from '@react-navigation/native';
 import {Button, Form, Input, Item, Text as NbText, Toast} from 'native-base';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {Alert, AsyncStorage, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, AsyncStorage, FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import { AuthScreenWrapper } from '../../components/AuthScreenWrapper';
 import { IdInput } from '../../components/IdInput';
 import { authService } from '../../services/auth.service';
 import { inputStyle } from '../../styles/input.style';
 import { Entypo } from "@expo/vector-icons";
+import Constants from "expo-constants";
+import * as Permissions from "expo-permissions";
+import * as Notifications from "expo-notifications";
 
 const styles = StyleSheet.create({
   secondaryButton: {
@@ -34,10 +37,51 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState<string>('');
   const [passwordRecoveryIsVisible, setPasswordRecoveryIsVisible] = useState<boolean>(false);
 
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    //if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      console.log('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    //} else {
+    //  console.log('Must use physical device for Push Notifications');
+    //}
+
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+        sound: 'default',
+      });
+    }
+
+    return token;
+  }
+
   const handleSubmit = async (onSaveLogin = false) => {
+    let pushtoken = '';
+    await registerForPushNotificationsAsync().then(itoken => {
+      if(itoken){
+        pushtoken = itoken;
+      }
+    });
+
     const isLoggedIn = await authService.login({
       login: login.replace(/-/g, ''),
       password,
+      pushToken: pushtoken
     });
     if (isLoggedIn) {
       if(onSaveLogin) {
@@ -54,7 +98,7 @@ export const LoginScreen = () => {
         }
 
         if (lst.length > 0) {
-          if(lst.every((item) => item.iin !== login && item.pass !== password)){
+          if(lst.every((item: { iin: string; pass: string; }) => item.iin !== login && item.pass !== password)){
             lst.push(setLst);
           }
         } else {
@@ -71,7 +115,6 @@ export const LoginScreen = () => {
 
         let loginList = JSON.stringify(lst);
         AsyncStorage.setItem('login_save', loginList);
-        console.log(loginList);
         navigation.dispatch(StackActions.replace('Home'));
       }else{
         navigation.dispatch(StackActions.replace('Home'));
@@ -148,7 +191,6 @@ export const LoginScreen = () => {
 
   const getUserLogin = async () => {
     const loginList = await AsyncStorage.getItem('login_save');
-    console.log(loginList);
 
     if(loginList !== null) {
       let logineds = JSON.parse(loginList);
@@ -165,7 +207,6 @@ export const LoginScreen = () => {
 
       setListLogins(logineds);
     }
-
   }
 
   useEffect(() => {
@@ -199,7 +240,6 @@ export const LoginScreen = () => {
                           style={{ height: 50, paddingLeft: 10, paddingTop: 10, zIndex: 1999 }}
                           key={item.iin}
                           onPress={() => {
-                            console.log(item);
                             setLogin(item.iin);
                             setPassword(item.pass);
                             setShowIINS(false);

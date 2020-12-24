@@ -8,6 +8,7 @@ import { DrawerContentComponentProps } from '@react-navigation/drawer/lib/typesc
 import { StackActions } from '@react-navigation/native';
 import React from 'react';
 
+
 export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const handleExit = () => {
     props.navigation.dispatch(StackActions.replace('Login'));
@@ -30,3 +31,5 @@ export const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     </DrawerContentScrollView>
   );
 };
+
+

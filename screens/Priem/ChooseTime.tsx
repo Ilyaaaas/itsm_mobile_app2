@@ -36,7 +36,7 @@ import {
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
-import { API } from '../constants';
+import { API, getToken } from '../constants';
 
 class ChooseTime extends React.Component {
   state = {
@@ -65,12 +65,10 @@ class ChooseTime extends React.Component {
 
   _getToken = async () => {
     try {
-      const value = await AsyncStorage.getItem('token');
+      await getToken().then(itoken => {
+        this.setState({ token: itoken });
+      });
 
-      if (value !== null) {
-        const token = value.replace(/['"«»]/g, '');
-        this.setState({ token });
-      }
     } catch (error) {
       console.log('error get Token' + error);
     }

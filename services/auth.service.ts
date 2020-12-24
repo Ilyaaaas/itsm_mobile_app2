@@ -15,6 +15,7 @@ export const authService = {
 export interface LoginParams {
   login: string;
   password: string;
+  pushToken: string;
 }
 export type LoginData = {
   success: boolean;

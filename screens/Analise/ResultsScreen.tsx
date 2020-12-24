@@ -22,6 +22,7 @@ import { StyleSheet, AsyncStorage } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import { isNotUndefined } from '../helpers';
+import { getToken } from '../constants';
 
 class ResultsScreen extends React.Component {
   state = {
@@ -44,16 +45,9 @@ class ResultsScreen extends React.Component {
   };
 
   _getToken = async () => {
-    try {
-      const value = await AsyncStorage.getItem('token');
-
-      if (value !== null) {
-        const token = value.replace(/['"«»]/g, '');
-        this.setState({ token }, this._getAnalyzes);
-      }
-    } catch (error) {
-      console.log('error get Token' + error);
-    }
+    getToken().then(itoken => {
+      this.setState({ token: itoken }, this._getAnalyzes);
+    });
   };
 
   _getAnalyzes = async () => {

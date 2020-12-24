@@ -16,7 +16,7 @@ import React from 'react';
 import { StyleSheet, AsyncStorage, Linking } from 'react-native';
 import { WebView } from 'react-native-webview';
 
-import { API } from '../constants';
+import { API, getToken } from '../constants';
 
 class ResultsShow extends React.Component {
   state = {
@@ -28,23 +28,17 @@ class ResultsShow extends React.Component {
   };
 
   _getToken = async () => {
-    try {
-      const value = await AsyncStorage.getItem('token');
-
-      if (value !== null) {
-        const token = value.replace(/['"«»]/g, '');
-        this.setState({ token: token });
-      }
-    } catch (error) {
-      console.log('error get Token' + error);
-    }
+    getToken().then(itoken => {
+      this.setState({ token: itoken });
+    });
   };
 
   _getAnalizeResultLoad = async () => {
-    const value = await AsyncStorage.getItem('token');
-    const token = value.replace(/['"«»]/g, '');
-    const API_URL = `${API}backend/analiz?h=ast2&rid=${this.props.route.params.data.reg_id}&tid=${this.props.route.params.data.take_id}&token=${token}`;
-    this.setState({ url: API_URL })
+    getToken().then(itoken => {
+      const API_URL = `${API}backend/analiz?h=ast2&rid=${this.props.route.params.data.reg_id}&tid=${this.props.route.params.data.take_id}&token=${itoken}`;
+      console.log(API_URL);
+      this.setState({ url: API_URL, token: itoken })
+    });
   }
 
   pressDownloadPDF = () => {

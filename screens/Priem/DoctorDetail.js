@@ -27,17 +27,10 @@ import { connect } from 'react-redux';
 import { API } from '../constants';
 
 function DoctorDetail({ navigation, route }) {
-
-    
-
     const [docData, setDocData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-
-
-        
-        
         let docId = route.params.docId
 
         let API_URL = `${API}backend/get_doctor_data?id=${docId}`

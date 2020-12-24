@@ -23,27 +23,27 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import * as Notifications from "expo-notifications";
 
 import { resetFormInfo, setFormInfo } from '../../actions/form-actions';
-import { isEmpty, DATE_T, SHED_ID_T, TIME_T, TIMES_T, API } from '../constants';
+import { isEmpty, DATE_T, SHED_ID_T, TIME_T, TIMES_T, API, getToken } from '../constants';
 
 import { Ionicons } from '@expo/vector-icons';
 
 const CHOOSE_SPEC = 'choose-spec',
-    CHOOSE_DOCTOR = 'choose-doctor';
+  CHOOSE_DOCTOR = 'choose-doctor';
 
 const datesWhitelistEmpty = [];
 
 const datesBlacklistEmpty = [],
-    datesBlacklist = []; // 1 day disabled
+  datesBlacklist = []; // 1 day disabled
 
 const locale = {
   name: 'ru',
   config: {
     months: 'Январь_Февраль_Март_Апрель_Май_Июнь_Июль_Август_Сентябрь_Октябрь_Ноябрь_Декабрь'.split(
-        '_'
+      '_'
     ),
     monthsParseExact: true,
     weekdays: 'Воскресенье_Понедельник_Вторник_Среда_Четверг_Пятница_Суббота'.split(
-        '_'
+      '_'
     ),
     weekdaysShort: 'Вс_Пн_Вт_Ср_Чт_Пт_Сб'.split('_'),
     weekdaysMin: 'Вс_Пн_Вт_Ср_Чт_Пт_Сб'.split('_'),
@@ -66,6 +66,8 @@ export default function PriemForm({ navigation }) {
     },
   ]);
 
+  const [customDatesStyles, setDatesStyles] = useState([]);
+
   const [openCheck, setOpenCheck] = useState(false);
   const [firstClick, setfirstClick] = useState(true);
   const [typeUrl, setTypeURL] = useState(0);
@@ -86,18 +88,16 @@ export default function PriemForm({ navigation }) {
   }, [date, typeUrl]);
 
   useEffect(() => {
+    _getToken();
     dispatch(resetFormInfo());
-    getToken();
   }, []);
 
-  async function getToken() {
+  async function _getToken() {
     try {
-      const value = await AsyncStorage.getItem('token');
-
-      if (value !== null) {
-        const token = value.replace(/['"«»]/g, '');
-        setToken(token);
-      }
+      await getToken().then(itoken => {
+        console.log('itoken_mew - '+itoken);
+        setToken(itoken);
+      });
     } catch (error) {
       console.log('error get Token' + error);
     }
@@ -135,6 +135,7 @@ export default function PriemForm({ navigation }) {
 
   async function getSheduleDay() {
     setfirstClick(true);
+
     const doctorId = form.doctor.doctorId;
     const datePriem = moment(date).format('DD.MM.YYYY');
     let cabinet = form.doctor.cabinet;
@@ -146,7 +147,6 @@ export default function PriemForm({ navigation }) {
     });
 
     const API_URL = `${API}backend/getSheduleDay?h=ast2&d=-2&doc=${doctorId}&day=${datePriem}&c=${cabinet}&type_conf=${typeUrl}`;
-
     try {
       const response = await fetch(API_URL, {
         method: 'GET',
@@ -161,7 +161,6 @@ export default function PriemForm({ navigation }) {
       if (responseJson !== null) {
         var data = responseJson;
 
-        console.log("Time data: ", data)
         if (data.length > 0) {
           const res = data.filter((item) => item.flag === '0');
 
@@ -186,12 +185,49 @@ export default function PriemForm({ navigation }) {
           dispatch(setFormInfo(TIMES_T, []));
         }
       }
+
+      getColorDocDays();
+
     } catch (error) {
       console.log('Error when call API: ' + error.message);
     }
   }
 
+  async function getColorDocDays()
+  {
+    setfirstClick(true);
+    const doctorId = form.doctor.doctorId;
+    const API_URL = `${API}backend/get_color_doctor/${doctorId}`;
 
+    try{
+      const response = await fetch(API_URL, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          token,
+        },
+      });
+
+      const responseJson = await response.json();
+      if (responseJson !== null) {
+        let customDatesStyles = [];
+
+        for(let data of responseJson) {
+          let startDate = moment(data.shed_date, 'DD.MM.YYYY');
+            customDatesStyles.push({
+              startDate: startDate,
+              dateContainerStyle: { backgroundColor: `${data.color}` },
+            });
+        }
+
+        setDatesStyles(customDatesStyles);
+      }
+
+    } catch (error) {
+      console.log('Error when call API: ' + error.message);
+    }
+  }
 
   async function getLastAvailableDate() {
     setfirstClick(true);
@@ -254,23 +290,23 @@ export default function PriemForm({ navigation }) {
         let halfPastBefore = priemDate - (15 * 60000);
         Notifications.scheduleNotificationAsync({
           content: {
-            title: 'До приема 24 часа',
-            body: `Вы записаны на прием ${form.doctor.name},${form.specType.name && ` специальность ${form.specType.name},`} время начало приема ${time}, кабинет ${form.doctor.cabinet || '**'}, также вы можете отменить запись через мобильное приложение или позвонить в регистратуру на номер +7 717 270 8090`,
+              title: 'До приема 24 часа',
+              body: `Вы записаны на прием ${form.doctor.name},${form.specType.name && ` специальность ${form.specType.name},`} время начало приема ${time}, кабинет ${form.doctor.cabinet || '**'}, также вы можете отменить запись через мобильное приложение или позвонить в регистратуру на номер +7 717 270 8090`,
           },
           trigger: {
-            seconds: dayBefore,
+              seconds: dayBefore,
           },
-        });
+      });
 
-        Notifications.scheduleNotificationAsync({
-          content: {
+      Notifications.scheduleNotificationAsync({
+        content: {
             title: 'До приема 15 минут',
             body: `Вы записаны на прием ${form.doctor.name},${form.specType.name && ` специальность ${form.specType.name},`} время начало приема ${time}, кабинет ${form.doctor.cabinet || '**'}, также вы можете отменить запись через мобильное приложение или позвонить в регистратуру на номер +7 717 270 8090`,
-          },
-          trigger: {
+        },
+        trigger: {
             seconds: halfPastBefore,
-          },
-        });
+        },
+    });
 
         var data = responseJson;
         if (data.success) {
@@ -290,7 +326,7 @@ export default function PriemForm({ navigation }) {
           });
         }
       }
-      updateState();
+      updateState();      
     } catch (error) {
       console.log('Error when call API : ' + error.message);
     }
@@ -310,183 +346,184 @@ export default function PriemForm({ navigation }) {
 
 
   return (
-      <Container>
-        <Header style={styles.headerTop}>
-          <Left style={{ flex: 1 }}>
-            <Ionicons
-                name="md-arrow-back"
-                style={{ color: '#046475', marginLeft: 10 }}
-                onPress={() => navigation.goBack()}
-                size={24}
-            />
-          </Left>
-          <Body style={{ flex: 3 }}>
-            <Title style={{ color: '#046475', fontSize: 20 }}>
-              Записаться на прием
-            </Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content style={{ paddingHorizontal: 20 }}>
-          {!openCheck ? (
-              <>
-                <View>
-                  <View style={{ marginVertical: 10 }}>
-                    <Text>Специальность</Text>
-                    <ListItem onPress={() => onPressSpec(CHOOSE_SPEC)}>
-                      <Left>
-                        <Text>
-                          {!isEmpty(form.specType) ? form.specType.name : 'Выбрать'}
-                        </Text>
-                      </Left>
-                      <Right>
-                        <Ionicons
-                            name="ios-arrow-dropdown"
-                            style={{ color: '#000' }}
-                        />
-                      </Right>
-                    </ListItem>
-                  </View>
-                  <View style={{ marginVertical: 10 }}>
-                    <Text>Врач</Text>
-                    {isEmpty(form.specType) ? (
-                        <ListItem>
-                          <Left>
-                            <Text></Text>
-                          </Left>
-                          <Right>
-                            <Ionicons name="ios-arrow-dropdown" />
-                          </Right>
-                        </ListItem>
-                    ) : (
-                        <ListItem onPress={() => onPressSpec(CHOOSE_DOCTOR)}>
-                          <Left>
-                            <Text>
-                              {!isEmpty(form.doctor) ? form.doctor.name : 'Выбрать'}
-                            </Text>
-                          </Left>
-                          <Right>
-                            <Ionicons
-                                name="ios-arrow-dropdown"
-                                style={{ color: '#000' }}
-                            />
-                          </Right>
-                        </ListItem>
-                    )}
-                  </View>
-                  <View style={{ marginVertical: 10, ...(Platform.OS !== 'android' && {
-                      zIndex: 10
-                    })}}>
-                    <Text style={{ marginBottom: 10 }}>Вид приема</Text>
-                    <DropDownPicker
-                        items={[
-                          {label: 'Консультация в медицинской организации', value: 0},
-                          {label: 'Онлайн консультация', value: 1},
-                        ]}
-                        defaultValue={typeUrl}
-                        disabled={disType}
-                        containerStyle={{height: 40}}
-                        onChangeItem={item => { setTypeURL(item.value); setVidPriem(item.label)}}
-                        onClose={() => getSheduleDay()}
+    <Container>
+      <Header style={styles.headerTop}>
+        <Left style={{ flex: 1 }}>
+          <Ionicons
+            name="md-arrow-back"
+            style={{ color: '#046475', marginLeft: 10 }}
+            onPress={() => navigation.goBack()}
+            size={24}
+          />
+        </Left>
+        <Body style={{ flex: 3 }}>
+          <Title style={{ color: '#046475', fontSize: 20 }}>
+            Записаться на прием
+          </Title>
+        </Body>
+        <Right />
+      </Header>
+      <Content style={{ paddingHorizontal: 20 }}>
+        {!openCheck ? (
+          <>
+            <View>
+              <View style={{ marginVertical: 10 }}>
+                <Text>Специальность</Text>
+                <ListItem onPress={() => onPressSpec(CHOOSE_SPEC)}>
+                  <Left>
+                    <Text>
+                      {!isEmpty(form.specType) ? form.specType.name : 'Выбрать'}
+                    </Text>
+                  </Left>
+                  <Right>
+                    <Ionicons
+                      name="ios-arrow-dropdown"
+                      style={{ color: '#000' }}
                     />
-                  </View>
-                  <CalendarStrip
-                      locale={locale}
-                      calendarAnimation={{ type: 'sequence', duration: 30 }}
-                      daySelectionAnimation={{
-                        type: 'border',
-                        duration: 200,
-                        borderWidth: 1,
-                        borderHighlightColor: 'white',
-                      }}
-                      style={{
-                        marginVertical: 10,
-                        height: 100,
-                        paddingTop: 20,
-                        paddingBottom: 10,
-                      }}
-                      calendarHeaderStyle={{ color: '#000' }}
-                      calendarColor={'#fff'}
-                      dateNumberStyle={{ color: '#000' }}
-                      dateNameStyle={{ color: '#000' }}
-                      scrollable={true}
-                      highlightDateNumberStyle={{
-                        padding: 3,
-                        backgroundColor: '#01A19F',
-                        color: '#fff',
-                      }}
-                      highlightDateNameStyle={{ color: '#01A19F' }}
-                      disabledDateNameStyle={{ color: 'grey' }}
-                      disabledDateNumberStyle={{ color: 'grey' }}
-                      datesWhitelist={
-                        isEmpty(form.doctor) ? datesWhitelistEmpty : datesWhitelist
-                      }
-                      datesBlacklist={
-                        isEmpty(form.doctor) ? datesBlacklistEmpty : datesBlacklist
-                      }
-                      iconContainer={{ flex: 0.1 }}
-                      selectedDate={date}
-                      onDateSelected={handleChangeCalendar}
-                  />
-                  <View
-                      style={{
-                        flex: 1,
-                        marginVertical: 10,
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        padding: 5,
-                        backgroundColor: '#fff',
-                      }}>
-                    {times.map((item, i) => (
-                        <Button
-                            rounded
-                            key={i}
-                            style={{
-                              width: 75,
-                              padding: 0,
-                              margin: 3,
-                              backgroundColor:
-                                  time === item.shedul_time ? '#F0F0F0' : '#01A19F',
-                            }}
-                            onPress={() => handleChangeTime(item)}>
-                          <Text
-                              style={{
-                                margin: 0,
-                                padding: 0,
-                                color: time === item.shedul_time ? '#000' : '#fff',
-                              }}>
-                            {item.shedul_time}
-                          </Text>
-                        </Button>
-                    ))}
-                  </View>
-                </View>
-                <Button
-                    block
-                    style={{
-                      marginVertical: 10,
-                      backgroundColor: !shedId ? '#F0F0F0' : '#01A19F',
-                    }}
-                    onPress={() => setOpenCheck(true)}
-                    disabled={!shedId}>
-                  <Text style={{ color: !shedId ? '#000' : '#F0F0F0' }}>Далее</Text>
-                </Button>
-              </>
-          ) : (
-              <RenderCheckSubmit
-                  form={form}
-                  date={new Date(date).toISOString().substring(0, 10)}
-                  time={time}
-                  postTalon={postTalon}
-                  cancel={() => setOpenCheck(false)}
-                  vid={vidPriem}
+                  </Right>
+                </ListItem>
+              </View>
+              <View style={{ marginVertical: 10 }}>
+                <Text>Врач</Text>
+                {isEmpty(form.specType) ? (
+                  <ListItem>
+                    <Left>
+                      <Text></Text>
+                    </Left>
+                    <Right>
+                      <Ionicons name="ios-arrow-dropdown" />
+                    </Right>
+                  </ListItem>
+                ) : (
+                  <ListItem onPress={() => onPressSpec(CHOOSE_DOCTOR)}>
+                    <Left>
+                      <Text>
+                        {!isEmpty(form.doctor) ? form.doctor.name : 'Выбрать'}
+                      </Text>
+                    </Left>
+                    <Right>
+                      <Ionicons
+                        name="ios-arrow-dropdown"
+                        style={{ color: '#000' }}
+                      />
+                    </Right>
+                  </ListItem>
+                )}
+              </View>
+              <View style={{ marginVertical: 10, ...(Platform.OS !== 'android' && {
+                              zIndex: 10
+                          })}}>
+                <Text style={{ marginBottom: 10 }}>Вид приема</Text>
+                <DropDownPicker
+                    items={[
+                      {label: 'Консультация в медицинской организации', value: 0},
+                      {label: 'Онлайн консультация', value: 1},
+                    ]}
+                    defaultValue={typeUrl}
+                    disabled={disType}
+                    containerStyle={{height: 40}}
+                    onChangeItem={item => { setTypeURL(item.value); setVidPriem(item.label)}}
+                    onClose={() => getSheduleDay()}
+                />
+              </View>
+              <CalendarStrip
+                locale={locale}
+                customDatesStyles={customDatesStyles}
+                calendarAnimation={{ type: 'sequence', duration: 30 }}
+                daySelectionAnimation={{
+                  type: 'border',
+                  duration: 200,
+                  borderWidth: 1,
+                  borderHighlightColor: 'white',
+                }}
+                style={{
+                  marginVertical: 10,
+                  height: 100,
+                  paddingTop: 20,
+                  paddingBottom: 10,
+                }}
+                calendarHeaderStyle={{ color: '#000' }}
+                calendarColor={'#fff'}
+                dateNumberStyle={{ color: '#000' }}
+                dateNameStyle={{ color: '#000' }}
+                scrollable={true}
+                highlightDateNumberStyle={{
+                  padding: 3,
+                  backgroundColor: '#01A19F',
+                  color: '#fff',
+                }}
+                highlightDateNameStyle={{ color: '#01A19F' }}
+                disabledDateNameStyle={{ color: 'grey' }}
+                disabledDateNumberStyle={{ color: 'grey' }}
+                datesWhitelist={
+                  isEmpty(form.doctor) ? datesWhitelistEmpty : datesWhitelist
+                }
+                datesBlacklist={
+                  isEmpty(form.doctor) ? datesBlacklistEmpty : datesBlacklist
+                }
+                iconContainer={{ flex: 0.1 }}
+                selectedDate={date}
+                onDateSelected={handleChangeCalendar}
               />
-          )}
-        </Content>
-        <Footer style={{ backgroundColor: '#047B7F', height: 30 }}>
-          <FooterTab style={{ backgroundColor: '#047B7F' }}></FooterTab>
-        </Footer>
-      </Container>
+              <View
+                style={{
+                  flex: 1,
+                  marginVertical: 10,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  padding: 5,
+                  backgroundColor: '#fff',
+                }}>
+                {times.map((item, i) => (
+                  <Button
+                    rounded
+                    key={i}
+                    style={{
+                      width: 75,
+                      padding: 0,
+                      margin: 3,
+                      backgroundColor:
+                        time === item.shedul_time ? '#F0F0F0' : '#01A19F',
+                    }}
+                    onPress={() => handleChangeTime(item)}>
+                    <Text
+                      style={{
+                        margin: 0,
+                        padding: 0,
+                        color: time === item.shedul_time ? '#000' : '#fff',
+                      }}>
+                      {item.shedul_time}
+                    </Text>
+                  </Button>
+                ))}
+              </View>
+            </View>
+            <Button
+              block
+              style={{
+                marginVertical: 10,
+                backgroundColor: !shedId ? '#F0F0F0' : '#01A19F',
+              }}
+              onPress={() => setOpenCheck(true)}
+              disabled={!shedId}>
+              <Text style={{ color: !shedId ? '#000' : '#F0F0F0' }}>Далее</Text>
+            </Button>
+          </>
+        ) : (
+          <RenderCheckSubmit
+            form={form}
+            date={new Date(date).toISOString().substring(0, 10)}
+            time={time}
+            postTalon={postTalon}
+            cancel={() => setOpenCheck(false)}
+            vid={vidPriem}
+          />
+        )}
+      </Content>
+      <Footer style={{ backgroundColor: '#047B7F', height: 30 }}>
+        <FooterTab style={{ backgroundColor: '#047B7F' }}></FooterTab>
+      </Footer>
+    </Container>
   );
 }
 
@@ -504,34 +541,34 @@ const styles = StyleSheet.create({
 
 function RenderCheckSubmit({ form, date, time, postTalon, cancel, vid }) {
   return (
-      <>
-        <Text style={{ marginVertical: 10 }}>Вид приема: {vid}</Text>
-        { () => {
-          if (form.user.name.trim() !== '') {
-            <Text style={{marginVertical: 10}}>{form.user.name}</Text>
-          }
+    <>
+      <Text style={{ marginVertical: 10 }}>Вид приема: {vid}</Text>
+      { () => {
+        if (form.user.name.trim() !== '') {
+          <Text style={{marginVertical: 10}}>{form.user.name}</Text>
         }
-        }
-        <Text style={{ marginVertical: 10 }}>
-          Специальность: {form.specType.name}
-        </Text>
-        <Text style={{ marginVertical: 10 }}>Врач: {form.doctor.name}</Text>
-        <Text style={{ marginVertical: 10 }}>Кабинет: {form.doctor.cabinet}</Text>
-        <Text style={{ marginVertical: 10 }}>
-          Дата и время приема: {date} {time}
-        </Text>
-        <Button
-            block
-            style={{ marginVertical: 10, backgroundColor: '#01A19F' }}
-            onPress={postTalon}>
-          <Text style={{ color: '#fff' }}>ЗАПИСАТЬСЯ</Text>
-        </Button>
-        <Button
-            block
-            style={{ marginVertical: 10, backgroundColor: '#fff' }}
-            onPress={cancel}>
-          <Text style={{ color: '#046475' }}>Назад</Text>
-        </Button>
-      </>
+      }
+      }
+      <Text style={{ marginVertical: 10 }}>
+        Специальность: {form.specType.name}
+      </Text>
+      <Text style={{ marginVertical: 10 }}>Врач: {form.doctor.name}</Text>
+      <Text style={{ marginVertical: 10 }}>Кабинет: {form.doctor.cabinet}</Text>
+      <Text style={{ marginVertical: 10 }}>
+        Дата и время приема: {date} {time}
+      </Text>
+      <Button
+        block        
+        style={{ marginVertical: 10, backgroundColor: '#01A19F' }}
+        onPress={postTalon}>
+        <Text style={{ color: '#fff' }}>ЗАПИСАТЬСЯ</Text>
+      </Button>
+      <Button
+        block
+        style={{ marginVertical: 10, backgroundColor: '#fff' }}
+        onPress={cancel}>
+        <Text style={{ color: '#046475' }}>Назад</Text>
+      </Button>
+    </>
   );
 }

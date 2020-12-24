@@ -19,7 +19,7 @@ import React from 'react';
 import { StyleSheet, AsyncStorage } from 'react-native';
 import { List as PaperList } from 'react-native-paper';
 
-import { API } from '../constants';
+import { API, getToken } from '../constants';
 import { isNotUndefined } from '../helpers';
 
 function RenderInfo({ title, list, onPressList }) {
@@ -81,13 +81,10 @@ class InfoScreen extends React.Component {
 
   _getToken = async () => {
     try {
-      const value = await AsyncStorage.getItem('token');
-
-      if (value !== null) {
-        const token = value.replace(/['"«»]/g, '');
-        this.setState({ token });
+      getToken().then(itoken => {
+        this.setState({ token: itoken });
         this._getRecommendations();
-      }
+      });
     } catch (error) {
       console.log('error' + error);
     }
