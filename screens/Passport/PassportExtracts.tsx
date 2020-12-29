@@ -133,8 +133,8 @@ export default class PassportExtracts extends React.Component<any, any>{
                                 placeholder="DD.MM.YYYY"
                                 format="DD.MM.YYYY"
                                 maxDate={moment().format('DD.MM.YYYY')}
-                                confirmBtnText="Chọn"
-                                cancelBtnText="Hủy"
+                                confirmBtnText="Ok"
+                                cancelBtnText="Cancel"
                                 customStyles={{
                                     dateInput: {
                                         backgroundColor: 'white',
@@ -157,8 +157,8 @@ export default class PassportExtracts extends React.Component<any, any>{
                                 placeholder="DD.MM.YYYY"
                                 format="DD.MM.YYYY"
                                 maxDate={moment().format('DD.MM.YYYY')}
-                                confirmBtnText="Chọn"
-                                cancelBtnText="Hủy"
+                                confirmBtnText="Ok"
+                                cancelBtnText="Cancel"
                                 customStyles={{
                                     dateInput: {
                                         backgroundColor: 'white',
