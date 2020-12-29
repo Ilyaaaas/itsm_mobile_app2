@@ -1,16 +1,16 @@
 import React from "react";
-import {ActivityIndicator, DatePickerIOS, Modal, Text, TouchableOpacity, View} from "react-native";
-import {Body, Button, Container, DatePicker, Left, List, ListItem, Right, Toast} from "native-base";
+import {ActivityIndicator, Modal, Text, TouchableOpacity, View} from "react-native";
+import {Body, Button, Container, Left, List, ListItem, Right, Toast} from "native-base";
 import moment from "moment";
-
 import {Head} from'./Head';
 import { API, getToken } from '../constants';
 import WebView from "react-native-webview";
-import DateTimePicker from "react-native-modal-datetime-picker";
 import {AntDesign, Ionicons} from "@expo/vector-icons";
+import DatePicker from 'react-native-datepicker';
 
-const m = moment().add('years', -1);
-const dateNow = new Date(m);
+
+const dateNow = moment().add(-1, 'years').format('DD.MM.YYYY');
+//const dateNow = new Date(m);
 
 export default class PassportExtracts extends React.Component<any, any>{
     constructor(props) {
@@ -18,28 +18,14 @@ export default class PassportExtracts extends React.Component<any, any>{
 
         this.state = {
             token: '',
-            dateBegin: null,
-            dateEnd: new Date(),
-            defaultDateBegin: dateNow,
-            defaultDateEnd: new Date(),
+            dateBegin: dateNow,
+            dateEnd: moment().format('DD.MM.YYYY'),
             list: [],
             showModal: false,
             html: '',
             onFilter: false,
         }
-
-        this.setDateBegin = this.setDateBegin.bind(this);
-        this.setDateEnd = this.setDateEnd.bind(this);
     }
-
-    setDateBegin(newDate) {
-        this.setState({ dateBegin: newDate });
-    }
-
-    setDateEnd(newDate) {
-        this.setState({ dateEnd: newDate });
-    }
-
     _getToken = async () => {
         await getToken().then(itoken => {
             this.setState({token: itoken});
@@ -60,6 +46,7 @@ export default class PassportExtracts extends React.Component<any, any>{
             });
 
             const responseJson = await response.json();
+
             if (responseJson !== null) {
                 if(responseJson.success == false){
                     Toast.show({
@@ -82,10 +69,6 @@ export default class PassportExtracts extends React.Component<any, any>{
             this.setState({
                 list: result,
                 onFilter: false,
-                dateBegin: dateNow,
-                dateEnd: new Date(),
-                defaultDateBegin: dateNow,
-                defaultDateEnd: new Date(),
             });
         })
     }
@@ -99,11 +82,17 @@ export default class PassportExtracts extends React.Component<any, any>{
             return;
         }
 
-        let date_begin = moment(this.state.dateBegin).format('DD.MM.YYYY');
-        let date_end = moment(this.state.dateEnd).format('DD.MM.YYYY');
+        //let date_begin = moment(this.state.dateBegin).format('DD.MM.YYYY');
+        //let date_end = moment(this.state.dateEnd).format('DD.MM.YYYY');
 
+        let date_begin = this.state.dateBegin;
+        let date_end = this.state.dateEnd;
         await this._getUrl('get_protocols?date_begin='+date_begin+'&date_end='+date_end).then(result => {
-            this.setState({list: result, onFilter: true});
+            if(result == null){
+                this.setState({list: [], onFilter: true});
+            }else {
+                this.setState({list: result, onFilter: true});
+            }
         })
     }
 
@@ -136,14 +125,50 @@ export default class PassportExtracts extends React.Component<any, any>{
                     <ListItem>
                         <Left>
                             <DatePicker
-                                defaultDate={this.state.defaultDateBegin}
-                                onDateChange={this.setDateBegin}
+                                showIcon={false}
+                                androidMode="spinner"
+                                style={{ width: '100%' }}
+                                date={this.state.dateBegin}
+                                mode="date"
+                                placeholder="DD.MM.YYYY"
+                                format="DD.MM.YYYY"
+                                maxDate={moment().format('DD.MM.YYYY')}
+                                confirmBtnText="Chọn"
+                                cancelBtnText="Hủy"
+                                customStyles={{
+                                    dateInput: {
+                                        backgroundColor: 'white',
+                                        borderWidth: 0,
+                                        borderColor: 'black',
+                                    },
+                                }}
+                                onDateChange={(date) => {
+                                    this.setState({ dateBegin: date });
+                                }}
                             />
                         </Left>
                         <Body>
                             <DatePicker
-                                defaultDate={this.state.defaultDateEnd}
-                                onDateChange={this.setDateEnd}
+                                showIcon={false}
+                                androidMode="spinner"
+                                style={{ width: '100%' }}
+                                date={this.state.dateEnd}
+                                mode="date"
+                                placeholder="DD.MM.YYYY"
+                                format="DD.MM.YYYY"
+                                maxDate={moment().format('DD.MM.YYYY')}
+                                confirmBtnText="Chọn"
+                                cancelBtnText="Hủy"
+                                customStyles={{
+                                    dateInput: {
+                                        backgroundColor: 'white',
+                                        borderWidth: 0,
+                                        borderColor: 'black',
+                                    },
+                                }}
+                                onDateChange={(date) => {
+                                    this.setState({ dateEnd: date });
+                                }}
                             />
                         </Body>
                         <Right>
