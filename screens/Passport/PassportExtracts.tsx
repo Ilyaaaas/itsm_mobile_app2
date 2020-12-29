@@ -9,6 +9,9 @@ import WebView from "react-native-webview";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import {AntDesign, Ionicons} from "@expo/vector-icons";
 
+const m = moment().add('years', -1);
+const dateNow = new Date(m);
+
 export default class PassportExtracts extends React.Component<any, any>{
     constructor(props) {
         super(props);
@@ -17,7 +20,8 @@ export default class PassportExtracts extends React.Component<any, any>{
             token: '',
             dateBegin: null,
             dateEnd: new Date(),
-            defaultDate: new Date(),
+            defaultDateBegin: dateNow,
+            defaultDateEnd: new Date(),
             list: [],
             showModal: false,
             html: '',
@@ -75,7 +79,14 @@ export default class PassportExtracts extends React.Component<any, any>{
 
     _get_protocols = async () => {
         await this._getUrl('get_protocols').then(result => {
-            this.setState({list: result, onFilter: false});
+            this.setState({
+                list: result,
+                onFilter: false,
+                dateBegin: dateNow,
+                dateEnd: new Date(),
+                defaultDateBegin: dateNow,
+                defaultDateEnd: new Date(),
+            });
         })
     }
 
@@ -92,7 +103,6 @@ export default class PassportExtracts extends React.Component<any, any>{
         let date_end = moment(this.state.dateEnd).format('DD.MM.YYYY');
 
         await this._getUrl('get_protocols?date_begin='+date_begin+'&date_end='+date_end).then(result => {
-            console.log(result);
             this.setState({list: result, onFilter: true});
         })
     }
@@ -126,13 +136,13 @@ export default class PassportExtracts extends React.Component<any, any>{
                     <ListItem>
                         <Left>
                             <DatePicker
-                                defaultDate={this.state.defaultDate}
+                                defaultDate={this.state.defaultDateBegin}
                                 onDateChange={this.setDateBegin}
                             />
                         </Left>
                         <Body>
                             <DatePicker
-                                defaultDate={this.state.defaultDate}
+                                defaultDate={this.state.defaultDateEnd}
                                 onDateChange={this.setDateEnd}
                             />
                         </Body>
