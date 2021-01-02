@@ -1,15 +1,14 @@
 import { useNavigation, StackActions } from '@react-navigation/native';
-import {Button, Form, Input, Item, Text as NbText, Toast} from 'native-base';
+import {Button, Form, Input, Item, Toast} from 'native-base';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {Alert, AsyncStorage, FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, AsyncStorage, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import { AuthScreenWrapper } from '../../components/AuthScreenWrapper';
 import { IdInput } from '../../components/IdInput';
 import { authService } from '../../services/auth.service';
 import { inputStyle } from '../../styles/input.style';
 import { Entypo } from "@expo/vector-icons";
-import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import * as Notifications from "expo-notifications";
 
@@ -38,45 +37,17 @@ export const LoginScreen = () => {
   const [passwordRecoveryIsVisible, setPasswordRecoveryIsVisible] = useState<boolean>(false);
 
 
-  async function registerForPushNotificationsAsync() {
-    let token;
-    //if (Constants.isDevice) {
-    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      console.log('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    //} else {
-    //  console.log('Must use physical device for Push Notifications');
-    //}
-
-
-    if (Platform.OS === 'android') {
-      Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
-        vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
-        sound: 'default',
-      });
-    }
-
-    return token;
-  }
-
   const handleSubmit = async (onSaveLogin = false) => {
     let pushtoken = '';
-    await registerForPushNotificationsAsync().then(itoken => {
-      if(itoken){
-        pushtoken = itoken;
+    try{
+      const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      if (status === "granted") {
+        const expoPushTokenResponse = await Notifications.getExpoPushTokenAsync();
+        pushtoken = expoPushTokenResponse.data;
       }
-    });
+    }catch(e){
+      Alert.alert(e.toLocaleString());
+    }
 
     const isLoggedIn = await authService.login({
       login: login.replace(/-/g, ''),

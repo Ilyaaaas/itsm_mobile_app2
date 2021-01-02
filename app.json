@@ -16,7 +16,13 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD"
+    },
+    "notification": {
+      "iosDisplayInForeground": false,
+      "androidMode": "default"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -26,6 +32,8 @@
       "supportsTablet": true
     },
     "android": {
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json",
       "package": "kz.bmcudp.medapp",
       "versionCode": 5,
       "permissions": []
