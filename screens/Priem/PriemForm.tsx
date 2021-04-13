@@ -171,7 +171,7 @@ export default function PriemForm({ navigation }) {
               text: 'В данной дате нет свободного времени',
               buttonText: 'Ok',
               type: 'warning',
-              duration: 1000,
+              duration: 10000,
             });
             dispatch(setFormInfo(TIMES_T, []));
           }
@@ -180,7 +180,7 @@ export default function PriemForm({ navigation }) {
             text: 'В данной дате нет свободного времени',
             buttonText: 'Ok',
             type: 'warning',
-            duration: 1000,
+            duration: 10000,
           });
           dispatch(setFormInfo(TIMES_T, []));
         }
@@ -326,7 +326,7 @@ export default function PriemForm({ navigation }) {
           });
         }
       }
-      updateState();      
+      updateState();
     } catch (error) {
       console.log('Error when call API : ' + error.message);
     }
@@ -558,7 +558,7 @@ function RenderCheckSubmit({ form, date, time, postTalon, cancel, vid }) {
         Дата и время приема: {date} {time}
       </Text>
       <Button
-        block        
+        block
         style={{ marginVertical: 10, backgroundColor: '#01A19F' }}
         onPress={postTalon}>
         <Text style={{ color: '#fff' }}>ЗАПИСАТЬСЯ</Text>
