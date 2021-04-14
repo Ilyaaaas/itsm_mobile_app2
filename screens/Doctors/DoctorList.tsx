@@ -1,5 +1,15 @@
 import React from "react";
-import {Dimensions, Modal, RefreshControl, StyleSheet, TextInput, TouchableOpacity, View, Alert} from "react-native";
+import {
+    Dimensions,
+    Modal,
+    RefreshControl,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View,
+    Alert,
+    ScrollView
+} from "react-native";
 import {
     Body,
     Container,
@@ -14,7 +24,7 @@ import {
     Toast,
     Input,
     Icon,
-    Button,
+    Button, Root,
 } from "native-base";
 import { API, getToken } from '../constants';
 import {Ionicons} from "@expo/vector-icons";
@@ -48,10 +58,6 @@ class DoctorList extends React.Component{
         const API_URL = `${API}backend/${url}`
 
         try {
-            console.log(API_URL);
-            console.log('API_URL');
-            console.log(this.state.token);
-            console.log('token');
             const response = await fetch(API_URL, {
                 method: 'GET',
                 headers: {
@@ -81,11 +87,22 @@ class DoctorList extends React.Component{
 
     _getDoctorList = async () => {
         await this._getUrl('get_doctors').then(value => {
-            console.log(value);
             if(value !== null){
                 this.setState({ list: value});
             }
         })
+    }
+
+    _alert = async (msgToast, onSuccess = false) => {
+        let tType = "success";
+        if(onSuccess == false){
+            tType = "danger";
+        }
+        Toast.show({
+            text: msgToast,
+            type: tType,
+            duration: 3000
+        });
     }
 
     _getToken = async () => {
@@ -121,44 +138,30 @@ class DoctorList extends React.Component{
 
     _setRetview = async () => {
         let API_URL = `${API}backend/set_grade`
+        let showToast = false;
+        let msgToast = '';
+        /*
+        if(this.state.otziv == ''){
+            showToast = true;
+            msgToast = 'Пустой текст сообщения';
+        }
+        if(this.state.callPhone == ''){
+            showToast = true;
+            msgToast = 'Пустой текст обратной связи';
+        }
+         */
+        if(this.state.ratingSet == 0){
+            showToast = true;
+            msgToast = 'Поставьте пожалуйста оценку';
+        }
 
-        if(this.state.ratingSet == 0)
+        if(showToast)
         {
-            Alert.alert(
-                "Alert Title",
-                "My Alert Msg",
-                [
-                    {
-                        text: "Cancel",
-                        onPress: () => console.log("Cancel Pressed"),
-                        style: "cancel"
-                    },
-                    { text: "OK", onPress: () => console.log("OK Pressed") }
-                ]
-            );
-            // Toast.show({
-            //     type: 'success',
-            //     text1: 'Hello',
-            //     text2: 'This is some something 👋',
-            //     visibilityTime: 4000,
-            //     autoHide: true,
-            //     topOffset: 30,
-            //     bottomOffset: 40,
-            //     onShow: () => {},
-            //     onHide: () => {},
-            //     onPress: () => {},
-            //     props: {},
-            //     // zIndex: 3000, // works on ios
-            //     // elevation: 3000, // works on android
-            //     zIndex:-2000,
-            // });
-            console.log('tst');
-
-            return
+            this._alert(msgToast, false);
+            return;
         }
         try {
-            console.log(API_URL);
-            console.log('API_URL');
+            console.log(`id_doctor=${this.state.activeDoc}&grade=${this.state.ratingSet}&note=${this.state.otziv}&feedback=${this.state.callPhone}`);
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
@@ -170,28 +173,27 @@ class DoctorList extends React.Component{
             });
 
             const responseJson = await response.json();
+            console.log(responseJson);
             if (responseJson !== null) {
                 let itype = 'success';
 
                 if(responseJson.success == false){
                     itype = 'danger';
                 }
-                Toast.show({
-                    text: responseJson.message,
-                    type: itype,
-                    duration: 3000
-                });
                 this.setState({activeDoc: null, modal: false, otziv: '', callPhone: '', ratingSet: 0 });
                 this._getDoctorList();
+                this._alert(responseJson.message, responseJson.success);
             }
         } catch (error) {
-            console.log('Error when call API: ' + error.message);
+            console.log(error.message);
+            this._alert("Ошибка отправки данных. Повторите еще раз");
         }
     }
 
     render() {
         return (
             <Container>
+                <Root>
                 <Header style={styles.headerTop}>
                     <Left style={{ flex: 1}}>
                         <Ionicons name="ios-menu"
@@ -213,72 +215,75 @@ class DoctorList extends React.Component{
                         />
                     }
                 >
-                    {this.state.refreshing ? (
-                        <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
-                    ) : (
-                    <List>
-                        {this.state.list.map((doc, i) => (
-                            <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
-                                <Body>
-                                    <Text style={styles.textName}>{doc.fio}</Text>
-                                    <View style={styles.starContainer}>
-                                        <Text style={styles.textSpecialty}>{doc.spr_value}</Text>
-                                    </View>
-                                    <View style={styles.buttonsContainer}>
-                                        <TouchableOpacity
-                                            activeOpacity={0.7}
-                                            style={[styles.button, styles.btn]}
-                                            onPress={() => this._onReviewButtonClicked(i)}
-                                        >
-                                            <Text style={{ color: '#fff' }}>О враче</Text>
-                                        </TouchableOpacity>
+                            {this.state.refreshing ? (
+                                <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
+                            ) : (
+                            <List>
+                                {this.state.list.map((doc, i) => (
+                                    <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
+                                        <Body>
+                                            <Text style={styles.textName}>{doc.fio}</Text>
+                                            <View style={styles.starContainer}>
+                                                <Text style={styles.textSpecialty}>{doc.spr_value}</Text>
+                                            </View>
+                                            <View style={styles.buttonsContainer}>
+                                                <TouchableOpacity
+                                                    activeOpacity={0.7}
+                                                    style={[styles.button, styles.btn]}
+                                                    onPress={() => this._onReviewButtonClicked(i)}
+                                                >
+                                                    <Text style={{ color: '#fff' }}>О враче</Text>
+                                                </TouchableOpacity>
 
-                                        <TouchableOpacity
-                                            activeOpacity={0.7}
-                                            style={[styles.button, styles.btn]}
-                                            onPress={() => this.onInfoButtonClicked(doc.doc_id)}
-                                        >
-                                            <Text style={{ color: '#fff' }}>Отзывы</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                    {this.state.isDocReviewSelected == i &&
-                                    <View style={{ marginBottom: 10, marginTop: 10 }}>
-                                        <Text style={styles.textSpecialty}>Категория: { doc.category_name || "" }</Text>
-                                        <Text style={styles.textSpecialty}>Ученая степень: {doc.science_degree}</Text>
-                                    </View>
-                                    }
-                                </Body>
-                                <Right>
-                                    <View style={styles.starContainer}>
-                                        <StarRating
-                                            disabled={true}
-                                            maxStars={5}
-                                            rating={parseInt(doc.avg_grade)}
-                                            emptyStar={'ios-star-outline'}
-                                            fullStar={'ios-star'}
-                                            halfStar={'ios-star-half'}
-                                            iconSet={'Ionicons'}
-                                            starSize={15}
-                                            fullStarColor={'red'}
-                                            emptyStarColor={'red'}
-                                        />
-                                        <Text style={styles.ratingText}>{doc.avg_grade}</Text>
-                                    </View>
-                                </Right>
-                            </ListItem>
-                        ))}
-                    </List>
-                    )}
-                    <Modal
-                        animationType={"slide"}
-                        visible={this.state.modal}
-                    >
+                                                <TouchableOpacity
+                                                    activeOpacity={0.7}
+                                                    style={[styles.button, styles.btn]}
+                                                    onPress={() => this.onInfoButtonClicked(doc.doc_id)}
+                                                >
+                                                    <Text style={{ color: '#fff' }}>Отзывы</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            {this.state.isDocReviewSelected == i &&
+                                            <View style={{ marginBottom: 10, marginTop: 10 }}>
+                                                <Text style={styles.textSpecialty}>Категория: { doc.category_name || "" }</Text>
+                                                <Text style={styles.textSpecialty}>Ученая степень: {doc.science_degree}</Text>
+                                            </View>
+                                            }
+                                        </Body>
+                                        <Right>
+                                            <View style={styles.starContainer}>
+                                                <StarRating
+                                                    disabled={true}
+                                                    maxStars={5}
+                                                    rating={parseInt(doc.avg_grade)}
+                                                    emptyStar={'ios-star-outline'}
+                                                    fullStar={'ios-star'}
+                                                    halfStar={'ios-star-half'}
+                                                    iconSet={'Ionicons'}
+                                                    starSize={15}
+                                                    fullStarColor={'red'}
+                                                    emptyStarColor={'red'}
+                                                />
+                                                <Text style={styles.ratingText}>{doc.avg_grade}</Text>
+                                            </View>
+                                        </Right>
+                                    </ListItem>
+                                ))}
+                            </List>
+                            )}
+                    </Content>
+                </Root>
+                <Modal
+                    animationType={"slide"}
+                    visible={this.state.modal}
+                >
+                    <Root>
                         <View style={{
                             flex: 1,
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                         }}>
-                            <View style={{ paddingTop: 40 }}>
+                            <ScrollView style={{ paddingTop: 10 }}>
                                 <List>
                                     {this.state.listGrade.map((grade, i) => (
                                         <ListItem key={i} style={{ flexDirection: 'column', alignItems: "flex-start" }}>
@@ -299,7 +304,7 @@ class DoctorList extends React.Component{
                                         </ListItem>
                                     ))}
                                 </List>
-                            </View>
+                            </ScrollView>
                             <View style={{ borderTopWidth: 1,}}>
                                 <List>
                                     <ListItem noBorder>
@@ -364,8 +369,8 @@ class DoctorList extends React.Component{
                                 </List>
                             </View>
                         </View>
-                    </Modal>
-                </Content>
+                    </Root>
+                </Modal>
             </Container>
         )
     }
