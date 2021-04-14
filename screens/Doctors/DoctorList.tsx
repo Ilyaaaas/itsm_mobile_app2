@@ -16,9 +16,8 @@ import {
     Icon, Button
 } from "native-base";
 import { API, getToken } from '../constants';
-import {AntDesign, Ionicons} from "@expo/vector-icons";
+import {Ionicons} from "@expo/vector-icons";
 import StarRating from "react-native-star-rating";
-import axios from "axios";
 
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
@@ -77,6 +76,7 @@ class DoctorList extends React.Component{
 
     _getDoctorList = async () => {
         await this._getUrl('get_doctors').then(value => {
+            console.log(value);
             if(value !== null){
                 this.setState({ list: value});
             }

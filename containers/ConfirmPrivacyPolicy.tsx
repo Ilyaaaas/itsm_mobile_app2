@@ -56,17 +56,18 @@ export const ConfirmPrivacyPolicy = (props: ConfirmPrivacyPolicyProps) => {
       <Modal visible={modalVisible}>
         <Container>
           <View style={{ flex: 1 }}>
-            <View style={{ flex: 4 }}>
+            <View style={{ flex : 4 }}>
               <WebView
                 source={{ uri: 'https://bmc-api.bmcudp.kz/backend/politics' }}
               />
             </View>
-            <View style={{ flex: 1, paddingHorizontal: 10 }}>
+            <View style={{ flex : 2 }}>
               <Checkbox.Item
                 status={props.checked ? 'checked' : 'unchecked'}
                 color="#4873fa"
                 onPress={handleChecked}
                 label="Принимаю пользовательское соглашение"
+                style={{ width:"90%" }}
               />
               <Button
                 block
