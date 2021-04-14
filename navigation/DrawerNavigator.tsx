@@ -74,7 +74,6 @@ export const DrawerNavigator = (props) => {
           ),
         }}
       />
-
       <Drawer.Screen
         name="DoctorListStack"
         component={DoctorListStack}
@@ -85,7 +84,6 @@ export const DrawerNavigator = (props) => {
           ),
         }}
       />
-
       <Drawer.Screen
         name="PriemStack"
         component={PriemStack}

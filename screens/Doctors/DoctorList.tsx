@@ -1,5 +1,5 @@
 import React from "react";
-import {Dimensions, Modal, RefreshControl, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
+import {Dimensions, Modal, RefreshControl, StyleSheet, TextInput, TouchableOpacity, View, Alert} from "react-native";
 import {
     Body,
     Container,
@@ -13,7 +13,8 @@ import {
     Text,
     Toast,
     Input,
-    Icon, Button
+    Icon,
+    Button,
 } from "native-base";
 import { API, getToken } from '../constants';
 import {Ionicons} from "@expo/vector-icons";
@@ -47,6 +48,10 @@ class DoctorList extends React.Component{
         const API_URL = `${API}backend/${url}`
 
         try {
+            console.log(API_URL);
+            console.log('API_URL');
+            console.log(this.state.token);
+            console.log('token');
             const response = await fetch(API_URL, {
                 method: 'GET',
                 headers: {
@@ -117,7 +122,43 @@ class DoctorList extends React.Component{
     _setRetview = async () => {
         let API_URL = `${API}backend/set_grade`
 
+        if(this.state.ratingSet == 0)
+        {
+            Alert.alert(
+                "Alert Title",
+                "My Alert Msg",
+                [
+                    {
+                        text: "Cancel",
+                        onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel"
+                    },
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+            );
+            // Toast.show({
+            //     type: 'success',
+            //     text1: 'Hello',
+            //     text2: 'This is some something 👋',
+            //     visibilityTime: 4000,
+            //     autoHide: true,
+            //     topOffset: 30,
+            //     bottomOffset: 40,
+            //     onShow: () => {},
+            //     onHide: () => {},
+            //     onPress: () => {},
+            //     props: {},
+            //     // zIndex: 3000, // works on ios
+            //     // elevation: 3000, // works on android
+            //     zIndex:-2000,
+            // });
+            console.log('tst');
+
+            return
+        }
         try {
+            console.log(API_URL);
+            console.log('API_URL');
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
@@ -237,12 +278,20 @@ class DoctorList extends React.Component{
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                         }}>
-                            <View>
+                            <View style={{ paddingTop: 40 }}>
                                 <List>
                                     {this.state.listGrade.map((grade, i) => (
                                         <ListItem key={i} style={{ flexDirection: 'column', alignItems: "flex-start" }}>
                                             <View>
                                                 <Text>{grade.note}</Text>
+                                            </View>
+                                            <View>
+                                                {grade.reason != null?
+                                                    <Text style={{
+                                                        color: 'red',
+                                                        textAlign: "left"
+                                                    }}>Отклонен модератором. Причина:{"\n"}{grade.reason}</Text>
+                                                    : null }
                                             </View>
                                             <View style={{ width: '100%' }}>
                                                 <Text style={{ width: '100%', textAlign: "right", fontSize: 10 }}>{grade.grade_date}</Text>
@@ -251,7 +300,7 @@ class DoctorList extends React.Component{
                                     ))}
                                 </List>
                             </View>
-                            <View style={{ borderTopWidth: 1}}>
+                            <View style={{ borderTopWidth: 1,}}>
                                 <List>
                                     <ListItem noBorder>
                                         <TextInput

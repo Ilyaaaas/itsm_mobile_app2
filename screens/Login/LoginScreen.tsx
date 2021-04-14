@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   },
   btnSubmit: {
     backgroundColor: '#3F51B5',
-    marginTop: 20,
+    marginTop: 2,
     paddingTop: 15,
     paddingBottom: 15,
     borderRadius: 3
@@ -186,7 +186,7 @@ export const LoginScreen = () => {
 
   return (
     <AuthScreenWrapper>
-      <Form style={{ zIndex: 2001}}>
+      <Form style={{ zIndex: 2001, marginTop: 40}}>
         <Item regular style={inputStyle.inputItem}>
           <IdInput onChangeText={(text) => setLogin(text)} value={login} />
           {listLogins.length > 1 ? (
@@ -245,16 +245,16 @@ export const LoginScreen = () => {
           </TouchableOpacity>
         </Item>
       </Form>
-      {passwordRecoveryIsVisible && (
-        <Button
+      <Button
           transparent
           block
           onPress={() => navigation.navigate('RestorePassword')}>
-          <Text style={styles.secondaryButton}>Восстановить пароль</Text>
-        </Button>
-      )}
+        <Text style={styles.secondaryButton}>Восстановить пароль</Text>
+      </Button>
+      {/*{passwordRecoveryIsVisible && (*/}
+      {/*)}*/}
       <TouchableOpacity
-        style={[!passwordRecoveryIsVisible && { marginTop: 16, zIndex: 100 }] && styles.btnSubmit}
+        style={[!passwordRecoveryIsVisible && { marginTop: 1, zIndex: 100 }] && styles.btnSubmit}
         onPress={AlertSaveLogin}
       >
         <Text style={{ color: '#ffff', textAlign: "center" }}>ВОЙТИ</Text>

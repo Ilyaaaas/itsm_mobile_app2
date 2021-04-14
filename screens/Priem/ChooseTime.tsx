@@ -143,7 +143,7 @@ class ChooseTime extends React.Component {
               text: 'В данной дате нет свободного времени',
               buttonText: 'Ok',
               type: 'warning',
-              duration: 3000,
+              duration: 10000,
             });
           }
         } else {
@@ -164,7 +164,7 @@ class ChooseTime extends React.Component {
         text: 'Выберите дату приема',
         buttonText: 'Ok',
         type: 'warning',
-        duration: 3000,
+        duration: 10000,
       });
     }
   };
