@@ -283,7 +283,7 @@ class DoctorList extends React.Component{
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                         }}>
-                            <ScrollView style={{ paddingTop: 10 }}>
+                            <ScrollView style={{ paddingTop: 40 }}>
                                 <List>
                                     {this.state.listGrade.map((grade, i) => (
                                         <ListItem key={i} style={{ flexDirection: 'column', alignItems: "flex-start" }}>
