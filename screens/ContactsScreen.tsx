@@ -21,7 +21,7 @@ class ContactsScreen extends React.Component {
   };
 
   _handleClickLink = (url = true) => {
-    if (url) Linking.openURL('https://bmcudp.kz');
+    if (url) Linking.openURL('https://smart24.kz');
     else Linking.openURL('https://go.2gis.com/3cj1m');
   };
 
@@ -36,13 +36,13 @@ class ContactsScreen extends React.Component {
           <Left style={{ flex: 1 }}>
             <Ionicons
               name="ios-menu"
-              style={{ color: '#046475', marginTop: 10, marginLeft: 10 }}
+              style={{ color: '#a2a3b7', marginTop: 10, marginLeft: 10 }}
               onPress={() => this.props.navigation.openDrawer()}
               size={24}
             />
           </Left>
           <Body style={{ flex: 3 }}>
-            <Title style={{ color: '#046475', fontSize: 20 }}>Контакты</Title>
+            <Title style={{ color: '#a2a3b7', fontSize: 20 }}>Контакты</Title>
           </Body>
           <Right />
         </Header>
@@ -51,7 +51,7 @@ class ContactsScreen extends React.Component {
             <Ionicons
               name="ios-pin"
               color="#047B7F"
-              style={{ fontSize: 20, color: '#047B7F', paddingVertical: 5 }}
+              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
             />
             <Body style={{ paddingLeft: 10 }}>
               <Text style={{ fontSize: 12 }} note>
@@ -60,7 +60,7 @@ class ContactsScreen extends React.Component {
               <Text
                 style={{ fontSize: 14, paddingVertical: 5 }}
                 onPress={() => this._handleClickLink(false)}>
-                г.Нур-Султан, район Есиль, проспект Мәңгілік ел, 80/Е495
+                г.Нур-Султан, ул. Улица
               </Text>
             </Body>
           </ListItem>
@@ -68,7 +68,7 @@ class ContactsScreen extends React.Component {
             <Ionicons
               name="ios-call"
               color="#047B7F"
-              style={{ fontSize: 20, color: '#047B7F', paddingVertical: 5 }}
+              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
             />
             <Body style={{ paddingLeft: 10 }}>
               <Text style={{ fontSize: 12 }} note>
@@ -76,24 +76,24 @@ class ContactsScreen extends React.Component {
               </Text>
               <Text
                 style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (7172) 70-80-90')}>
-                +7 (7172) 70-80-90
+                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
+                +7 (777) 777-77-77
               </Text>
               <Text style={{ fontSize: 12 }} note>
-                Приемное отделение
+                Отдел продаж
               </Text>
               <Text
                 style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (7172) 70-79-12')}>
-                +7 (7172) 70-79-12
+                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
+                +7 (777) 777-77-77
               </Text>
               <Text style={{ fontSize: 12 }} note>
-                Скорая помощь
+                Техническая служба
               </Text>
               <Text
                 style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (7172) 70-79-03')}>
-                +7 (7172) 70-79-03, 70-79-04
+                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
+                +7 (777) 777-77-77
               </Text>
             </Body>
           </ListItem>
@@ -101,7 +101,7 @@ class ContactsScreen extends React.Component {
             <Ionicons
               name="ios-link"
               color="#047B7F"
-              style={{ fontSize: 20, color: '#047B7F', paddingVertical: 5 }}
+              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
             />
             <Body style={{ paddingLeft: 10 }}>
               <Text style={{ fontSize: 12 }} note>
@@ -110,14 +110,14 @@ class ContactsScreen extends React.Component {
               <Text
                 style={{ fontSize: 14, paddingVertical: 5 }}
                 onPress={this._handleClickLink}>
-                bmcudp.kz
+                smart24.kz
               </Text>
             </Body>
           </ListItem>
           <ListItem>
             <Ionicons
               name="ios-time"
-              style={{ fontSize: 20, color: '#047B7F', paddingVertical: 5 }}
+              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
             />
             <Body style={{ paddingLeft: 10 }}>
               <Text style={{ fontSize: 12 }} note>
@@ -128,27 +128,6 @@ class ContactsScreen extends React.Component {
               </Text>
               <Text style={{ fontSize: 14, paddingVertical: 5 }}>
                 вс 9:00 - 18:00
-              </Text>
-            </Body>
-          </ListItem>
-          <ListItem>
-            <Ionicons
-              name="ios-bus"
-              style={{ fontSize: 20, color: '#047B7F', paddingVertical: 5 }}
-            />
-            <Body style={{ paddingLeft: 10 }}>
-              <Text style={{ fontSize: 12 }} note>
-                Как до нас добраться
-              </Text>
-              <Text style={{ fontSize: 14, paddingVertical: 5 }}>
-                Автобусы: 12, 51, 40, 47, 53, 100 экспресс, 102 экспресс{' '}
-              </Text>
-              <Text
-                  style={{ fontSize: 16, paddingVertical: 5}}
-                  onPress={() => {Linking.openURL('https://2gis.kz/nur_sultan/geo/71.426232%2C51.07591?m=71.426499%2C51.075907%2F17.17')}}
-              >
-                <Entypo name="location-pin" size={24} color="black" />
-                2gis
               </Text>
             </Body>
           </ListItem>
@@ -166,11 +145,11 @@ class ContactsScreen extends React.Component {
               <View style={{ flexDirection: 'row'}}>
                 <Ionicons
                     name="logo-facebook"
-                    style={{ fontSize: 20, color: '#047B7F', paddingVertical: 5 }}
+                    style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
                 />
                 <Text
                     style={{ fontSize: 14, paddingVertical: 5, marginLeft: 20 }}
-                    onPress={() => {Linking.openURL('https://www.facebook.com/bmcudp.kz/')}}
+                    onPress={() => {Linking.openURL('https://www.facebook.com/')}}
                 >
                   FaceBook
                 </Text>
@@ -179,11 +158,11 @@ class ContactsScreen extends React.Component {
               <View  style={{ flexDirection: 'row'}}>
                 <Ionicons
                   name="logo-instagram"
-                  style={{ fontSize: 20, color: '#047B7F', paddingVertical: 5 }}
+                  style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
                 />
                 <Text
                     style={{ fontSize: 14, paddingVertical: 5, marginLeft: 20 }}
-                    onPress={() => {Linking.openURL('http://www.instagram.com/bmcudprk')}}
+                    onPress={() => {Linking.openURL('http://www.instagram.com')}}
                 >
                   Instagram
                 </Text>
@@ -192,8 +171,8 @@ class ContactsScreen extends React.Component {
 
           </ListItem>
         </Content>
-        <Footer style={{ backgroundColor: '#047B7F', height: 30 }}>
-          <FooterTab style={{ backgroundColor: '#047B7F' }} />
+        <Footer style={{ backgroundColor: '#1a192a', height: 30 }}>
+          <FooterTab style={{ backgroundColor: '#1a192a' }} />
         </Footer>
       </Container>
     );
@@ -214,7 +193,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTop: {
-    backgroundColor: '#01A19F',
+    backgroundColor: '#1a192a',
   },
   rowBottom: {
     zIndex: 1,

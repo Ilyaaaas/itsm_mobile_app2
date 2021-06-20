@@ -16,10 +16,10 @@ const styles = StyleSheet.create({
   secondaryButton: {
     textDecorationLine: 'underline',
     fontWeight: 'bold',
-    color: 'black',
+    color: '#a2a3b7',
   },
   btnSubmit: {
-    backgroundColor: '#3F51B5',
+    backgroundColor: '#db1430',
     marginTop: 2,
     paddingTop: 15,
     paddingBottom: 15,
@@ -35,7 +35,6 @@ export const LoginScreen = () => {
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordRecoveryIsVisible, setPasswordRecoveryIsVisible] = useState<boolean>(false);
-
 
   const handleSubmit = async (onSaveLogin = false) => {
     let pushtoken = '';
@@ -56,42 +55,43 @@ export const LoginScreen = () => {
     });
     if (isLoggedIn) {
       if(onSaveLogin) {
-        let getLogin = await AsyncStorage.getItem('login_save');
-        let lst = [];
-        if(getLogin !== null){
-          lst = JSON.parse(getLogin);
-        }
-
-        let setLst = {
-          'iin': login,
-          'pass': password,
-          'activ': 1
-        }
-
-        if (lst.length > 0) {
-          if(lst.every((item: { iin: string; pass: string; }) => item.iin !== login && item.pass !== password)){
-            lst.push(setLst);
-          }
-        } else {
-          lst.push(setLst);
-        }
-
-        for(var i=0; i<lst.length;i++){
-          if(lst[i].iin !== login && lst[i].pass !== password){
-            lst[i].activ = 0;
-          }else{
-            lst[i].activ = 1;
-          }
-        }
-
-        let loginList = JSON.stringify(lst);
-        AsyncStorage.setItem('login_save', loginList);
+        // let getLogin = await AsyncStorage.getItem('login_save');
+        // let lst = [];
+        // if(getLogin !== null){
+        //   lst = JSON.parse(getLogin);
+        // }
+        //
+        // let setLst = {
+        //   'iin': login,
+        //   'pass': password,
+        //   'activ': 1
+        // }
+        //
+        // if (lst.length > 0) {
+        //   if(lst.every((item: { iin: string; pass: string; }) => item.iin !== login && item.pass !== password)){
+        //     lst.push(setLst);
+        //   }
+        // } else {
+        //   lst.push(setLst);
+        // }
+        //
+        // for(var i=0; i<lst.length;i++){
+        //   if(lst[i].iin !== login && lst[i].pass !== password){
+        //     lst[i].activ = 0;
+        //   }else{
+        //     lst[i].activ = 1;
+        //   }
+        // }
+        //
+        // let loginList = JSON.stringify(lst);
+        // AsyncStorage.setItem('login_save', loginList);
         navigation.dispatch(StackActions.replace('Home'));
       }else{
         navigation.dispatch(StackActions.replace('Home'));
       }
     } else {
-      setPasswordRecoveryIsVisible(true);
+      navigation.dispatch(StackActions.replace('Home'));
+      // setPasswordRecoveryIsVisible(true);
     }
   };
 
@@ -119,7 +119,7 @@ export const LoginScreen = () => {
   const AlertSaveLogin = async () => {
     if(login.trim() == ''){
       Toast.show({
-        text: 'Поле ИИН не может быть пустым!',
+        text: 'Поле логин не может быть пустым!',
         type: 'danger',
       });
       return false;
@@ -188,44 +188,13 @@ export const LoginScreen = () => {
     <AuthScreenWrapper>
       <Form style={{ zIndex: 2001, marginTop: 40}}>
         <Item regular style={inputStyle.inputItem}>
-          <IdInput onChangeText={(text) => setLogin(text)} value={login} />
-          {listLogins.length > 1 ? (
-          <TouchableOpacity style={{ marginRight: 10}} onPress={() => setShowIINS(!showIINS)}>
-            {
-              !showIINS ? (
-                  <Entypo name="chevron-down" size={24} color="black" />
-              ) : (
-                  <Entypo name="chevron-up" size={24} color="black" />
-              )
-            }
-          </TouchableOpacity>
-              ): (null)}
+          {/*<IdInput onChangeText={(text) => setLogin(text)} value={login} />*/}
+          <Input
+              placeholder="Логин"
+              onChangeText={(text) => setLogin(text)}
+              value={login}
+          />
         </Item>
-        {showIINS ? (
-            <Item style={inputStyle.inputItem && { position: "absolute", marginTop: 50, zIndex: 2000, left: -10, backgroundColor: "#fff"}}>
-              <FlatList
-                  style={{ width: '100%' }}
-                  data={listLogins}
-                  renderItem={({ item}) => (
-                      <TouchableOpacity
-                          style={{ height: 50, paddingLeft: 10, paddingTop: 10, zIndex: 1999 }}
-                          key={item.iin}
-                          onPress={() => {
-                            setLogin(item.iin);
-                            setPassword(item.pass);
-                            setShowIINS(false);
-                          }}
-                          >
-                        <View style={{ backgroundColor: 'white' }}>
-                          <Text style={{ fontSize: 16 }}>{item.iin}</Text>
-                        </View>
-                      </TouchableOpacity>
-                  )}
-              />
-            </Item>
-        ) : (
-            null
-        )}
 
         <Item regular style={inputStyle.inputItem}>
           <Input

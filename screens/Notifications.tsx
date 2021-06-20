@@ -88,13 +88,13 @@ export default class Notifications extends React.Component{
                 <Header style={styles.headerTop}>
                     <Left style={{ flex: 1}}>
                         <Ionicons name="ios-menu"
-                              style={{ color: '#046475', marginLeft: 10 }}
+                              style={{ color: '#a2a3b7', marginLeft: 10 }}
                               onPress={() => this.props.navigation.openDrawer()}
                               size={24}
                         />
                     </Left>
                     <Body style={{ flex: 3 }}>
-                        <Title style={{ color: '#046475' }}>Уведомления</Title>
+                        <Title style={{ color: '#a2a3b7' }}>Уведомления</Title>
                     </Body>
                 </Header>
                 <Content
@@ -174,16 +174,16 @@ const NotNotification = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#eeeff4',
         alignItems: 'center',
         justifyContent: 'center',
     },
     headerTop: {
-        backgroundColor: '#01A19F',
+        backgroundColor: '#1a192a',
     },
 
     tab_heading: {
-        backgroundColor: '#fff',
+        backgroundColor: '#eeeff4',
     },
     tab_heading_text: {
         color: '#000000',
@@ -192,19 +192,19 @@ const styles = StyleSheet.create({
         textAlign: "center",
         borderRadius: 5,
         fontSize: 16,
-        borderColor: '#01A19F',
+        borderColor: '#1a192a',
     },
     tab_heading_text_active: {
-        color: '#ffffff',
+        color: '#a2a3b7',
         borderWidth: 1,
         width: '80%',
         textAlign: "center",
         borderRadius: 5,
         fontSize: 16,
-        backgroundColor: '#01A19F',
-        borderColor: '#01A19F',
+        backgroundColor: '#1a192a',
+        borderColor: '#1a192a',
     },
     txt: {
-        color: '#bababa'
+        color: '#a2a3b7'
     }
 });

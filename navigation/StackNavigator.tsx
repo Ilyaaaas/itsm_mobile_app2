@@ -6,6 +6,7 @@ import { LoginScreen } from '../screens/Login/LoginScreen';
 import { RegistrationScreen } from '../screens/Registration/RegistrationScreen';
 import { RestorePassword } from '../screens/RestorePassword/RestorePassword';
 import { DrawerNavigator } from './DrawerNavigator';
+import DoctorList from "../screens/Doctors/DoctorList";
 
 const Stack = createStackNavigator();
 export const StackNavigator = () => {
@@ -16,6 +17,7 @@ export const StackNavigator = () => {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="RestorePassword" component={RestorePassword} />
         <Stack.Screen name="Home" component={DrawerNavigator} />
+        <Stack.Screen name="RequestList" component={DoctorList} />
       </Stack.Navigator>
     </NavigationContainer>
   );

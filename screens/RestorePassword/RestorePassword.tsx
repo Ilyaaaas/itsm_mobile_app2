@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#a2a3b7',
   },
   submitBtn: {
     marginTop: 16,

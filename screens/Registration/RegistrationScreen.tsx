@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   header: {
     fontWeight: 'bold',
     textAlign: 'center',
+    color: '#a2a3b7',
   },
   submitBtn: {
     marginTop: 16,
@@ -77,17 +78,17 @@ export const RegistrationScreen = () => {
             <Text
               style={authScreenStyles.textPhone}
               onPress={() => {
-                Linking.openURL('tel:87172708090');
+                Linking.openURL('tel:87777777777');
               }}>
-              Телефон технической поддержки:{'\n'}8-(7172)-70-80-90
+              Телефон технической поддержки:{'\n'}8-(777)-777-77-77
             </Text>
             <Text
               style={authScreenStyles.textPhone}
               onPress={() => {
-                Linking.openURL('mailto:mobappsupport@bmc.mcudp.kz');
+                Linking.openURL('mailto:support@smart24.kz');
               }}>
               {'\n'}
-              mobappsupport@bmc.mcudp.kz
+              support@smart24.kz
             </Text>
           </View>
         </View>

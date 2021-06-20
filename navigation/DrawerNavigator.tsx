@@ -64,94 +64,93 @@ export const DrawerNavigator = (props) => {
         //console.log('State = '+appState.current);
     };
 
-
   return (
       <Drawer.Navigator initialRouteName={'Home'} drawerContent={CustomDrawerContent}>
       <Drawer.Screen name="Home" component={HomeScreen} options={{
-          drawerLabel: 'Главная',
+          drawerLabel: 'Заявки',
           drawerIcon: ({ color, size }) => (
             <FontAwesome name="home" color={color} size={size} />
           ),
         }}
       />
-      <Drawer.Screen
-        name="DoctorListStack"
-        component={DoctorListStack}
-        options={{
-          drawerLabel: 'Наши врачи',
-          drawerIcon: ({ color, size }) => (
-            <FontAwesome name="user-md" color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="PriemStack"
-        component={PriemStack}
-        options={{
-          drawerLabel: 'Мои записи',
-          drawerIcon: ({ color, size }) => (
-            <FontAwesome name="calendar" color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="ResultsStack"
-        component={ResultsStack}
-        options={{
-          drawerLabel: 'Мои анализы',
-          drawerIcon: ({ color, size }) => (
-            <FontAwesome name="medkit" color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-          name="DiaryStack"
-          component={DiaryStack}
-          options={{
-              drawerLabel: 'Дневник пациента',
-              drawerIcon: ({ color, size }) => (<Entypo name="open-book" color={color} size={size} />),
-          }}
-      />
+      {/*<Drawer.Screen*/}
+      {/*  name="DoctorListStack"*/}
+      {/*  component={DoctorListStack}*/}
+      {/*  options={{*/}
+      {/*    drawerLabel: 'Наши врачи',*/}
+      {/*    drawerIcon: ({ color, size }) => (*/}
+      {/*      <FontAwesome name="user-md" color={color} size={size} />*/}
+      {/*    ),*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*<Drawer.Screen*/}
+      {/*  name="PriemStack"*/}
+      {/*  component={PriemStack}*/}
+      {/*  options={{*/}
+      {/*    drawerLabel: 'Мои записи',*/}
+      {/*    drawerIcon: ({ color, size }) => (*/}
+      {/*      <FontAwesome name="calendar" color={color} size={size} />*/}
+      {/*    ),*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*<Drawer.Screen*/}
+      {/*  name="ResultsStack"*/}
+      {/*  component={ResultsStack}*/}
+      {/*  options={{*/}
+      {/*    drawerLabel: 'Мои анализы',*/}
+      {/*    drawerIcon: ({ color, size }) => (*/}
+      {/*      <FontAwesome name="medkit" color={color} size={size} />*/}
+      {/*    ),*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*<Drawer.Screen*/}
+      {/*    name="DiaryStack"*/}
+      {/*    component={DiaryStack}*/}
+      {/*    options={{*/}
+      {/*        drawerLabel: 'Дневник пациента',*/}
+      {/*        drawerIcon: ({ color, size }) => (<Entypo name="open-book" color={color} size={size} />),*/}
+      {/*    }}*/}
+      {/*/>*/}
 
-      <Drawer.Screen
-          name="PassportStack"
-          component={PassportStack}
-          options={{
-              drawerLabel: 'E-паспорт здоровья',
-              drawerIcon: ({ color, size }) => (<FontAwesome5 name="passport" color={color} size={size} />),
-          }}
-      />
+      {/*<Drawer.Screen*/}
+      {/*    name="PassportStack"*/}
+      {/*    component={PassportStack}*/}
+      {/*    options={{*/}
+      {/*        drawerLabel: 'E-паспорт здоровья',*/}
+      {/*        drawerIcon: ({ color, size }) => (<FontAwesome5 name="passport" color={color} size={size} />),*/}
+      {/*    }}*/}
+      {/*/>*/}
 
-      <Drawer.Screen
-        name="InfoScreenStack"
-        component={InfoScreenStack}
-        options={{
-          drawerLabel: 'Рекомендации',
-          drawerIcon: ({ color, size }) => (
-            <FontAwesome name="list-alt" color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="HealthyLifestyle"
-        component={HealthyLifestyleScreen}
-        options={{
-          drawerLabel: 'Здоровый образ жизни',
-          drawerIcon: ({ color, size }) => (
-            <FontAwesome name="heart" color={color} size={size} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-          name="ReceptsList"
-          component={ReceptsList}
-          options={{
-              drawerLabel: 'Рецепты',
-              drawerIcon: ({ color, size }) => (
-                  <FontAwesome5 name="notes-medical" color={color} size={size} />
-              ),
-          }}
-      />
+      {/*<Drawer.Screen*/}
+      {/*  name="InfoScreenStack"*/}
+      {/*  component={InfoScreenStack}*/}
+      {/*  options={{*/}
+      {/*    drawerLabel: 'Рекомендации',*/}
+      {/*    drawerIcon: ({ color, size }) => (*/}
+      {/*      <FontAwesome name="list-alt" color={color} size={size} />*/}
+      {/*    ),*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*<Drawer.Screen*/}
+      {/*  name="HealthyLifestyle"*/}
+      {/*  component={HealthyLifestyleScreen}*/}
+      {/*  options={{*/}
+      {/*    drawerLabel: 'Здоровый образ жизни',*/}
+      {/*    drawerIcon: ({ color, size }) => (*/}
+      {/*      <FontAwesome name="heart" color={color} size={size} />*/}
+      {/*    ),*/}
+      {/*  }}*/}
+      {/*/>*/}
+      {/*<Drawer.Screen*/}
+      {/*    name="ReceptsList"*/}
+      {/*    component={ReceptsList}*/}
+      {/*    options={{*/}
+      {/*        drawerLabel: 'Рецепты',*/}
+      {/*        drawerIcon: ({ color, size }) => (*/}
+      {/*            <FontAwesome5 name="notes-medical" color={color} size={size} />*/}
+      {/*        ),*/}
+      {/*    }}*/}
+      {/*/>*/}
 
       <Drawer.Screen
           name="Notifications"
@@ -168,7 +167,7 @@ export const DrawerNavigator = (props) => {
         name="AboutStack"
         component={AboutStack}
         options={{
-          drawerLabel: 'О больнице',
+          drawerLabel: 'О системе',
           drawerIcon: ({ color, size }) => (
             <FontAwesome name="info-circle" color={color} size={size} />
           ),

@@ -55,30 +55,32 @@ class DoctorList extends React.Component{
     }
 
     _getUrl = async (url) => {
-        const API_URL = `${API}backend/${url}`
+        const API_URL = API+url;
 
         try {
             const response = await fetch(API_URL, {
                 method: 'GET',
                 headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'token': this.state.token,
+                    'x-api-key': 'J4MMi7ilF-IoFyNi85CXemZjLZGi_bPp',
                 },
             });
 
             const responseJson = await response.json();
-            if (responseJson !== null) {
-                if(responseJson.success == false){
-                    Toast.show({
-                        text: responseJson.message,
-                        type: 'danger',
-                        duration: 3000
-                    });
-                    return null;
-                }
-                return responseJson.result;
-            }
+            console.log('responseJson')
+            // console.log(response)
+            console.log(responseJson)
+            return responseJson;
+            // if (responseJson !== null) {
+            //     if(responseJson.success == false){
+            //         Toast.show({
+            //             text: responseJson.message,
+            //             type: 'danger',
+            //             duration: 3000
+            //         });
+            //         return null;
+            //     }
+            //     return responseJson.result;
+            // }
         } catch (error) {
             console.log('Error when call API: ' + error.message);
         }
@@ -86,7 +88,7 @@ class DoctorList extends React.Component{
     }
 
     _getDoctorList = async () => {
-        await this._getUrl('get_doctors').then(value => {
+        await this._getUrl('request').then(value => {
             if(value !== null){
                 this.setState({ list: value});
             }
@@ -131,7 +133,10 @@ class DoctorList extends React.Component{
     }
 
     onInfoButtonClicked = async (docid) => {
-        await this._getUrl('get_grade/'+docid).then(value => {
+        await this._getUrl('request/'+docid).then(value => {
+            console.log('onInfoButtonClicked');
+            console.log(value);
+            // this.setState({listGrade: value})
             this.setState({ listGrade: value, activeDoc: docid, modal: true });
         })
     }
@@ -203,10 +208,9 @@ class DoctorList extends React.Component{
                         />
                     </Left>
                     <Body style={{ flex: 3 }}>
-                        <Title style={{ color: '#046475' }}>Наши врачи</Title>
+                        <Title style={{ color: '#046475' }}>Мои заявки</Title>
                     </Body>
                 </Header>
-
                 <Content
                     refreshControl={
                         <RefreshControl
@@ -222,7 +226,7 @@ class DoctorList extends React.Component{
                                 {this.state.list.map((doc, i) => (
                                     <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
                                         <Body>
-                                            <Text style={styles.textName}>{doc.fio}</Text>
+                                            <Text style={styles.textName}>{doc.descr}</Text>
                                             <View style={styles.starContainer}>
                                                 <Text style={styles.textSpecialty}>{doc.spr_value}</Text>
                                             </View>
@@ -232,21 +236,21 @@ class DoctorList extends React.Component{
                                                     style={[styles.button, styles.btn]}
                                                     onPress={() => this._onReviewButtonClicked(i)}
                                                 >
-                                                    <Text style={{ color: '#fff' }}>О враче</Text>
+                                                    <Text style={{ color: '#fff' }}>Подробнее</Text>
                                                 </TouchableOpacity>
 
                                                 <TouchableOpacity
                                                     activeOpacity={0.7}
                                                     style={[styles.button, styles.btn]}
-                                                    onPress={() => this.onInfoButtonClicked(doc.doc_id)}
+                                                    onPress={() => this.onInfoButtonClicked(doc.id)}
                                                 >
-                                                    <Text style={{ color: '#fff' }}>Отзывы</Text>
+                                                    <Text style={{ color: '#fff' }}>Сменить статус</Text>
                                                 </TouchableOpacity>
                                             </View>
                                             {this.state.isDocReviewSelected == i &&
                                             <View style={{ marginBottom: 10, marginTop: 10 }}>
-                                                <Text style={styles.textSpecialty}>Категория: { doc.category_name || "" }</Text>
-                                                <Text style={styles.textSpecialty}>Ученая степень: {doc.science_degree}</Text>
+                                                <Text style={styles.textSpecialty}>Дата: { doc.category_name || "" }</Text>
+                                                <Text style={styles.textSpecialty}>Приоритет: {doc.science_degree}</Text>
                                             </View>
                                             }
                                         </Body>
@@ -284,26 +288,18 @@ class DoctorList extends React.Component{
                             justifyContent: 'space-between',
                         }}>
                             <ScrollView style={{ paddingTop: 40 }}>
-                                <List>
-                                    {this.state.listGrade.map((grade, i) => (
-                                        <ListItem key={i} style={{ flexDirection: 'column', alignItems: "flex-start" }}>
-                                            <View>
-                                                <Text>{grade.note}</Text>
-                                            </View>
-                                            <View>
-                                                {grade.reason != null?
-                                                    <Text style={{
-                                                        color: 'red',
-                                                        textAlign: "left"
-                                                    }}>Отклонен модератором. Причина:{"\n"}{grade.reason}</Text>
-                                                    : null }
-                                            </View>
-                                            <View style={{ width: '100%' }}>
-                                                <Text style={{ width: '100%', textAlign: "right", fontSize: 10 }}>{grade.grade_date}</Text>
-                                            </View>
-                                        </ListItem>
-                                    ))}
-                                </List>
+                                <View>
+                                    <Text style={styles.textName}>Заголовок: </Text>
+                                    <Text>{this.state.listGrade.descr}</Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.textName}>Описание: </Text>
+                                    <Text>{this.state.listGrade.response}</Text>
+                                </View>
+                                <View>
+                                    <Text style={styles.textName}>Дата создания: </Text>
+                                    <Text>{this.state.listGrade.createdAt}</Text>
+                                </View>
                             </ScrollView>
                             <View style={{ borderTopWidth: 1,}}>
                                 <List>
@@ -311,7 +307,7 @@ class DoctorList extends React.Component{
                                         <TextInput
                                             style={styles.textArea}
                                             underlineColorAndroid="transparent"
-                                            placeholder="Введите отзыв"
+                                            placeholder="Комментарий"
                                             placeholderTextColor="grey"
                                             numberOfLines={2}
                                             multiline={true}
@@ -322,25 +318,9 @@ class DoctorList extends React.Component{
                                         <TextInput
                                             style={styles.contactInput}
                                             underlineColorAndroid="transparent"
-                                            placeholder="Как с вами связаться? (Телефон или электронную почту)"
+                                            placeholder="Ваши контакты"
                                             placeholderTextColor="grey"
                                             onChangeText={text => this.setState({callPhone: text})}
-                                        />
-                                    </ListItem>
-                                    <ListItem noBorder style={{ marginTop: -20, flexDirection: 'column', }}>
-                                        <Text>Оцените врача по пятибалльной шкале</Text>
-                                        <StarRating
-                                            maxStars={5}
-                                            emptyStar={'ios-star-outline'}
-                                            fullStar={'ios-star'}
-                                            halfStar={'ios-star-half'}
-                                            iconSet={'Ionicons'}
-                                            rating={this.state.ratingSet}
-                                            starSize={30}
-                                            selectedStar={(rating) => this.setState({ratingSet: rating})}
-                                            fullStarColor={'red'}
-                                            emptyStarColor={'red'}
-                                            interitemSpacing={20}
                                         />
                                     </ListItem>
                                 </List>
@@ -362,7 +342,7 @@ class DoctorList extends React.Component{
                                                 style={{ width: '90%', borderRadius: 10 }}
                                                 onPress={() => { this._setRetview() }}
                                             >
-                                                <Text style={{ width: '100%', textAlign: "center"}}>Отправить</Text>
+                                                <Text style={{ width: '100%', textAlign: "center"}}>Принять</Text>
                                             </Button>
                                         </Body>
                                     </ListItem>
@@ -428,8 +408,6 @@ const styles = StyleSheet.create({
     textStyle: {
         paddingVertical: 5
     },
-
-
 
     centeredView: {
         flex: 1,

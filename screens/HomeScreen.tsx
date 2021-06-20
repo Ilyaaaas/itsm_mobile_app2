@@ -13,211 +13,339 @@ import {
   List,
   ListItem,
   ActionSheet,
-  Toast,
+  Toast, Root, Button,
 } from 'native-base';
 import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity, AsyncStorage, Linking} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  AsyncStorage,
+  Linking,
+  RefreshControl,
+  Modal, ScrollView, TextInput, Dimensions
+} from 'react-native';
 import * as Location from 'expo-location';
 import Main from './Main';
 import { isNotUndefined } from './helpers';
 import {API, getToken} from './constants';
+import StarRating from "react-native-star-rating";
+
+let ScreenHeight = Dimensions.get("window").height;
+let ScreenWidth = Dimensions.get("window").width;
 
 var BUTTONS = ["Вызов", "Отправить геоданные", "Отмена"];
 var DESTRUCTIVE_INDEX = 2;
 var CANCEL_INDEX = 3;
 
-class HomeScreen extends React.Component {
+class HomeScreen extends React.Component{
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoggedIn: false,
-      user: {
-        fname: '',
-        sname: '',
-        section_txt: '',
-      },
-      token: ''
-    };
-  }
-
-  componentDidMount() {
-    this.checkLogIn();
-    this._retrieveData();
-  }
-
-  _retrieveData = () => {
-    AsyncStorage.getItem('user_data').then((value) => {
-      if (value) {
-        const obj = JSON.parse(value);
-        this.setState({ user: obj });
-      }
-    });
-  };
-
-  checkLogIn = async () => {
-    getToken().then(itoken => {
-      this.setState({ token: itoken});
-    });
-  };
-
-  call911 = async (id) => {
-    if(id == 0) {
-      Linking.openURL(`tel:+77172707903`);
+      token: '',
+      refreshing: false,
+      list: [],
+      isReview: null,
+      docInfo: null,
+      isDocReviewSelected: null,
+      isDocInfoSelected: null,
+      modal: false,
+      listGrade: [],
+      activeDoc: null,
+      otziv: '',
+      callPhone: '',
+      ratingSet: 0,
     }
+  }
 
-    if(id == 1){
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access location was denied');
-      }
+  _getUrl = async (url) => {
+    const API_URL = API+url;
 
-      let location = await Location.getCurrentPositionAsync({});
-      let lat = location.coords.latitude;
-      let lon = location.coords.longitude;
-
-      const API_URL = `${API}backend/setgeodan`;
+    try {
       const response = await fetch(API_URL, {
-        method: 'POST',
+        method: 'GET',
         headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'token' : this.state.token,
+          'x-api-key': 'J4MMi7ilF-IoFyNi85CXemZjLZGi_bPp',
         },
-        body: `longtitude=${lon}&latitude=${lat}`,
       });
 
       const responseJson = await response.json();
+      console.log('responseJson')
+      // console.log(response)
+      console.log(responseJson)
+      return responseJson;
+      // if (responseJson !== null) {
+      //     if(responseJson.success == false){
+      //         Toast.show({
+      //             text: responseJson.message,
+      //             type: 'danger',
+      //             duration: 3000
+      //         });
+      //         return null;
+      //     }
+      //     return responseJson.result;
+      // }
+    } catch (error) {
+      console.log('Error when call API: ' + error.message);
+    }
+    return null;
+  }
 
-      if (responseJson !== null) {
-        Toast.show({
-          text: responseJson.message,
-          type: 'success',
-          buttonText: 'Ok',
-          duration: 3000,
-        });
+  _getDoctorList = async () => {
+    await this._getUrl('request').then(value => {
+      if(value !== null){
+        this.setState({ list: value});
       }
+    })
+  }
 
+  _alert = async (msgToast, onSuccess = false) => {
+    let tType = "success";
+    if(onSuccess == false){
+      tType = "danger";
+    }
+    Toast.show({
+      text: msgToast,
+      type: tType,
+      duration: 3000
+    });
+  }
+
+  _getToken = async () => {
+    await getToken().then(itoken => {
+      this.setState({token: itoken});
+    })
+  }
+
+  _refreshPage = async () => {
+    this.setState({refreshing: true});
+    await this._getToken();
+    await this._getDoctorList();
+    this.setState({refreshing: false});
+  }
+
+  UNSAFE_componentWillMount() {
+    this._refreshPage();
+  }
+
+  _onReviewButtonClicked = async (index) => {
+    if (this.state.isDocReviewSelected === index) {
+      this.setState({isDocReviewSelected: null});
+    } else {
+      this.setState({isDocReviewSelected: index});
+    }
+  }
+
+  onInfoButtonClicked = async (docid) => {
+    await this._getUrl('request/'+docid).then(value => {
+      console.log('onInfoButtonClicked');
+      console.log(value);
+      // this.setState({listGrade: value})
+      this.setState({ listGrade: value, activeDoc: docid, modal: true });
+    })
+  }
+
+  _setRetview = async () => {
+    let API_URL = `${API}backend/set_grade`
+    let showToast = false;
+    let msgToast = '';
+    /*
+    if(this.state.otziv == ''){
+        showToast = true;
+        msgToast = 'Пустой текст сообщения';
+    }
+    if(this.state.callPhone == ''){
+        showToast = true;
+        msgToast = 'Пустой текст обратной связи';
+    }
+     */
+    if(this.state.ratingSet == 0){
+      showToast = true;
+      msgToast = 'Поставьте пожалуйста оценку';
+    }
+
+    if(showToast)
+    {
+      this._alert(msgToast, false);
+      return;
+    }
+    try {
+      console.log(`id_doctor=${this.state.activeDoc}&grade=${this.state.ratingSet}&note=${this.state.otziv}&feedback=${this.state.callPhone}`);
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'token': this.state.token,
+        },
+        body: `id_doctor=${this.state.activeDoc}&grade=${this.state.ratingSet}&note=${this.state.otziv}&feedback=${this.state.callPhone}`,
+      });
+
+      const responseJson = await response.json();
+      console.log(responseJson);
+      if (responseJson !== null) {
+        let itype = 'success';
+
+        if(responseJson.success == false){
+          itype = 'danger';
+        }
+        this.setState({activeDoc: null, modal: false, otziv: '', callPhone: '', ratingSet: 0 });
+        this._getDoctorList();
+        this._alert(responseJson.message, responseJson.success);
+      }
+    } catch (error) {
+      console.log(error.message);
+      this._alert("Ошибка отправки данных. Повторите еще раз");
     }
   }
 
   render() {
-    const { user } = this.state;
-
     return (
-      <Main>
         <Container>
-          <Header style={styles.headerTop}>
-            <Left style={{ flex: 1 }}>
-              <Ionicons
-                name="ios-menu"
-                style={{ color: '#046475', marginTop: 10, marginLeft: 10 }}
-                onPress={() => this.props.navigation.openDrawer()}
-                size={24}
-              />
-            </Left>
-            <Body style={{ flex: 3 }}>
-              <Title style={{ color: '#046475' }}>Медицинские услуги </Title>
-            </Body>
-            <Right />
-          </Header>
+          <Root>
+            <Header style={styles.headerTop}>
+              <Left style={{ flex: 1}}>
+                <Ionicons name="ios-menu"
+                          style={{ color: '#a2a3b7', marginLeft: 10 }}
+                          onPress={() => this.props.navigation.openDrawer()}
+                          size={24}
+                />
+              </Left>
+              <Body style={{ flex: 3 }}>
+                <Title style={{ color: '#a2a3b7' }}>Мои заявки</Title>
+              </Body>
+            </Header>
+            <Content
+                refreshControl={
+                  <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this._refreshPage}
+                  />
+                }
+            >
+              {this.state.refreshing ? (
+                  <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
+              ) : (
+                  <List>
+                    {this.state.list.map((doc, i) => (
+                        <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
+                          <Body>
+                            <Text style={styles.textName}>{doc.descr}</Text>
+                            <View style={styles.starContainer}>
+                              <Text style={styles.textSpecialty}>{doc.spr_value}</Text>
+                            </View>
+                            <View style={styles.buttonsContainer}>
+                              <TouchableOpacity
+                                  activeOpacity={0.7}
+                                  style={[styles.button, styles.btn]}
+                                  onPress={() => this._onReviewButtonClicked(i)}
+                              >
+                                <Text style={{ color: '#fff' }}>Подробнее</Text>
+                              </TouchableOpacity>
 
-          <Content>
-            <List>
-              <ListItem noBorder>
-                <Left style={{ flex: 1 }}>
+                              <TouchableOpacity
+                                  activeOpacity={0.7}
+                                  style={[styles.button, styles.btn]}
+                                  onPress={() => this.onInfoButtonClicked(doc.id)}
+                              >
+                                <Text style={{ color: '#fff' }}>Сменить статус</Text>
+                              </TouchableOpacity>
+                            </View>
+                            {this.state.isDocReviewSelected == i &&
+                            <View style={{ marginBottom: 10, marginTop: 10 }}>
+                              <Text style={styles.textSpecialty}>Дата: { doc.category_name || "" }</Text>
+                              <Text style={styles.textSpecialty}>Приоритет: {doc.science_degree}</Text>
+                            </View>
+                            }
+                          </Body>
+                          <Right>
+
+                          </Right>
+                        </ListItem>
+                    ))}
+                  </List>
+              )}
+            </Content>
+          </Root>
+          <Modal
+              animationType={"slide"}
+              visible={this.state.modal}
+          >
+            <Root>
+              <View style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}>
+                <ScrollView style={{ paddingTop: 40 }}>
                   <View>
-                    <Text
-                      style={{
-                        fontSize: 20,
-                      }}>
-                      {isNotUndefined(user.fname)} {isNotUndefined(user.sname)}
-                    </Text>
-                    <Text>{user.section_txt}</Text>
+                    <Text style={styles.textName}>Заголовок: </Text>
+                    <Text>{this.state.listGrade.descr}</Text>
                   </View>
-                </Left>
-                <Right>
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      width: 70,
-                      height: 70,
-                    }}
-                    onPress={() => {
-                      ActionSheet.show(
-                          {
-                            options: BUTTONS,
-                            cancelButtonIndex: CANCEL_INDEX,
-                            destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                          },
-                          buttonIndex => {
-                            this.call911(buttonIndex);
-                          }
-                      )
-                    }}>
-                    <Image
-                      style={{ width: 65, height: 65 }}
-                      source={require('../assets/design/home/call103.png')}
-                    />
-                  </TouchableOpacity>
-                </Right>
-              </ListItem>
-            </List>
-            <View style={{ flex: 1, flexDirection: 'column' }}>
-              <TouchableOpacity
-                style={{ marginVertical: 10 }}
-                onPress={() => {
-                  this.props.navigation.navigate('PriemStack');
-                }}>
-                <Image
-                  resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
-                  source={require('../assets/design/home/1.png')}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginVertical: 10 }}
-                onPress={() => {
-                  this.props.navigation.navigate('InfoScreenStack');
-                }}>
-                <Image
-                  resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
-                  source={require('../assets/design/home/2.png')}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginVertical: 10 }}
-                onPress={() => {
-                  this.props.navigation.navigate('ResultsStack');
-                }}>
-                <Image
-                  resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
-                  source={require('../assets/design/home/3.png')}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ marginVertical: 10 }}
-                onPress={() => {
-                  this.props.navigation.navigate('ContactsScreen');
-                }}>
-                <Image
-                  resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
-                  source={require('../assets/design/home/4.png')}
-                />
-              </TouchableOpacity>
-            </View>
-          </Content>
-          <Footer style={{ backgroundColor: '#047B7F', height: 30 }}>
-            <FooterTab style={{ backgroundColor: '#047B7F' }} />
-          </Footer>
+                  <View>
+                    <Text style={styles.textName}>Описание: </Text>
+                    <Text>{this.state.listGrade.response}</Text>
+                  </View>
+                  <View>
+                    <Text style={styles.textName}>Дата создания: </Text>
+                    <Text>{this.state.listGrade.createdAt}</Text>
+                  </View>
+                </ScrollView>
+                <View style={{ borderTopWidth: 1,}}>
+                  <List>
+                    <ListItem noBorder>
+                      <TextInput
+                          style={styles.textArea}
+                          underlineColorAndroid="transparent"
+                          placeholder="Комментарий"
+                          placeholderTextColor="grey"
+                          numberOfLines={2}
+                          multiline={true}
+                          onChangeText={text => this.setState({ otziv: text})}
+                      />
+                    </ListItem>
+                    <ListItem noBorder style={{ marginTop: -20 }}>
+                      <TextInput
+                          style={styles.contactInput}
+                          underlineColorAndroid="transparent"
+                          placeholder="Ваши контакты"
+                          placeholderTextColor="grey"
+                          onChangeText={text => this.setState({callPhone: text})}
+                      />
+                    </ListItem>
+                  </List>
+                  <List>
+                    <ListItem>
+                      <Left>
+                        <Button
+                            success={true}
+                            style={{ width: '90%', borderRadius: 10 }}
+                            onPress={() => {
+                              this.setState({modal: false});
+                            }}
+                        >
+                          <Text style={{ width: '100%', textAlign: "center"}}>Закрыть</Text>
+                        </Button>
+                      </Left>
+                      <Body>
+                        <Button
+                            style={{ width: '90%', borderRadius: 10 }}
+                            onPress={() => { this._setRetview() }}
+                        >
+                          <Text style={{ width: '100%', textAlign: "center"}}>Принять</Text>
+                        </Button>
+                      </Body>
+                    </ListItem>
+                  </List>
+                </View>
+              </View>
+            </Root>
+          </Modal>
         </Container>
-      </Main>
-    );
+    )
   }
 }
 
@@ -231,25 +359,106 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTop: {
-    backgroundColor: '#01A19F',
+    backgroundColor: '#1a192a',
   },
-  row: {
-    zIndex: 1,
+  textName: {
+    fontSize: 14,
+    color: '#5e6064',
+    fontWeight: '700',
+    paddingBottom: 5,
   },
-  columnLeft: {
-    marginRight: 10,
-    alignItems: 'flex-end',
+  textSpecialty: {
+    fontSize: 10,
+    color: '#5e6064',
+    fontWeight: '300'
   },
-  columnRight: {
-    marginLeft: 10,
-    alignItems: 'flex-start',
+  starContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
-  chat: {
-    marginTop: -40,
-    zIndex: 999,
+  ratingText: {
+    color: 'red',
+    fontSize: 12,
+    fontWeight: '300',
+    marginLeft: 10
   },
-  rowBottom: {
-    zIndex: 1,
-    marginTop: -40,
+  buttonsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 10,
   },
-});
+  button: {
+    borderRadius: 10,
+    margin: 3,
+    borderColor: '#54bb87'
+  },
+  btn: {
+    backgroundColor: '#54bb87',
+    borderWidth: 0,
+    paddingVertical: 5,
+    paddingHorizontal: 10
+  },
+  textStyle: {
+    paddingVertical: 5
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: "center",
+  },
+  modalView: {
+    width: ScreenWidth,
+    height: ScreenHeight,
+    backgroundColor: "white",
+    alignItems: "center",
+    paddingTop: 100
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 20
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+
+  textAreaContainer: {
+    width: ScreenWidth - 20,
+    borderColor: 'grey',
+    borderWidth: 1,
+    padding: 5,
+    marginBottom: 20
+  },
+  textArea: {
+    height: 65,
+    width: '100%',
+    padding: 5,
+    textAlignVertical: "top",
+    justifyContent: "flex-start",
+    borderWidth: 1
+  },
+  contactInput: {
+    borderWidth: 1,
+    width: '100%',
+    padding: 5,
+  },
+
+  contactContainer: {
+    width: ScreenWidth - 20,
+    borderColor: 'grey',
+    borderWidth: 1,
+    padding: 5,
+    marginBottom: 20
+  }
+})

@@ -62,14 +62,14 @@ function About({ navigation, route }) {
                 <Left style={{ flex: 1 }}>
                     <Ionicons
                         name="ios-menu"
-                        style={{ color: '#046475', marginLeft: 10 }}
+                        style={{ color: '#a2a3b7', marginLeft: 10 }}
                         onPress={() => navigation.openDrawer()}
                         size={24}
                     />
                 </Left>
                 <Body style={{ flex: 3 }}>
-                    <Title style={{ color: '#046475', fontSize: 20 }}>
-                        О больнице
+                    <Title style={{ color: '#a2a3b7', fontSize: 20 }}>
+                        О системе
                     </Title>
                 </Body>
                 <Right />
@@ -87,7 +87,7 @@ function About({ navigation, route }) {
 
 const styles = StyleSheet.create({
     headerTop: {
-        backgroundColor: '#01A19F',
+        backgroundColor: '#1a192a',
     },
 });
 

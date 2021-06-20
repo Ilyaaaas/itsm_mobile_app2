@@ -75,7 +75,7 @@ const DrawerRoutes = {
     name: 'HomeStack',
     screen: HomeScreen,
     navigationOptions: () => ({
-      title: `Главная`,
+      title: `Заявки`,
       drawerIcon: ({ tintColor }) => (
         <Icon name="home" style={{ color: tintColor }} />
       ),

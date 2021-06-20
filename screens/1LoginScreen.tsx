@@ -180,7 +180,7 @@ export class Login extends React.Component {
                         style={{
                           margin: 5,
                           borderRadius: 8,
-                          backgroundColor: 'white',
+                          backgroundColor: '#a2a3b7',
                           borderColor: 'white',
                         }}>
                         <Input

@@ -9,6 +9,7 @@ import PriemScreen from '../screens/Priem/PriemScreen';
 import PriemFormList from "../screens/Priem/PriemFormList";
 import PriemForm from "../screens/Priem/PriemForm";
 import PriemChat from "../screens/Priem/PriemChat";
+import GradeForm from "../screens/Priem/GradeForm";
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ export const PriemStack = () => {
         <Stack.Screen name="ChooseDoctor" component={ChooseDoctor} />
         <Stack.Screen name="ChooseTime" component={ChooseTime} />
         <Stack.Screen name="PriemChat" component={PriemChat} />
+        <Stack.Screen name="GradeForm" component={GradeForm} />
     </Stack.Navigator>
   );
 };

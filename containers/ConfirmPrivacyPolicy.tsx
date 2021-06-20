@@ -14,6 +14,7 @@ export interface ConfirmPrivacyPolicyProps {
 const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
+    color: '#a2a3b7'
   },
   main: {
     marginTop: 16,
@@ -49,7 +50,8 @@ export const ConfirmPrivacyPolicy = (props: ConfirmPrivacyPolicyProps) => {
         <SecondaryButton
           transparent
           block
-          onPress={() => setModalVisible(true)}>
+          onPress={() => setModalVisible(true)}
+          style={{color: '#a2a3b7'}}>
           Пользовательское соглашение
         </SecondaryButton>
       </View>
@@ -58,13 +60,13 @@ export const ConfirmPrivacyPolicy = (props: ConfirmPrivacyPolicyProps) => {
           <View style={{ flex: 1 }}>
             <View style={{ flex : 4 }}>
               <WebView
-                source={{ uri: 'https://bmc-api.bmcudp.kz/backend/politics' }}
+                source={{ uri: 'https://smart24.kz' }}
               />
             </View>
             <View style={{ flex : 2 }}>
               <Checkbox.Item
                 status={props.checked ? 'checked' : 'unchecked'}
-                color="#4873fa"
+                color="#a2a3b7"
                 onPress={handleChecked}
                 label="Принимаю пользовательское соглашение"
                 style={{ width:"90%" }}

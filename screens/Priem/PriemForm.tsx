@@ -344,7 +344,6 @@ export default function PriemForm({ navigation }) {
     ]);
   }
 
-
   return (
     <Container>
       <Header style={styles.headerTop}>

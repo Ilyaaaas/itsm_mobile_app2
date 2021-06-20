@@ -5,10 +5,8 @@ import { TextInputMask, TextInputMaskProps } from 'react-native-masked-text';
 export const IdInput = (props: Omit<TextInputMaskProps, 'type'>) => (
   <TextInputMask
     type="custom"
-    keyboardType="numeric"
-    placeholder="ИИН"
+    placeholder="Логин"
     customTextInput={Input}
     options={{ mask: '999999999999' }}
-    {...props}
   />
 );

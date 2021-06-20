@@ -19,6 +19,7 @@ export const authScreenStyles = StyleSheet.create({
   textPhone: {
     textAlign: 'center',
     fontSize: 14,
+    color: '#c7c7c7',
   },
 });
 
@@ -50,15 +51,15 @@ export const AuthScreenWrapper = ({
               onPress={() => {
                 Linking.openURL('tel:87172708090');
               }}>
-              Телефон технической поддержки:{'\n'}8-(7172)-70-80-90
+              Телефон технической поддержки:{'\n'}8-(777)-777-77-77
             </Text>
             <Text
               style={authScreenStyles.textPhone}
               onPress={() => {
-                Linking.openURL('mailto:mobappsupport@bmc.mcudp.kz');
+                Linking.openURL('mailto:support@smart24.kz');
               }}>
               {'\n'}
-              mobappsupport@bmc.mcudp.kz
+              support@smart24.kz
             </Text>
           </View>
         </View>
