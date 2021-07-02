@@ -109,7 +109,7 @@ class HomeScreen extends React.Component{
 
   _getDoctorList = async () => {
     await this._getUrl('request?expand=status,product').then(value => {
-      console.log('request');
+      console.log('request2');
       console.log(value);
       if(value !== null){
         this.setState({ list: value.items});
