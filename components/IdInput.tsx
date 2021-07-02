@@ -7,6 +7,5 @@ export const IdInput = (props: Omit<TextInputMaskProps, 'type'>) => (
     type="custom"
     placeholder="Логин"
     customTextInput={Input}
-    options={{ mask: '999999999999' }}
   />
 );

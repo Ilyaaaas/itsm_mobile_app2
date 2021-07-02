@@ -134,8 +134,6 @@ class DoctorList extends React.Component{
 
     onInfoButtonClicked = async (docid) => {
         await this._getUrl('request/'+docid).then(value => {
-            console.log('onInfoButtonClicked');
-            console.log(value);
             // this.setState({listGrade: value})
             this.setState({ listGrade: value, activeDoc: docid, modal: true });
         })

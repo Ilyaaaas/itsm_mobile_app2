@@ -13,3 +13,9 @@ export const InfoScreenStack = () => {
     </Stack.Navigator>
   );
 };
+
+
+
+
+
+

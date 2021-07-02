@@ -26,7 +26,6 @@ export default class Notifications extends React.Component{
         })
     }
 
-
     _getUrl = async (url) => {
         const API_URL = `${API}backend/${url}`
 

@@ -23,7 +23,6 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 
-
 import { API } from '../constants';
 
 function DoctorDetail({ navigation, route }) {

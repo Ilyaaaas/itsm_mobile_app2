@@ -46,7 +46,7 @@ export default () => {
     if (!isReady) {
         return <AppLoading />;
     }
-  
+
     return (
         <Provider store={store}>
             <Root>

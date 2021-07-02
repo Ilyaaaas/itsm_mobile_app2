@@ -10,3 +10,4 @@ class PriemScreen extends React.Component {
 };
 
 export default PriemScreen;
+

@@ -32,14 +32,6 @@ import { healthyLifestyleAdapter } from '../../redux/healthy-lifestyle.slice';
 import { HealthyLifestyleInterface } from '../../types/healthy-lifestyle.interface';
 
 const screen = Dimensions.get('screen');
-const styles = StyleSheet.create({
-  modal: {
-    width: screen.width,
-    height: screen.height * 0.8,
-    marginTop: screen.height * 0.1,
-    marginBottom: screen.height * 0.1,
-  },
-});
 
 export const HealthyLifestyleScreen = () => {
   const dispatch = useAppDispatch();
@@ -104,3 +96,12 @@ export const HealthyLifestyleScreen = () => {
     </PaperProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  modal: {
+    width: screen.width,
+    height: screen.height * 0.8,
+    marginTop: screen.height * 0.1,
+    marginBottom: screen.height * 0.1,
+  },
+});

@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import {AntDesign, Ionicons} from '@expo/vector-icons';
 import {
   Container,
   Content,
@@ -25,13 +25,17 @@ import {
   AsyncStorage,
   Linking,
   RefreshControl,
-  Modal, ScrollView, TextInput, Dimensions
+  Modal,
+  ScrollView,
+  TextInput,
+  Dimensions
 } from 'react-native';
 import * as Location from 'expo-location';
 import Main from './Main';
 import { isNotUndefined } from './helpers';
 import {API, getToken} from './constants';
 import StarRating from "react-native-star-rating";
+import {WebView} from "react-native-webview";
 
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
@@ -58,24 +62,33 @@ class HomeScreen extends React.Component{
       otziv: '',
       callPhone: '',
       ratingSet: 0,
+      filterModal: false,
     }
   }
 
   _getUrl = async (url) => {
     const API_URL = API+url;
 
+    await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+        .then(json => console.log('accessToken '+json[0].accessToken))
+        .then(json => {
+          this.setState({ token: json[0].accessToken });
+          // setAccessToken(json[0].accessToken);
+          // setUserId(json[1].userId);
+        })
+        .then(json2 => console.log('json2'))
+        .catch(error => console.log('error!'));
+
     try {
       const response = await fetch(API_URL, {
         method: 'GET',
         headers: {
-          'x-api-key': 'J4MMi7ilF-IoFyNi85CXemZjLZGi_bPp',
+          // 'x-api-key': this.state.token,
+          'x-api-key': 'siwGYZ4040586lnjwjUdPIbQWIcyUli0',
         },
       });
 
       const responseJson = await response.json();
-      console.log('responseJson')
-      // console.log(response)
-      console.log(responseJson)
       return responseJson;
       // if (responseJson !== null) {
       //     if(responseJson.success == false){
@@ -95,9 +108,11 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    await this._getUrl('request').then(value => {
+    await this._getUrl('request?expand=status,product').then(value => {
+      console.log('request');
+      console.log(value);
       if(value !== null){
-        this.setState({ list: value});
+        this.setState({ list: value.items});
       }
     })
   }
@@ -141,27 +156,22 @@ class HomeScreen extends React.Component{
 
   onInfoButtonClicked = async (docid) => {
     await this._getUrl('request/'+docid).then(value => {
-      console.log('onInfoButtonClicked');
-      console.log(value);
-      // this.setState({listGrade: value})
       this.setState({ listGrade: value, activeDoc: docid, modal: true });
     })
+  }
+
+  goToCreateReq = () => {
+    this.props.navigation.navigate('OfferScreen');
+  }
+
+  showFilter = () => {
+    this.setState({ filterModal: true});
   }
 
   _setRetview = async () => {
     let API_URL = `${API}backend/set_grade`
     let showToast = false;
     let msgToast = '';
-    /*
-    if(this.state.otziv == ''){
-        showToast = true;
-        msgToast = 'Пустой текст сообщения';
-    }
-    if(this.state.callPhone == ''){
-        showToast = true;
-        msgToast = 'Пустой текст обратной связи';
-    }
-     */
     if(this.state.ratingSet == 0){
       showToast = true;
       msgToast = 'Поставьте пожалуйста оценку';
@@ -173,13 +183,13 @@ class HomeScreen extends React.Component{
       return;
     }
     try {
-      console.log(`id_doctor=${this.state.activeDoc}&grade=${this.state.ratingSet}&note=${this.state.otziv}&feedback=${this.state.callPhone}`);
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
-          'token': this.state.token,
+          // 'token': this.state.token,
+          'token': 'siwGYZ4040586lnjwjUdPIbQWIcyUli0',
         },
         body: `id_doctor=${this.state.activeDoc}&grade=${this.state.ratingSet}&note=${this.state.otziv}&feedback=${this.state.callPhone}`,
       });
@@ -203,6 +213,9 @@ class HomeScreen extends React.Component{
   }
 
   render() {
+    var color = 'blue';
+    console.log(this.state.list.items);
+    console.log('list');
     return (
         <Container>
           <Root>
@@ -217,6 +230,22 @@ class HomeScreen extends React.Component{
               <Body style={{ flex: 3 }}>
                 <Title style={{ color: '#a2a3b7' }}>Мои заявки</Title>
               </Body>
+              <Right>
+                <AntDesign
+                    name="pluscircle"
+                    size={24}
+                    color="#a2a3b7"
+                    style={{marginRight: 10}}
+                    onPress={() => this.goToCreateReq()}
+                />
+                <AntDesign
+                    name="filter"
+                    size={24}
+                    color="#a2a3b7"
+                    style={{marginRight: 10}}
+                    onPress={() => this.showFilter()}
+                />
+              </Right>
             </Header>
             <Content
                 refreshControl={
@@ -262,7 +291,16 @@ class HomeScreen extends React.Component{
                             }
                           </Body>
                           <Right>
-
+                            <View style={{ marginBottom: 10, marginTop: 10 }}>
+                              <AntDesign
+                                  name="warning"
+                                  size={24}
+                                  color={doc.status.color_class}
+                                  style={{marginRight: 10}}
+                                  onPress={() => this.getPriemForm()}
+                              />
+                              <Text style={styles.textSpecialty}>{doc.status.name}</Text>
+                            </View>
                           </Right>
                         </ListItem>
                     ))}
@@ -344,6 +382,31 @@ class HomeScreen extends React.Component{
               </View>
             </Root>
           </Modal>
+          <Modal
+              transparent={true}
+              visible={this.state.filterModal}
+              contentContainerStyle={styles.filterModal}
+              onRequestClose={()=>this.setState({ filterModal: false})}>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center'}}>
+              <View style={{
+                backgroundColor: 'white',
+                width: 400,
+                height: 300}}>
+                <Text onPress={()=>this.setState({ filterModal: false})} style={{alignSelf:'flex-end', fontSize: 20}}>X</Text>
+                <Text>Text</Text>
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={[styles.button, styles.btn]}
+                >
+                  <Text style={{ width: '100%', textAlign: "center", color: 'white'}}>Применить</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </Container>
     )
   }
@@ -352,6 +415,12 @@ class HomeScreen extends React.Component{
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  filterModal: {
+    width: 10,
+    height: 10,
+    marginTop: 20,
+    marginBottom: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

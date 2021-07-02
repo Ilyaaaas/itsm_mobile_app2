@@ -14,6 +14,7 @@ import DoctorDetail from '../screens/Priem/DoctorDetail';
 import ChooseTime from '../screens/Priem/ChooseTime';
 import ChooseType from '../screens/Priem/ChooseType';
 import PriemScreen from '../screens/Priem/PriemScreen';
+import CreateITSMRequest from '../screens/Request/CreateOffer';
 import { Registration } from '../screens/Registration/RegistrationForm';
 
 import Doctors from '../screens/Doctors/Doctors';
@@ -30,6 +31,12 @@ const stackConfig = {
 const DoctorListStack = {
   DoctorList_1: {
     screen: Doctors
+  }
+}
+
+const CreateITSMRequestStack = {
+  CreateITSMRequest: {
+    screen: CreateITSMRequest,
   }
 }
 
@@ -98,6 +105,19 @@ const DrawerRoutes = {
     name: 'PriemStack',
     screen: createStackNavigator(PriemStack, {
       initialRouteName: 'Priem',
+      ...stackConfig,
+    }),
+    navigationOptions: () => ({
+      title: `Мои записи`,
+      drawerIcon: ({ tintColor }) => (
+        <Icon name="calendar" style={{ color: tintColor }} />
+      ),
+    }),
+  },
+  CreateRequest: {
+    name: 'CreateRequest',
+    screen: createStackNavigator(CreateRequest, {
+      initialRouteName: 'CreateRequest',
       ...stackConfig,
     }),
     navigationOptions: () => ({

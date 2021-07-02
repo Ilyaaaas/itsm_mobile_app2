@@ -37,63 +37,60 @@ export const LoginScreen = () => {
   const [passwordRecoveryIsVisible, setPasswordRecoveryIsVisible] = useState<boolean>(false);
 
   const handleSubmit = async (onSaveLogin = false) => {
-    let pushtoken = '';
-    try{
-      const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-      if (status === "granted") {
-        const expoPushTokenResponse = await Notifications.getExpoPushTokenAsync();
-        pushtoken = expoPushTokenResponse.data;
+    let data = {
+      method: 'POST',
+      credentials: 'same-origin',
+      mode: 'same-origin',
+      body: JSON.stringify({
+        // username: login,
+        // password: password,
+        username: 'i.akhmetov@digital.sk.kz',
+        password: 'Astana2021!',
+        // username: 'a.iskaliyev@skbs.kz',
+        // password: 'U7cXPraHSU',
+        // username: 'b.rysbek@skbs.kz',
+        // password: 'ec682c6',
+      }),
+      headers: {
+        'Accept':       'application/json',
+        'Content-Type': 'application/json'
       }
-    }catch(e){
-      Alert.alert(e.toLocaleString());
     }
-
-    const isLoggedIn = await authService.login({
-      login: login.replace(/-/g, ''),
-      password,
-      pushToken: pushtoken
-    });
-    if (isLoggedIn) {
-      if(onSaveLogin) {
-        // let getLogin = await AsyncStorage.getItem('login_save');
-        // let lst = [];
-        // if(getLogin !== null){
-        //   lst = JSON.parse(getLogin);
-        // }
-        //
-        // let setLst = {
-        //   'iin': login,
-        //   'pass': password,
-        //   'activ': 1
-        // }
-        //
-        // if (lst.length > 0) {
-        //   if(lst.every((item: { iin: string; pass: string; }) => item.iin !== login && item.pass !== password)){
-        //     lst.push(setLst);
-        //   }
-        // } else {
-        //   lst.push(setLst);
-        // }
-        //
-        // for(var i=0; i<lst.length;i++){
-        //   if(lst[i].iin !== login && lst[i].pass !== password){
-        //     lst[i].activ = 0;
-        //   }else{
-        //     lst[i].activ = 1;
-        //   }
-        // }
-        //
-        // let loginList = JSON.stringify(lst);
-        // AsyncStorage.setItem('login_save', loginList);
-        navigation.dispatch(StackActions.replace('Home'));
-      }else{
-        navigation.dispatch(StackActions.replace('Home'));
-      }
-    } else {
-      navigation.dispatch(StackActions.replace('Home'));
-      // setPasswordRecoveryIsVisible(true);
-    }
+    fetch('http://api.smart24.kz/portal/v1/profile/login', data)
+        // .then((response) => response.json())
+        // .then((responseData) => {
+        //   console.log(responseData)
+        // })
+        // .then(response => response.json())
+        .then(response => response.json())
+        .then(json => {
+              if(json.accessToken === undefined)
+              {
+                alert('Введен неправильный пароль или логин');
+              }
+              else
+              {
+                alert('success')
+                setAccessTokenFunc('@accessToken', json.accessToken, json.userId);
+                navigation.dispatch(StackActions.replace('DiaryStack'));
+              }
+            }
+        )
+    // setPasswordRecoveryIsVisible(true);
   };
+
+  const setAccessTokenFunc = async (key, value, userId) => {
+    AsyncStorage.clear();
+    try {
+      await AsyncStorage.setItem(key, value);
+      const items = [{"accessToken": value}, {"userId": userId}];
+      console.log(items);
+      AsyncStorage.setItem("accessToken", JSON.stringify(items));
+    } catch(e) {
+      console.log('error');
+    }
+    console.log('Done.')
+  }
 
   const AlertShow = async () => {
     Alert.alert(
@@ -117,23 +114,24 @@ export const LoginScreen = () => {
   }
 
   const AlertSaveLogin = async () => {
-    if(login.trim() == ''){
-      Toast.show({
-        text: 'Поле логин не может быть пустым!',
-        type: 'danger',
-      });
-      return false;
-    }
+    // if(login.trim() == ''){
+    //   Toast.show({
+    //     text: 'Поле логин не может быть пустым!',
+    //     type: 'danger',
+    //   });
+    //   return false;
+    // }
+    //
+    // if(password.trim() == ''){
+    //   Toast.show({
+    //     text: 'Поле Пароль не может быть пустым!',
+    //     type: 'danger',
+    //   });
+    //   return false;
+    // }
 
-    if(password.trim() == ''){
-      Toast.show({
-        text: 'Поле Пароль не может быть пустым!',
-        type: 'danger',
-      });
-      return false;
-    }
-
-    let getLogin = await AsyncStorage.getItem('login_save');
+    // let getLogin = await AsyncStorage.getItem('login_save');
+    let getLogin = null;
     let b = true;
 
     if(getLogin !== null) {
@@ -161,7 +159,8 @@ export const LoginScreen = () => {
   }
 
   const getUserLogin = async () => {
-    const loginList = await AsyncStorage.getItem('login_save');
+    // const loginList = await AsyncStorage.getItem('login_save');
+    const loginList = null;
 
     if(loginList !== null) {
       let logineds = JSON.parse(loginList);
