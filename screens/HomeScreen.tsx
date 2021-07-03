@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
   ActionSheet,
-  Toast, Root, Button,
+  Toast, Root, Button, Tab,
 } from 'native-base';
 import React from 'react';
 import {
@@ -63,6 +63,8 @@ class HomeScreen extends React.Component{
       callPhone: '',
       ratingSet: 0,
       filterModal: false,
+      dataDocStatusId: 0,
+      dataDocId: 0,
     }
   }
 
@@ -84,7 +86,7 @@ class HomeScreen extends React.Component{
         method: 'GET',
         headers: {
           // 'x-api-key': this.state.token,
-          'x-api-key': 'siwGYZ4040586lnjwjUdPIbQWIcyUli0',
+          'x-api-key': 'ekJXO1IYdkiPgaMqaBRSFnmeIaOtBaRV',
         },
       });
 
@@ -105,6 +107,43 @@ class HomeScreen extends React.Component{
       console.log('Error when call API: ' + error.message);
     }
     return null;
+  }
+
+  acceptRequest = async () => {
+    fetch('http://api.smart24.kz/service-requests/v1/request/725',
+        {method:'PATCH',
+          headers: {"x-api-key": "ekJXO1IYdkiPgaMqaBRSFnmeIaOtBaRV",
+            "Content-type": "application/json",
+            "Accept": "application/json"},
+          body: '{"status_id": 2}'}
+    )
+        .then(response => response.json())
+        .then(function(data){
+          console.log('data');
+          console.log(data);
+        })
+        .catch(error => console.error(error))
+        .then()
+        .finally()
+  }
+
+  closeRequest = async () => {
+    fetch('http://api.smart24.kz/service-requests/v1/request/725',
+        {
+          method:'PATCH',
+          headers: {"x-api-key": "RHVOifWopGMLlFAuocvv4eBWnbJsuV6o",
+            "Content-type": "application/json",
+            "Accept": "application/json"},
+          body: '{"status_id": 12}'
+        })
+        .then(response => response.json())
+        .then(function(data){
+          console.log('data');
+          console.log(data);
+        })
+        .catch(error => console.error(error))
+        .then()
+        .finally()
   }
 
   _getDoctorList = async () => {
@@ -156,7 +195,10 @@ class HomeScreen extends React.Component{
 
   onInfoButtonClicked = async (docid) => {
     await this._getUrl('request/'+docid).then(value => {
-      this.setState({ listGrade: value, activeDoc: docid, modal: true });
+      this.setState({ listGrade: value, activeDoc: docid, modal: true});
+      console.log('value');
+      console.log(value);
+      console.log('value');
     })
   }
 
@@ -365,16 +407,28 @@ class HomeScreen extends React.Component{
                               this.setState({modal: false});
                             }}
                         >
-                          <Text style={{ width: '100%', textAlign: "center"}}>Закрыть</Text>
+                          <Text style={{ width: '100%', textAlign: "center"}}>{this.state.listGrade.statusId}Закрыть</Text>
                         </Button>
                       </Left>
                       <Body>
-                        <Button
-                            style={{ width: '90%', borderRadius: 10 }}
-                            onPress={() => { this._setRetview() }}
-                        >
-                          <Text style={{ width: '100%', textAlign: "center"}}>Принять</Text>
-                        </Button>
+                        {this.state.listGrade.statusId == 13 ?
+                            <Button
+                                block
+                                onPress={() => acceptRequest(this.state.dataDocId)}
+                                style={{backgroundColor: 'green'}}
+                            >
+                              <Text>Начать исполнение</Text>
+                            </Button>
+                            : null }
+                        {this.state.listGrade.statusId == 2 ?
+                            <Button
+                                block
+                                onPress={() => closeRequest(this.state.dataDocId)}
+                                style={{backgroundColor: 'red'}}
+                            >
+                              <Text>Завершить исполнение</Text>
+                            </Button>
+                            : null }
                       </Body>
                     </ListItem>
                   </List>

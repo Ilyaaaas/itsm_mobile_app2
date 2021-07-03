@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "ITSM Smart24",
-    "description": "ITSM Smart24",
-    "slug": "medapp",
+    "name": "ITSM smart24",
+    "description": "Мобильное приложение ITSM qazcloud",
+    "slug": "smart24",
     "version": "2.0.1",
     "orientation": "portrait",
     "icon": "./assets/logo/logo-512.png",
@@ -28,15 +28,16 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "kz.bmcudp.med-app",
+      "bundleIdentifier": "kz.qazcloud.smart24",
       "supportsTablet": true
     },
     "android": {
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
-      "package": "kz.bmcudp.medapp",
+      "package": "kz.qazcloud.smart24",
       "versionCode": 5,
       "permissions": []
     }
   }
 }
+

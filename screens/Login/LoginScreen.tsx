@@ -53,7 +53,7 @@ export const LoginScreen = () => {
       }),
       headers: {
         'Accept':       'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       }
     }
     fetch('http://api.smart24.kz/portal/v1/profile/login', data)
