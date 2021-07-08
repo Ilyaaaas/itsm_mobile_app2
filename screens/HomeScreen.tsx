@@ -1,4 +1,4 @@
-import {AntDesign, Ionicons} from '@expo/vector-icons';
+import {AntDesign, Ionicons, MaterialIcons} from '@expo/vector-icons';
 import {
   Container,
   Content,
@@ -49,7 +49,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: '',
+      token: 'VLfqdCiEdWzM261GCgR0eIY-QSN5Tlb2',
       refreshing: false,
       list: [],
       isReview: null,
@@ -75,8 +75,6 @@ class HomeScreen extends React.Component{
         .then(json => console.log('accessToken '+json[0].accessToken))
         .then(json => {
           this.setState({ token: json[0].accessToken });
-          // setAccessToken(json[0].accessToken);
-          // setUserId(json[1].userId);
         })
         .then(json2 => console.log('json2'))
         .catch(error => console.log('error!'));
@@ -85,8 +83,7 @@ class HomeScreen extends React.Component{
       const response = await fetch(API_URL, {
         method: 'GET',
         headers: {
-          // 'x-api-key': this.state.token,
-          'x-api-key': 'ekJXO1IYdkiPgaMqaBRSFnmeIaOtBaRV',
+          'x-api-key': this.state.token,
         },
       });
 
@@ -109,29 +106,29 @@ class HomeScreen extends React.Component{
     return null;
   }
 
-  acceptRequest = async () => {
-    fetch('http://api.smart24.kz/service-requests/v1/request/725',
+  acceptRequest = async (docId) => {
+    fetch('http://api.smart24.kz/service-requests/v1/request/'+docId,
         {method:'PATCH',
-          headers: {"x-api-key": "ekJXO1IYdkiPgaMqaBRSFnmeIaOtBaRV",
+          headers: {"x-api-key": this.state.token,
             "Content-type": "application/json",
             "Accept": "application/json"},
           body: '{"status_id": 2}'}
     )
         .then(response => response.json())
         .then(function(data){
-          console.log('data');
           console.log(data);
         })
         .catch(error => console.error(error))
-        .then()
+        .then(console.log('closeRequest'))
         .finally()
+      this.setState({ modal: false});
   }
 
-  closeRequest = async () => {
-    fetch('http://api.smart24.kz/service-requests/v1/request/725',
+  closeRequest = async (docId) => {
+    fetch('http://api.smart24.kz/service-requests/v1/request/'+docId,
         {
           method:'PATCH',
-          headers: {"x-api-key": "RHVOifWopGMLlFAuocvv4eBWnbJsuV6o",
+          headers: {"x-api-key": this.state.token,
             "Content-type": "application/json",
             "Accept": "application/json"},
           body: '{"status_id": 12}'
@@ -142,16 +139,17 @@ class HomeScreen extends React.Component{
           console.log(data);
         })
         .catch(error => console.error(error))
-        .then()
+        .then(console.log('closeRequest'))
         .finally()
+    this.setState({ modal: false});
   }
 
   _getDoctorList = async () => {
     await this._getUrl('request?expand=status,product').then(value => {
-      console.log('request2');
-      console.log(value);
       if(value !== null){
         this.setState({ list: value.items});
+        console.log('items');
+        console.log(value.items);
       }
     })
   }
@@ -170,7 +168,7 @@ class HomeScreen extends React.Component{
 
   _getToken = async () => {
     await getToken().then(itoken => {
-      this.setState({token: itoken});
+      this.setState({token: this.state.token});
     })
   }
 
@@ -196,9 +194,6 @@ class HomeScreen extends React.Component{
   onInfoButtonClicked = async (docid) => {
     await this._getUrl('request/'+docid).then(value => {
       this.setState({ listGrade: value, activeDoc: docid, modal: true});
-      console.log('value');
-      console.log(value);
-      console.log('value');
     })
   }
 
@@ -231,7 +226,7 @@ class HomeScreen extends React.Component{
           Accept: 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
           // 'token': this.state.token,
-          'token': 'siwGYZ4040586lnjwjUdPIbQWIcyUli0',
+          'token': this.state.token,
         },
         body: `id_doctor=${this.state.activeDoc}&grade=${this.state.ratingSet}&note=${this.state.otziv}&feedback=${this.state.callPhone}`,
       });
@@ -256,8 +251,6 @@ class HomeScreen extends React.Component{
 
   render() {
     var color = 'blue';
-    console.log(this.state.list.items);
-    console.log('list');
     return (
         <Container>
           <Root>
@@ -297,6 +290,13 @@ class HomeScreen extends React.Component{
                   />
                 }
             >
+              <View>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder="Поиск"
+                    onChangeText={text => this.searchRequest({text})}
+                />
+              </View>
               {this.state.refreshing ? (
                   <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
               ) : (
@@ -309,14 +309,6 @@ class HomeScreen extends React.Component{
                               <Text style={styles.textSpecialty}>{doc.spr_value}</Text>
                             </View>
                             <View style={styles.buttonsContainer}>
-                              <TouchableOpacity
-                                  activeOpacity={0.7}
-                                  style={[styles.button, styles.btn]}
-                                  onPress={() => this._onReviewButtonClicked(i)}
-                              >
-                                <Text style={{ color: '#fff' }}>Подробнее</Text>
-                              </TouchableOpacity>
-
                               <TouchableOpacity
                                   activeOpacity={0.7}
                                   style={[styles.button, styles.btn]}
@@ -334,15 +326,36 @@ class HomeScreen extends React.Component{
                           </Body>
                           <Right>
                             <View style={{ marginBottom: 10, marginTop: 10 }}>
+                              {doc.status.colorClass == 'success' ?
+                                  <MaterialIcons name="done" size={24} color="black" />
+                                  :
+                                  null
+                              }
+                              {doc.status.colorClass == 'info' ?
+                                  <AntDesign
+                                      name="warning"
+                                      size={24}
+                                      style={{marginRight: 10, color: '#17a2b8'}}
+                                      onPress={() => this.getPriemForm()}
+                                  />
+                                  :
+                                  null
+                              }
+                              <Text style={styles.textSpecialty}>{doc.status.name}</Text>
+                            </View>
+                            <TouchableOpacity
+                                activeOpacity={0.7}
+                                // style={[styles.button, styles.btn]}
+                                onPress={() => this._onReviewButtonClicked(i)}
+                            >
                               <AntDesign
-                                  name="warning"
+                                  name="down"
                                   size={24}
                                   color={doc.status.color_class}
                                   style={{marginRight: 10}}
-                                  onPress={() => this.getPriemForm()}
                               />
-                              <Text style={styles.textSpecialty}>{doc.status.name}</Text>
-                            </View>
+                              {/*<Text style={{ color: '#fff' }}>Подробнее</Text>*/}
+                            </TouchableOpacity>
                           </Right>
                         </ListItem>
                     ))}
@@ -407,14 +420,14 @@ class HomeScreen extends React.Component{
                               this.setState({modal: false});
                             }}
                         >
-                          <Text style={{ width: '100%', textAlign: "center"}}>{this.state.listGrade.statusId}Закрыть</Text>
+                          <Text style={{ width: '100%', textAlign: "center"}}>Закрыть</Text>
                         </Button>
                       </Left>
                       <Body>
                         {this.state.listGrade.statusId == 13 ?
                             <Button
                                 block
-                                onPress={() => acceptRequest(this.state.dataDocId)}
+                                onPress={() => this.acceptRequest(this.state.listGrade.id)}
                                 style={{backgroundColor: 'green'}}
                             >
                               <Text>Начать исполнение</Text>
@@ -423,7 +436,7 @@ class HomeScreen extends React.Component{
                         {this.state.listGrade.statusId == 2 ?
                             <Button
                                 block
-                                onPress={() => closeRequest(this.state.dataDocId)}
+                                onPress={() => this.closeRequest(this.state.listGrade.id)}
                                 style={{backgroundColor: 'red'}}
                             >
                               <Text>Завершить исполнение</Text>
@@ -469,6 +482,12 @@ class HomeScreen extends React.Component{
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  danger: {
+    color: '#ff1016'
+  },
+  info: {
+    color: '#445aff'
+  },
   filterModal: {
     width: 10,
     height: 10,
@@ -583,5 +602,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 5,
     marginBottom: 20
-  }
+  },
+  textInput:
+      {
+        fontSize: 14,
+        backgroundColor: '#fff',
+        color: '#1a192a',
+        padding: 5,
+        height: 40,
+        borderColor: '#5e6064',
+        borderWidth: 1,
+        textTransform: 'uppercase',
+      }
 })
