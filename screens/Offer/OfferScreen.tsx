@@ -94,7 +94,7 @@ export default function OfferScreen({ navigation }) {
             //     console.log(data);
             // })
             .catch(error => console.error(error))
-            .then(console.log('createOffer'))
+            .then(console.log('createOffer2'))
             .finally()
     }
 
