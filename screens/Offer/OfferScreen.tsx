@@ -79,6 +79,42 @@ export default function OfferScreen({ navigation }) {
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
 
+    const createOffer = async () =>
+    {
+        fetch('http://api.smart24.kz/service-requests/v1/request/',
+            {method:'POST',
+                headers: {"x-api-key": "4GMWH8akzCVCeHzK6hbuZSepvzS2xqde",
+                    'Accept':       'application/json',
+                    'Content-Type': 'application/json',
+                    },
+                body: '{"product_id": "1082", "descr": "tst tststs tststs tststststst"}'}
+        )
+            .then(response => response.json())
+            // .then(function(data){
+            //     console.log(data);
+            // })
+            .catch(error => console.error(error))
+            .then(console.log('createOffer'))
+            .finally()
+    }
+
+    function getServices()
+    {
+        fetch('http://api.smart24.kz/en/service-catalog/v1/product?access-token=4GMWH8akzCVCeHzK6hbuZSepvzS2xqd&_format=json',
+            {method:'GET',
+                headers: {"x-api-key": "4GMWH8akzCVCeHzK6hbuZSepvzS2xqde",
+                    "Content-type": "application/json",
+                    "Accept": "application/json"},
+                body: ''}
+        )
+            .then(response => response.json())
+            .then(function(data){
+                console.log(data);
+            })
+            .catch(error => console.error(error))
+            .then(console.log('createOffer'))
+            .finally()
+    }
 
     return (
         <Container>
@@ -154,8 +190,7 @@ export default function OfferScreen({ navigation }) {
                                 marginVertical: 10,
                                 backgroundColor: !shedId ? '#42976f' : '#42976f',
                             }}
-                            onPress={() => setOpenCheck(true)}
-                            disabled={!shedId}>
+                            onPress={() => createOffer()}>
                             <Text style={{ color: !shedId ? '#fff' : '#fff' }}>
                                 <AntDesign style={{color: '#fff'}} name="check" size={24} color="black" />
                                 Создать заявку

@@ -49,7 +49,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: 'VLfqdCiEdWzM261GCgR0eIY-QSN5Tlb2',
+      token: '4GMWH8akzCVCeHzK6hbuZSepvzS2xqde',
       refreshing: false,
       list: [],
       isReview: null,
