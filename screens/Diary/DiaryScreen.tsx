@@ -204,7 +204,6 @@ class DiaryScreen extends React.Component
             </Container>
         );
     }
-
 }
 
 const styles = StyleSheet.create({

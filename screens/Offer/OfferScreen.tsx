@@ -17,7 +17,7 @@ import {
     Body,
     FooterTab,
     Footer,
-    Toast, Tab, TabHeading, List, Tabs,
+    Toast, Tab, TabHeading, List, Tabs, Input,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -27,6 +27,7 @@ import { resetFormInfo, setFormInfo } from '../../actions/form-actions';
 import { isEmpty, DATE_T, SHED_ID_T, TIME_T, TIMES_T, API, getToken } from '../constants';
 import {WebView} from "react-native-webview";
 import {Modal} from "react-native-paper";
+import {StackActions} from "@react-navigation/native";
 
 const CHOOSE_SPEC = 'choose-spec',
     CHOOSE_DOCTOR = 'choose-doctor';
@@ -59,7 +60,6 @@ const locale = {
 };
 
 export default function OfferScreen({ navigation }) {
-    const [token, setToken] = useState('');
     const [datesWhitelist, setDatesWhitelist] = useState([
         {
             start: moment(),
@@ -73,47 +73,142 @@ export default function OfferScreen({ navigation }) {
     const [firstClick, setfirstClick] = useState(true);
     const [typeUrl, setTypeURL] = useState(0);
     const [vidPriem, setVidPriem] = useState('');
+    const [offerDescr, setOfferDescr] = useState('');
     const [disType, setDisType] = useState(true);
     const [activeTab, setActiveTab] = useState(0);
+    const [services, setServices] = useState();
+    const [token, setToken] = useState('RKoeJFKUHb2ayaLLeZDzc3_ZgLioQcJ4');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
 
+    const handleSubmit = async () => {
+        let data = {
+            method: 'POST',
+            body: JSON.stringify({
+                product_id: '1083',
+                descr: "tst tststs tststs tststststst",
+            }),
+            headers: {
+                'Accept':       'application/json',
+                'Content-Type': 'application/json',
+                "x-api-key": token,
+            }
+        }
+        fetch('http://api.smart24.kz/service-requests/v1/request', data)
+            .then(response => response.text())
+            .then(json => {
+                    console.log(json);
+                }
+            )
+    }
+
+    useEffect(() => {
+        getServices();
+    }, []);
+
     const createOffer = async () =>
     {
-        fetch('http://api.smart24.kz/service-requests/v1/request/',
+        fetch('http://api.smart24.kz/service-requests/v1/request',
             {method:'POST',
-                headers: {"x-api-key": "4GMWH8akzCVCeHzK6hbuZSepvzS2xqde",
+                headers: {"x-api-key": token,
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
                     },
-                body: '{"product_id": "1082", "descr": "tst tststs tststs tststststst"}'}
+                body: '{"product_id": "1083", "descr": "'+offerDescr+'"}'}
         )
-            .then(response => response.json())
-            // .then(function(data){
-            //     console.log(data);
-            // })
+            .then(response => response.text())
+            .then(function(data){
+                console.log(data);
+            })
             .catch(error => console.error(error))
             .then(console.log('createOffer2'))
             .finally()
     }
 
-    function getServices()
+    const getServices = async () =>
     {
-        fetch('http://api.smart24.kz/en/service-catalog/v1/product?access-token=4GMWH8akzCVCeHzK6hbuZSepvzS2xqd&_format=json',
+        fetch('http://api.smart24.kz/en/service-catalog/v1/product?access-token=RKoeJFKUHb2ayaLLeZDzc3_ZgLioQcJ4&_format=json',
             {method:'GET',
-                headers: {"x-api-key": "4GMWH8akzCVCeHzK6hbuZSepvzS2xqde",
+                headers: {"x-api-key": token,
                     "Content-type": "application/json",
                     "Accept": "application/json"},
                 body: ''}
         )
             .then(response => response.json())
             .then(function(data){
-                console.log(data);
+                console.log('services');
+                console.log(data.items);
+                setServices(data.items);
+                console.log('services');
             })
             .catch(error => console.error(error))
-            .then(console.log('createOffer'))
+            .then(console.log('getServices'))
             .finally()
+    }
+
+    function _renderServices()
+    {
+        if(services != undefined)
+        {
+            console.log('_renderServices');
+            console.log(services);
+            return
+            <Picker
+                // style={{your_style}}
+                mode="dropdown"
+                selectedValue={services}
+                onValueChange={()=>{}}>
+                {services.map((key) => {
+                    return (<Picker.Item label={key.id} value={key.subject} key={key.id}/>)
+                })}
+            </Picker>
+
+            // return services.map((data) => {
+            //     return (
+            //
+            //         <View key={data.id}><Text>2</Text></View>
+            //     )
+            // })
+        }
+            else
+        {
+            return <Text>Test</Text>
+        }
+    }
+
+    function _renderShifts()
+    {
+        console.log('_renderServices');
+        console.log(services);
+        if(services != undefined) {
+            // return services.map((data, i) => {
+                // <Text>{data.subject}</Text>
+            // <Picker
+            //     // style={{your_style}}
+            //     mode="dropdown"
+            //     // selectedValue={services}
+            //     onValueChange={()=>{}}>
+            //     {services.map((key) => {
+            //         return (<Picker.Item label={key.id} value={key.subject} key={key.id}/>) //if you have a bunch of keys value pair
+            //     })}
+            // </Picker>
+            <DropDownPicker
+            items={[
+                    {label: 'Консультация в медицинской организации', value: 0},
+                    {label: 'Онлайн консультация', value: 1},
+            ]}
+            defaultValue={typeUrl}
+            disabled={disType}
+            containerStyle={{height: 40}}
+            onChangeItem={item => { setTypeURL(item.value); setVidPriem(item.label)}}
+            />
+            // });
+        }
+            else
+        {
+            return <View><Text>Test</Text></View>
+        }
     }
 
     return (
@@ -135,67 +230,94 @@ export default function OfferScreen({ navigation }) {
                 <Right />
             </Header>
             <Content style={{ paddingHorizontal: 20, backgroundColor: '#edeef4' }}>
-                        <View style={{ paddingHorizontal: 20, backgroundColor: '#fff', marginTop: 20 }}>
-                            <View style={{ marginVertical: 10 }}>
-                                <Text>Выберите каталог</Text>
-                                <Tabs
-                                    tabBarUnderlineStyle={{borderBottomWidth:0}}
-                                    initialPage={activeTab}
-                                    onChangeTab={()=>console.log('1')}
-                                >
-                                    <Tab heading={
-                                        <TabHeading>
-                                            <Entypo name="flow-tree" size={24} color="black" />
-                                            <Text style={{fontSize: 12, textAlign: 'center'}}>Обеспечение бизнеса</Text>
-                                        </TabHeading>
-                                    }>
-                                        <Text>1</Text>
-                                    </Tab>
-                                    <Tab
-                                        heading={
-                                            <TabHeading>
-                                                <View>
-                                                <MaterialIcons name="computer" size={24} color="black" />
-                                                </View>
-                                                <View>
-                                                <Text>Программное обеспечение</Text>
-                                                </View>
-                                            </TabHeading>
-                                        }>
-                                        <Text>2</Text>
-                                    </Tab>
-                                    <Tab
-                                        heading={
-                                            <TabHeading>
-                                                <AntDesign name="setting" size={24} color="black" />
-                                                <Text>Другие услуги</Text>
-                                            </TabHeading>
-                                        }>
-                                        <Text>3</Text>
-                                    </Tab>
-                                </Tabs>
-                            </View>
-                            <View style={{ marginVertical: 10 }}>
-                                <Text>Выберите услугу</Text>
-                            </View>
-                            <View style={{ marginVertical: 10, ...(Platform.OS !== 'android' && {
-                                    zIndex: 10
-                                })}}>
-                                <Text style={{ marginBottom: 10 }}>Опишите заявку</Text>
-                            </View>
+                <View style={{ paddingHorizontal: 20, backgroundColor: '#fff', marginTop: 20 }}>
+                    <View style={{ marginVertical: 10 }}>
+                        {/*{_renderShifts()}*/}
+                        { _renderServices() }
+                        <View style={{ marginVertical: 10, ...(Platform.OS !== 'android' && {
+                                zIndex: 10
+                            })}}>
+                            <Text style={{ marginBottom: 10 }}>Вид приема</Text>
+                            {console.log('tstst')}
+                            {console.log(services)}
+                            {services != undefined ?
+                                <DropDownPicker
+                                    items={services.map(item=> ({label:item.subject,value:item.id}))}
+                                    defaultValue={typeUrl}
+                                    containerStyle={{height: 40}}
+                                    onChangeItem={item => { setTypeURL(item.value); setVidPriem(item.label)}}
+                                />
+                                :
+                                <Text>test</Text>
+                            }
                         </View>
-                        <Button
-                            block
-                            style={{
-                                marginVertical: 10,
-                                backgroundColor: !shedId ? '#42976f' : '#42976f',
-                            }}
-                            onPress={() => createOffer()}>
-                            <Text style={{ color: !shedId ? '#fff' : '#fff' }}>
-                                <AntDesign style={{color: '#fff'}} name="check" size={24} color="black" />
-                                Создать заявку
-                            </Text>
-                        </Button>
+                        <Text>Выберите каталог</Text>
+                        <Tabs
+                            tabBarUnderlineStyle={{borderBottomWidth:0}}
+                            initialPage={activeTab}
+                            onChangeTab={()=>console.log('1')}
+                        >
+                            <Tab heading={
+                                <TabHeading>
+                                    <Entypo name="flow-tree" size={24} color="black" />
+                                    <Text style={{fontSize: 12, textAlign: 'center'}}>Обеспечение бизнеса</Text>
+                                </TabHeading>
+                            }>
+                                <Text>1</Text>
+                            </Tab>
+                            <Tab
+                                heading={
+                                    <TabHeading>
+                                        <View>
+                                        <MaterialIcons name="computer" size={24} color="black" />
+                                        </View>
+                                        <View>
+                                        <Text>Программное обеспечение</Text>
+                                        </View>
+                                    </TabHeading>
+                                }>
+                                <Text>2</Text>
+                            </Tab>
+                            <Tab
+                                heading={
+                                    <TabHeading>
+                                        <AntDesign name="setting" size={24} color="black" />
+                                        <Text>Другие услуги</Text>
+                                    </TabHeading>
+                                }>
+                                <Text>3</Text>
+                            </Tab>
+                        </Tabs>
+                    </View>
+                    <View style={{ marginVertical: 10 }}>
+                        <Text>Описание</Text>
+                        <Input
+                            placeholder="Описание"
+                            onChangeText={setOfferDescr}
+                            value={offerDescr}
+                        />
+                    </View>
+                    <View style={{ marginVertical: 10 }}>
+                        <Text>Выберите услугу</Text>
+                    </View>
+                    <View style={{ marginVertical: 10, ...(Platform.OS !== 'android' && {
+                            zIndex: 10
+                        })}}>
+                        <Text style={{ marginBottom: 10 }}>Опишите заявку</Text>
+                    </View>
+                </View>
+                <Button
+                    block
+                    style={{
+                        marginVertical: 10,
+                        backgroundColor: !shedId ? '#42976f' : '#42976f',
+                    }}
+                    onPress={() => createOffer()}>
+                    <Text style={{ color: !shedId ? '#fff' : '#fff' }}>
+                        <AntDesign style={{color: '#fff'}} name="check" size={24} color="black" />
+                        Создать заявку
+                    </Text>
+                </Button>
             </Content>
             <Footer style={{ backgroundColor: '#1a192a', height: 30 }}>
                 <FooterTab style={{ backgroundColor: '#1a192a' }}></FooterTab>
