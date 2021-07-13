@@ -4,6 +4,7 @@ import {View, StyleSheet, AsyncStorage, Picker, Platform} from 'react-native';
 import 'moment/locale/ru';
 import CalendarStrip from 'react-native-calendar-strip';
 import {AntDesign, Ionicons, Entypo, MaterialIcons} from '@expo/vector-icons';
+import axios from 'axios';
 import {
     Container,
     Header,
@@ -77,63 +78,64 @@ export default function OfferScreen({ navigation }) {
     const [disType, setDisType] = useState(true);
     const [activeTab, setActiveTab] = useState(0);
     const [services, setServices] = useState();
-    const [token, setToken] = useState('RKoeJFKUHb2ayaLLeZDzc3_ZgLioQcJ4');
+    const [selectedService, setSelectedService] = useState();
+    const [token, setToken] = useState('BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
-
-    const handleSubmit = async () => {
-        let data = {
-            method: 'POST',
-            body: JSON.stringify({
-                product_id: '1083',
-                descr: "tst tststs tststs tststststst",
-            }),
-            headers: {
-                'Accept':       'application/json',
-                'Content-Type': 'application/json',
-                "x-api-key": token,
-            }
-        }
-        fetch('http://api.smart24.kz/service-requests/v1/request', data)
-            .then(response => response.text())
-            .then(json => {
-                    console.log(json);
-                }
-            )
-    }
 
     useEffect(() => {
         getServices();
     }, []);
 
+    // const handleSubmit = async () => {
+    //     alert('handleSubmit');
+    //     await fetch("http://api.smart24.kz/service-requests/v1/request", {
+    //         method: "POST",
+    //         body: "product_id=1083&descr=$offerDescr",
+    //         headers: {
+    //             "Accept": "application/json",
+    //             "Content-Type": "application/json",
+    //             "X-Api-Key": "BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI"
+    //         },
+    //     })
+    //         .then(response => response.text())
+    //         .then(function(data){
+    //             console.log(data);
+    //         })
+    // }
+
     const createOffer = async () =>
     {
         fetch('http://api.smart24.kz/service-requests/v1/request',
-            {method:'POST',
-                headers: {"x-api-key": token,
+            {
+                method:'POST',
+                headers: {"x-api-key": 'BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI',
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
                     },
-                body: '{"product_id": "1083", "descr": "'+offerDescr+'"}'}
+                body: '{"product_id": "1083", "descr": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia"}'}
         )
             .then(response => response.text())
             .then(function(data){
+                console.log('response77');
                 console.log(data);
+                console.log('response77');
             })
             .catch(error => console.error(error))
-            .then(console.log('createOffer2'))
-            .finally()
+            .then()
+            .finally(console.log('createOffer'))
+        // handleSubmit();
     }
 
     const getServices = async () =>
     {
-        fetch('http://api.smart24.kz/en/service-catalog/v1/product?access-token=RKoeJFKUHb2ayaLLeZDzc3_ZgLioQcJ4&_format=json',
+        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token=BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI&_format=json',
             {method:'GET',
                 headers: {"x-api-key": token,
                     "Content-type": "application/json",
                     "Accept": "application/json"},
-                body: ''}
+                }
         )
             .then(response => response.json())
             .then(function(data){
@@ -163,51 +165,10 @@ export default function OfferScreen({ navigation }) {
                     return (<Picker.Item label={key.id} value={key.subject} key={key.id}/>)
                 })}
             </Picker>
-
-            // return services.map((data) => {
-            //     return (
-            //
-            //         <View key={data.id}><Text>2</Text></View>
-            //     )
-            // })
         }
             else
         {
             return <Text>Test</Text>
-        }
-    }
-
-    function _renderShifts()
-    {
-        console.log('_renderServices');
-        console.log(services);
-        if(services != undefined) {
-            // return services.map((data, i) => {
-                // <Text>{data.subject}</Text>
-            // <Picker
-            //     // style={{your_style}}
-            //     mode="dropdown"
-            //     // selectedValue={services}
-            //     onValueChange={()=>{}}>
-            //     {services.map((key) => {
-            //         return (<Picker.Item label={key.id} value={key.subject} key={key.id}/>) //if you have a bunch of keys value pair
-            //     })}
-            // </Picker>
-            <DropDownPicker
-            items={[
-                    {label: 'Консультация в медицинской организации', value: 0},
-                    {label: 'Онлайн консультация', value: 1},
-            ]}
-            defaultValue={typeUrl}
-            disabled={disType}
-            containerStyle={{height: 40}}
-            onChangeItem={item => { setTypeURL(item.value); setVidPriem(item.label)}}
-            />
-            // });
-        }
-            else
-        {
-            return <View><Text>Test</Text></View>
         }
     }
 
@@ -242,52 +203,17 @@ export default function OfferScreen({ navigation }) {
                             {console.log(services)}
                             {services != undefined ?
                                 <DropDownPicker
-                                    items={services.map(item=> ({label:item.subject,value:item.id}))}
-                                    defaultValue={typeUrl}
+                                    items={services.map(item=> ({label: item.subject, value: item.id}))}
+                                    // defaultValue={typeUrl}
                                     containerStyle={{height: 40}}
-                                    onChangeItem={item => { setTypeURL(item.value); setVidPriem(item.label)}}
+                                    // onChangeItem={item => { setSelectedService(item.id); alert(item.id)}}
+                                    onChangeItem={item => setSelectedService(item.value)}
                                 />
                                 :
                                 <Text>test</Text>
                             }
                         </View>
                         <Text>Выберите каталог</Text>
-                        <Tabs
-                            tabBarUnderlineStyle={{borderBottomWidth:0}}
-                            initialPage={activeTab}
-                            onChangeTab={()=>console.log('1')}
-                        >
-                            <Tab heading={
-                                <TabHeading>
-                                    <Entypo name="flow-tree" size={24} color="black" />
-                                    <Text style={{fontSize: 12, textAlign: 'center'}}>Обеспечение бизнеса</Text>
-                                </TabHeading>
-                            }>
-                                <Text>1</Text>
-                            </Tab>
-                            <Tab
-                                heading={
-                                    <TabHeading>
-                                        <View>
-                                        <MaterialIcons name="computer" size={24} color="black" />
-                                        </View>
-                                        <View>
-                                        <Text>Программное обеспечение</Text>
-                                        </View>
-                                    </TabHeading>
-                                }>
-                                <Text>2</Text>
-                            </Tab>
-                            <Tab
-                                heading={
-                                    <TabHeading>
-                                        <AntDesign name="setting" size={24} color="black" />
-                                        <Text>Другие услуги</Text>
-                                    </TabHeading>
-                                }>
-                                <Text>3</Text>
-                            </Tab>
-                        </Tabs>
                     </View>
                     <View style={{ marginVertical: 10 }}>
                         <Text>Описание</Text>

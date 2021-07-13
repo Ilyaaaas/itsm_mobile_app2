@@ -49,7 +49,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: 'RKoeJFKUHb2ayaLLeZDzc3_ZgLioQcJ4',
+      token: 'BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI',
       refreshing: false,
       list: [],
       isReview: null,
@@ -76,7 +76,7 @@ class HomeScreen extends React.Component{
         .then(json => {
           this.setState({ token: json[0].accessToken });
         })
-        .then(json2 => console.log('json2'))
+        .then()
         .catch(error => console.log('error!'));
 
     try {
@@ -116,10 +116,10 @@ class HomeScreen extends React.Component{
     )
         .then(response => response.json())
         .then(function(data){
-          console.log(data);
+          //console.log(data);
         })
         .catch(error => console.error(error))
-        .then(console.log('closeRequest'))
+        .then()
         .finally()
       this.setState({ modal: false});
   }
@@ -135,11 +135,11 @@ class HomeScreen extends React.Component{
         })
         .then(response => response.json())
         .then(function(data){
-          console.log('data');
-          console.log(data);
+          //console.log('data');
+          //console.log(data);
         })
         .catch(error => console.error(error))
-        .then(console.log('closeRequest'))
+        .then()
         .finally()
     this.setState({ modal: false});
   }
@@ -148,8 +148,8 @@ class HomeScreen extends React.Component{
     await this._getUrl('request?expand=status,product').then(value => {
       if(value !== null){
         this.setState({ list: value.items});
-        console.log('items');
-        console.log(value.items);
+        //console.log('items');
+        //console.log(value.items);
       }
     })
   }
@@ -232,7 +232,7 @@ class HomeScreen extends React.Component{
       });
 
       const responseJson = await response.json();
-      console.log(responseJson);
+      //console.log(responseJson);
       if (responseJson !== null) {
         let itype = 'success';
 
@@ -244,7 +244,7 @@ class HomeScreen extends React.Component{
         this._alert(responseJson.message, responseJson.success);
       }
     } catch (error) {
-      console.log(error.message);
+      //console.log(error.message);
       this._alert("Ошибка отправки данных. Повторите еще раз");
     }
   }

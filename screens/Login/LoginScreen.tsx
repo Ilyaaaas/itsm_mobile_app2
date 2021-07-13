@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
 export const LoginScreen = () => {
   const navigation = useNavigation();
   const [passView, setpassView] = useState(true);
-  //
   const [showIINS, setShowIINS] = useState(false);
   const [listLogins, setListLogins] = useState([]);
   const [login, setLogin] = useState<string>('');
