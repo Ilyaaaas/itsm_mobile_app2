@@ -1,6 +1,6 @@
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, AsyncStorage, Picker, Platform} from 'react-native';
+import {View, StyleSheet, AsyncStorage, Picker, Platform, TextInput} from 'react-native';
 import 'moment/locale/ru';
 import CalendarStrip from 'react-native-calendar-strip';
 import {AntDesign, Ionicons, Entypo, MaterialIcons} from '@expo/vector-icons';
@@ -88,23 +88,6 @@ export default function OfferScreen({ navigation }) {
         getServices();
     }, []);
 
-    // const handleSubmit = async () => {
-    //     alert('handleSubmit');
-    //     await fetch("http://api.smart24.kz/service-requests/v1/request", {
-    //         method: "POST",
-    //         body: "product_id=1083&descr=$offerDescr",
-    //         headers: {
-    //             "Accept": "application/json",
-    //             "Content-Type": "application/json",
-    //             "X-Api-Key": "BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI"
-    //         },
-    //     })
-    //         .then(response => response.text())
-    //         .then(function(data){
-    //             console.log(data);
-    //         })
-    // }
-
     const createOffer = async () =>
     {
         fetch('http://api.smart24.kz/service-requests/v1/request',
@@ -114,18 +97,20 @@ export default function OfferScreen({ navigation }) {
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
                     },
-                body: '{"product_id": "1083", "descr": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia"}'}
+                body: '{"product_id": "'+selectedService+'", "descr": "'+offerDescr+'"}'}
         )
             .then(response => response.text())
             .then(function(data){
-                console.log('response77');
-                console.log(data);
-                console.log('response77');
+                // console.log(data);
             })
             .catch(error => console.error(error))
             .then()
-            .finally(console.log('createOffer'))
-        // handleSubmit();
+            .finally()
+        Toast.show({
+            text: 'Заявка успешно отправлена',
+            type: 'success',
+            duration: 3000
+        });
     }
 
     const getServices = async () =>
@@ -139,13 +124,10 @@ export default function OfferScreen({ navigation }) {
         )
             .then(response => response.json())
             .then(function(data){
-                console.log('services');
-                console.log(data.items);
                 setServices(data.items);
-                console.log('services');
             })
             .catch(error => console.error(error))
-            .then(console.log('getServices'))
+            .then()
             .finally()
     }
 
@@ -153,8 +135,6 @@ export default function OfferScreen({ navigation }) {
     {
         if(services != undefined)
         {
-            console.log('_renderServices');
-            console.log(services);
             return
             <Picker
                 // style={{your_style}}
@@ -194,42 +174,33 @@ export default function OfferScreen({ navigation }) {
                 <View style={{ paddingHorizontal: 20, backgroundColor: '#fff', marginTop: 20 }}>
                     <View style={{ marginVertical: 10 }}>
                         {/*{_renderShifts()}*/}
-                        { _renderServices() }
-                        <View style={{ marginVertical: 10, ...(Platform.OS !== 'android' && {
-                                zIndex: 10
-                            })}}>
-                            <Text style={{ marginBottom: 10 }}>Вид приема</Text>
-                            {console.log('tstst')}
-                            {console.log(services)}
+                        {/*{ _renderServices() }*/}
+                        <View style={{zIndex: 10}}>
+                            <Text>Выберите каталог</Text>
                             {services != undefined ?
-                                <DropDownPicker
+                                <DropDownPicker style={{backgroundColor: '#fff'}}
                                     items={services.map(item=> ({label: item.subject, value: item.id}))}
                                     // defaultValue={typeUrl}
-                                    containerStyle={{height: 40}}
                                     // onChangeItem={item => { setSelectedService(item.id); alert(item.id)}}
                                     onChangeItem={item => setSelectedService(item.value)}
+                                    dropDownStyle={{backgroundColor: '#fff'}}
+                                    zIndex={1000}
                                 />
                                 :
-                                <Text>test</Text>
+                                null
                             }
                         </View>
-                        <Text>Выберите каталог</Text>
-                    </View>
-                    <View style={{ marginVertical: 10 }}>
-                        <Text>Описание</Text>
-                        <Input
-                            placeholder="Описание"
-                            onChangeText={setOfferDescr}
-                            value={offerDescr}
-                        />
-                    </View>
-                    <View style={{ marginVertical: 10 }}>
-                        <Text>Выберите услугу</Text>
-                    </View>
-                    <View style={{ marginVertical: 10, ...(Platform.OS !== 'android' && {
-                            zIndex: 10
-                        })}}>
-                        <Text style={{ marginBottom: 10 }}>Опишите заявку</Text>
+                        <View style={{zIndex: -10, marginTop: 20}}>
+                            <Text>Описание</Text>
+                            <TextInput
+                                placeholder="Описание"
+                                multiline={true}
+                                numberOfLines={4}
+                                onChangeText={setOfferDescr}
+                                value={offerDescr}
+                                style={{height: 100}}
+                            />
+                        </View>
                     </View>
                 </View>
                 <Button
@@ -237,6 +208,7 @@ export default function OfferScreen({ navigation }) {
                     style={{
                         marginVertical: 10,
                         backgroundColor: !shedId ? '#42976f' : '#42976f',
+                        zIndex: -10,
                     }}
                     onPress={() => createOffer()}>
                     <Text style={{ color: !shedId ? '#fff' : '#fff' }}>
