@@ -36,6 +36,7 @@ import { isNotUndefined } from './helpers';
 import {API, getToken} from './constants';
 import StarRating from "react-native-star-rating";
 import {WebView} from "react-native-webview";
+import DropDownPicker from "react-native-dropdown-picker";
 
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
@@ -49,7 +50,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: 'BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI',
+      token: 'WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ',
       refreshing: false,
       list: [],
       isReview: null,
@@ -122,6 +123,7 @@ class HomeScreen extends React.Component{
         .then()
         .finally()
       this.setState({ modal: false});
+      alert('Заявка прияната на исполнение')
   }
 
   closeRequest = async (docId) => {
@@ -142,14 +144,16 @@ class HomeScreen extends React.Component{
         .then()
         .finally()
     this.setState({ modal: false});
+    alert('Заявка успешно закрыта')
   }
 
   _getDoctorList = async () => {
-    await this._getUrl('request?expand=status,product').then(value => {
+    await this._getUrl('request?access-token=WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ&_format=json&expand=status,product,type&sort=-id').then(value => {
       if(value !== null){
         this.setState({ list: value.items});
-        //console.log('items');
-        //console.log(value.items);
+        console.log('items');
+        console.log(value.items);
+        console.log('items');
       }
     })
   }
@@ -256,18 +260,18 @@ class HomeScreen extends React.Component{
           <Root>
             <Header style={styles.headerTop}>
               <Left style={{ flex: 1}}>
-                <Ionicons name="ios-menu"
-                          style={{ color: '#a2a3b7', marginLeft: 10 }}
-                          onPress={() => this.props.navigation.openDrawer()}
-                          size={24}
-                />
+                {/*<Ionicons name="ios-menu"*/}
+                {/*          style={{ color: '#a2a3b7', marginLeft: 10 }}*/}
+                {/*          onPress={() => this.props.navigation.openDrawer()}*/}
+                {/*          size={24}*/}
+                {/*/>*/}
               </Left>
               <Body style={{ flex: 3 }}>
                 <Title style={{ color: '#a2a3b7' }}>Мои заявки</Title>
               </Body>
               <Right>
                 <AntDesign
-                    name="pluscircle"
+                    name="pluscircleo"
                     size={24}
                     color="#a2a3b7"
                     style={{marginRight: 10}}
@@ -304,44 +308,12 @@ class HomeScreen extends React.Component{
                     {this.state.list.map((doc, i) => (
                         <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
                           <Body>
+                            <Text style={styles.textSpecialty}>№: { doc.id }</Text>
+                            <Text style={styles.textSpecialty}>{ doc.createdAt }</Text>
+
                             <Text style={styles.textName}>{doc.descr}</Text>
                             <View style={styles.starContainer}>
                               <Text style={styles.textSpecialty}>{doc.spr_value}</Text>
-                            </View>
-                            <View style={styles.buttonsContainer}>
-                              <TouchableOpacity
-                                  activeOpacity={0.7}
-                                  style={[styles.button, styles.btn]}
-                                  onPress={() => this.onInfoButtonClicked(doc.id)}
-                              >
-                                <Text style={{ color: '#fff' }}>Сменить статус</Text>
-                              </TouchableOpacity>
-                            </View>
-                            {this.state.isDocReviewSelected == i &&
-                            <View style={{ marginBottom: 10, marginTop: 10 }}>
-                              <Text style={styles.textSpecialty}>Дата: { doc.category_name || "" }</Text>
-                              <Text style={styles.textSpecialty}>Приоритет: {doc.science_degree}</Text>
-                            </View>
-                            }
-                          </Body>
-                          <Right>
-                            <View style={{ marginBottom: 10, marginTop: 10 }}>
-                              {doc.status.colorClass == 'success' ?
-                                  <MaterialIcons name="done" size={24} color="black" />
-                                  :
-                                  null
-                              }
-                              {doc.status.colorClass == 'info' ?
-                                  <AntDesign
-                                      name="warning"
-                                      size={24}
-                                      style={{marginRight: 10, color: '#17a2b8'}}
-                                      onPress={() => this.getPriemForm()}
-                                  />
-                                  :
-                                  null
-                              }
-                              <Text style={styles.textSpecialty}>{doc.status.name}</Text>
                             </View>
                             <TouchableOpacity
                                 activeOpacity={0.7}
@@ -356,6 +328,42 @@ class HomeScreen extends React.Component{
                               />
                               {/*<Text style={{ color: '#fff' }}>Подробнее</Text>*/}
                             </TouchableOpacity>
+                            {this.state.isDocReviewSelected == i &&
+                            <View style={{ marginBottom: 10, marginTop: 10 }}>
+                              <Text style={styles.textSpecialty}>Дата: { doc.category_name || "" }</Text>
+                              <Text style={styles.textSpecialty}>Описание: {doc.descr}</Text>
+                              <View style={styles.buttonsContainer}>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    style={[styles.button, styles.btn]}
+                                    onPress={() => this.onInfoButtonClicked(doc.id)}
+                                >
+                                  <Text style={{ color: '#fff' }}>Сменить статус</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                            }
+                          </Body>
+                          <Right>
+                            <Text style={styles.textSpecialtyDanger}>18.07.2021</Text>
+                            <View style={{ marginBottom: 10, marginTop: 10 }}>
+                              {doc.status.colorClass == 'success' ?
+                                  <MaterialIcons name="done" size={24} color="black" />
+                                  :
+                                  null
+                              }
+                              {/*{doc.status.colorClass == 'info' ?*/}
+                                  <AntDesign
+                                      name="warning"
+                                      size={24}
+                                      style={{marginRight: 10, color: '#17a2b8'}}
+                                      onPress={() => this.getPriemForm()}
+                                  />
+                              {/*    :*/}
+                              {/*    null*/}
+                              {/*}*/}
+                              <Text style={styles.textSpecialty}>{doc.status.name}</Text>
+                            </View>
                           </Right>
                         </ListItem>
                     ))}
@@ -376,11 +384,11 @@ class HomeScreen extends React.Component{
                 <ScrollView style={{ paddingTop: 40 }}>
                   <View>
                     <Text style={styles.textName}>Заголовок: </Text>
-                    <Text>{this.state.listGrade.descr}</Text>
+                    <Text>{this.state.listGrade.title}</Text>
                   </View>
                   <View>
                     <Text style={styles.textName}>Описание: </Text>
-                    <Text>{this.state.listGrade.response}</Text>
+                    <Text>{this.state.listGrade.descr}</Text>
                   </View>
                   <View>
                     <Text style={styles.textName}>Дата создания: </Text>
@@ -464,7 +472,20 @@ class HomeScreen extends React.Component{
                 width: 400,
                 height: 300}}>
                 <Text onPress={()=>this.setState({ filterModal: false})} style={{alignSelf:'flex-end', fontSize: 20}}>X</Text>
-                <Text>Text</Text>
+                <DropDownPicker
+                    items={[
+                      {label: 'Новые заявки', value: 0},
+                      {label: 'Требуют исполнения', value: 1},
+                      {label: 'Назначенные мне', value: 2},
+                      {label: 'Созданные мной', value: 3},
+                      {label: 'Назначенные на группу', value: 4},
+                      {label: 'Требуют внимания', value: 5},
+                      {label: 'Акуатльные инценденты', value: 6},
+                      {label: 'Инценденты', value: 7},
+                    ]}
+                    containerStyle={{height: 40}}
+                    onChangeItem={() => alert('Filter')}
+                />
                 <TouchableOpacity
                     activeOpacity={0.7}
                     style={[styles.button, styles.btn]}
@@ -513,6 +534,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#5e6064',
     fontWeight: '300'
+  },
+  textSpecialtyDanger: {
+    fontSize: 10,
+    color: '#5e6064',
+    fontWeight: '300',
+    backgroundColor: '#fd397a',
+    borderRadius: 10,
+    paddingRight: 4,
+    paddingLeft: 4,
   },
   starContainer: {
     flex: 1,

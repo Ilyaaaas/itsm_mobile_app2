@@ -78,8 +78,9 @@ export default function OfferScreen({ navigation }) {
     const [disType, setDisType] = useState(true);
     const [activeTab, setActiveTab] = useState(0);
     const [services, setServices] = useState();
+    const [deadLine, setOfferTitle] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [token, setToken] = useState('BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI');
+    const [token, setToken] = useState('WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
@@ -90,10 +91,21 @@ export default function OfferScreen({ navigation }) {
 
     const createOffer = async () =>
     {
+        if(selectedService == '')
+        {
+            alert('Выберите категорию');
+            return
+        }
+        if(offerDescr == '')
+        {
+            alert('Заполните описание заявки');
+            return
+        }
+
         fetch('http://api.smart24.kz/service-requests/v1/request',
             {
                 method:'POST',
-                headers: {"x-api-key": 'BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI',
+                headers: {"x-api-key": 'WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ',
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
                     },
@@ -106,16 +118,13 @@ export default function OfferScreen({ navigation }) {
             .catch(error => console.error(error))
             .then()
             .finally()
-        Toast.show({
-            text: 'Заявка успешно отправлена',
-            type: 'success',
-            duration: 3000
-        });
+            alert('Заявка успешно отправлена!');
+            navigation.goBack();
     }
 
     const getServices = async () =>
     {
-        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token=BlUukRU4m5u0oiS8Gt2Xy93EKTq8qwaI&_format=json',
+        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token=WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ&_format=json',
             {method:'GET',
                 headers: {"x-api-key": token,
                     "Content-type": "application/json",
@@ -180,8 +189,6 @@ export default function OfferScreen({ navigation }) {
                             {services != undefined ?
                                 <DropDownPicker style={{backgroundColor: '#fff'}}
                                     items={services.map(item=> ({label: item.subject, value: item.id}))}
-                                    // defaultValue={typeUrl}
-                                    // onChangeItem={item => { setSelectedService(item.id); alert(item.id)}}
                                     onChangeItem={item => setSelectedService(item.value)}
                                     dropDownStyle={{backgroundColor: '#fff'}}
                                     zIndex={1000}
