@@ -8,7 +8,7 @@ import HomeScreen from "./HomeScreen";
 import About from "./About/About";
 import InfoScreen from "./Info/InfoScreen";
 import {Root} from "native-base";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -19,22 +19,22 @@ class MainITSMScreen extends React.Component{
                 <BottomTab.Navigator>
                     <BottomTab.Screen name="Заявки" component={HomeScreen}
                         options={{
-                            tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
+                            tabBarIcon: ({ color }) => <Ionicons name="ios-chatbubbles" size={30} color={color}/>,
                         }}
                     />
-                    <BottomTab.Screen name="DiaryScreenView" component={DiaryScreenView}
+                    <BottomTab.Screen name="Уведомления" component={DiaryScreenView}
                         options={{
-                            tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
+                            tabBarIcon: ({ color }) => <Ionicons name="md-notifications-outline" size={30} color={color}/>,
                         }}
                     />
-                    <BottomTab.Screen name="About" component={About}
+                    <BottomTab.Screen name="Профиль" component={About}
                         options={{
-                            tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
+                            tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,
                         }}
                     />
-                    <BottomTab.Screen name="Профиль" component={InfoScreen}
+                    <BottomTab.Screen name="Еще" component={InfoScreen}
                         options={{
-                            tabBarIcon: ({ color }) => <TabBarIcon name="ios-person" color={color} />,
+                            tabBarIcon: ({ color }) => <Feather name="more-vertical" size={24}  color={color} />,
                         }}
                     />
                 </BottomTab.Navigator>
