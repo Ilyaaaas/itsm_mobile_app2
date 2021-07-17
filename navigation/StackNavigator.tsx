@@ -10,12 +10,14 @@ import { DiaryStack } from './DiaryStack';
 import { OfferStack } from './OfferStack';
 import OfferScreen from '../screens/Offer/OfferScreen';
 import DoctorList from "../screens/Doctors/DoctorList";
+import MainITSMScreen from "../screens/MainITSMScreen";
 
 const Stack = createStackNavigator();
 export const StackNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" headerMode="none">
+      <Stack.Navigator initialRouteName="MainITSMScreen" headerMode="none">
+        <Stack.Screen name="MainITSMScreen" component={MainITSMScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="RestorePassword" component={RestorePassword} />

@@ -4,6 +4,7 @@ import {View, StyleSheet, AsyncStorage, Picker, Platform, TextInput} from 'react
 import 'moment/locale/ru';
 import CalendarStrip from 'react-native-calendar-strip';
 import {AntDesign, Ionicons, Entypo, MaterialIcons} from '@expo/vector-icons';
+import HomeScreen from '../HomeScreen';
 import axios from 'axios';
 import {
     Container,
@@ -18,18 +19,21 @@ import {
     Body,
     FooterTab,
     Footer,
-    Toast, Tab, TabHeading, List, Tabs, Input,
+    Toast, List, Tabs, Input,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
 import * as Notifications from "expo-notifications";
+import DiaryScreenView from "../Diary/DiaryScreenView";
 
 import { resetFormInfo, setFormInfo } from '../../actions/form-actions';
 import { isEmpty, DATE_T, SHED_ID_T, TIME_T, TIMES_T, API, getToken } from '../constants';
 import {WebView} from "react-native-webview";
 import {Modal} from "react-native-paper";
 import {StackActions} from "@react-navigation/native";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+const BottomTab = createBottomTabNavigator();
 const CHOOSE_SPEC = 'choose-spec',
     CHOOSE_DOCTOR = 'choose-doctor';
 
@@ -60,6 +64,30 @@ const locale = {
     },
 };
 
+function Test() {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Test</Text>
+        </View>
+    );
+}
+
+function Test2() {
+    return (
+        <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Test2</Text>
+        </View>
+    );
+}
+
+function Test3() {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Test3</Text>
+        </View>
+    );
+}
+
 export default function OfferScreen({ navigation }) {
     const [datesWhitelist, setDatesWhitelist] = useState([
         {
@@ -78,15 +106,17 @@ export default function OfferScreen({ navigation }) {
     const [disType, setDisType] = useState(true);
     const [activeTab, setActiveTab] = useState(0);
     const [services, setServices] = useState();
+    const [catalogs, setCatalogs] = useState();
     const [deadLine, setOfferTitle] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [token, setToken] = useState('WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ');
+    const [token, setToken] = useState('6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
 
     useEffect(() => {
         getServices();
+        getCatalogs();
     }, []);
 
     const createOffer = async () =>
@@ -105,7 +135,7 @@ export default function OfferScreen({ navigation }) {
         fetch('http://api.smart24.kz/service-requests/v1/request',
             {
                 method:'POST',
-                headers: {"x-api-key": 'WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ',
+                headers: {"x-api-key": '6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl',
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
                     },
@@ -122,14 +152,35 @@ export default function OfferScreen({ navigation }) {
             navigation.goBack();
     }
 
-    const getServices = async () =>
+    const getCatalogs = async () =>
     {
-        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token=WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ&_format=json',
+        fetch('http://api.smart24.kz/service-catalog/v1/catalog?access-token=6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl&_format=json',
             {method:'GET',
-                headers: {"x-api-key": token,
+                headers: {
                     "Content-type": "application/json",
                     "Accept": "application/json"},
                 }
+        )
+            .then(response => response.json())
+            .then(function(data){
+                console.log('setCatalogs');
+                console.log(data.items);
+                console.log('setCatalogs');
+                setCatalogs(data.items);
+            })
+            .catch(error => console.error(error))
+            .then()
+            .finally()
+    }
+
+    const getServices = async () =>
+    {
+        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token=6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl&_format=json',
+            {method:'GET',
+                headers: {
+                    "Content-type": "application/json",
+                    "Accept": "application/json"},
+            }
         )
             .then(response => response.json())
             .then(function(data){
@@ -186,12 +237,25 @@ export default function OfferScreen({ navigation }) {
                         {/*{ _renderServices() }*/}
                         <View style={{zIndex: 10}}>
                             <Text>Выберите каталог</Text>
-                            {services != undefined ?
+                            {catalogs != undefined ?
                                 <DropDownPicker style={{backgroundColor: '#fff'}}
-                                    items={services.map(item=> ({label: item.subject, value: item.id}))}
+                                    items={catalogs.map(item=> ({label: item.name, value: item.id}))}
                                     onChangeItem={item => setSelectedService(item.value)}
                                     dropDownStyle={{backgroundColor: '#fff'}}
                                     zIndex={1000}
+                                />
+                                :
+                                null
+                            }
+                        </View>
+                        <View style={{zIndex: 9}}>
+                            <Text>Выберите услугу</Text>
+                            {services != undefined ?
+                                <DropDownPicker style={{backgroundColor: '#fff'}}
+                                                items={services.map(item=> ({label: item.subject, value: item.id}))}
+                                                onChangeItem={item => setSelectedService(item.value)}
+                                                dropDownStyle={{backgroundColor: '#fff'}}
+                                                zIndex={1000}
                                 />
                                 :
                                 null
@@ -225,7 +289,7 @@ export default function OfferScreen({ navigation }) {
                 </Button>
             </Content>
             <Footer style={{ backgroundColor: '#1a192a', height: 30 }}>
-                <FooterTab style={{ backgroundColor: '#1a192a' }}></FooterTab>
+                {/*<FooterTab style={{ backgroundColor: '#1a192a' }}></FooterTab>*/}
             </Footer>
         </Container>
     );

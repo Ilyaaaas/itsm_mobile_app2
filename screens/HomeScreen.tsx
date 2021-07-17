@@ -37,6 +37,9 @@ import {API, getToken} from './constants';
 import StarRating from "react-native-star-rating";
 import {WebView} from "react-native-webview";
 import DropDownPicker from "react-native-dropdown-picker";
+// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import DiaryScreenView from "./Diary/DiaryScreenView";
 
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
@@ -44,13 +47,14 @@ let ScreenWidth = Dimensions.get("window").width;
 var BUTTONS = ["Вызов", "Отправить геоданные", "Отмена"];
 var DESTRUCTIVE_INDEX = 2;
 var CANCEL_INDEX = 3;
+const BottomTab = createBottomTabNavigator();
 
 class HomeScreen extends React.Component{
   constructor(props) {
     super(props);
 
     this.state = {
-      token: 'WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ',
+      token: '6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl',
       refreshing: false,
       list: [],
       isReview: null,
@@ -148,7 +152,7 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    await this._getUrl('request?access-token=WyHlcqcp7dYXW0Z_snLHOXPwwhybxwLQ&_format=json&expand=status,product,type&sort=-id').then(value => {
+    await this._getUrl('request?access-token=6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl&_format=json&expand=status,product,type&sort=-id').then(value => {
       if(value !== null){
         this.setState({ list: value.items});
         console.log('items');
@@ -254,6 +258,12 @@ class HomeScreen extends React.Component{
   }
 
   render() {
+    function Test() {
+      return (
+          <Text>test</Text>
+      );
+    }
+
     var color = 'blue';
     return (
         <Container>
@@ -353,12 +363,12 @@ class HomeScreen extends React.Component{
                                   null
                               }
                               {/*{doc.status.colorClass == 'info' ?*/}
-                                  <AntDesign
-                                      name="warning"
-                                      size={24}
-                                      style={{marginRight: 10, color: '#17a2b8'}}
-                                      onPress={() => this.getPriemForm()}
-                                  />
+                              <AntDesign
+                                  name="warning"
+                                  size={24}
+                                  style={{marginRight: 10, color: '#17a2b8'}}
+                                  onPress={() => this.getPriemForm()}
+                              />
                               {/*    :*/}
                               {/*    null*/}
                               {/*}*/}

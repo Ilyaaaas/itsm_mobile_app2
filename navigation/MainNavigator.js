@@ -1,6 +1,7 @@
 import { Icon } from 'native-base';
 import React from 'react';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
+// import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import ResultsScreen from '../screens/Analise/ResultsScreen';
 import ResultsShow from '../screens/Analise/ResultsShow';

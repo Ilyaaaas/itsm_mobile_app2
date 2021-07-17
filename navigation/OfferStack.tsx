@@ -5,13 +5,15 @@ import DiaryScreen from "../screens/Diary/DiaryScreen";
 import DiaryScreenView from "../screens/Diary/DiaryScreenView";
 import DiaryScreenResult from '../screens/Diary/DiaryScreenResult';
 import HomeScreen from '../screens/HomeScreen';
+import MainITSMScreen from '../screens/MainITSMScreen';
 import OfferScreen from '../screens/Offer/OfferScreen';
 
 const Stack = createStackNavigator();
 
 export const OfferStack = () => {
     return (
-        <Stack.Navigator initialRouteName="HomeScreen" headerMode="none">
+        <Stack.Navigator initialRouteName="MainITSMScreen" headerMode="none">
+            <Stack.Screen name="MainITSMScreen" component={MainITSMScreen} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="DiaryScreenView" component={DiaryScreenView} />
             <Stack.Screen name="OfferScreen" component={OfferScreen} />
