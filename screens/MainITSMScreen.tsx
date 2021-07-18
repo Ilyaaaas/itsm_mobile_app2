@@ -1,14 +1,20 @@
 import React from 'react';
 import {
-    Text
+    Text,
+    Button,
+    View
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DiaryScreenView from "./Diary/DiaryScreenView";
+import DiaryScreen from "./Diary/DiaryScreen";
 import HomeScreen from "./HomeScreen";
 import About from "./About/About";
 import InfoScreen from "./Info/InfoScreen";
+import Notifications from "./Notifications";
+import OfferScreen from "../screens/Offer/OfferScreen";
 import {Root} from "native-base";
-import { Ionicons, Feather } from '@expo/vector-icons';
+import {Ionicons, Feather, AntDesign} from '@expo/vector-icons';
+import {BaseButton} from "react-native-gesture-handler";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -22,12 +28,23 @@ class MainITSMScreen extends React.Component{
                             tabBarIcon: ({ color }) => <Ionicons name="ios-chatbubbles" size={30} color={color}/>,
                         }}
                     />
-                    <BottomTab.Screen name="Уведомления" component={DiaryScreenView}
+                    <BottomTab.Screen name="Уведомления" component={Notifications}
                         options={{
                             tabBarIcon: ({ color }) => <Ionicons name="md-notifications-outline" size={30} color={color}/>,
                         }}
                     />
-                    <BottomTab.Screen name="Профиль" component={About}
+                    <BottomTab.Screen name=" " component={OfferScreen}
+                                      options={{
+                                          tabBarIcon: ({ color }) => <AntDesign
+                                              name="pluscircleo"
+                                              size={35}
+                                              color="#a2a3b7"
+                                              style={{paddingBottom: 20, marginBottom: 0, zIndex: 30}}
+                                              onPress={() => this.props.navigation.navigate('OfferScreen')}
+                                          />,
+                                      }}
+                    />
+                    <BottomTab.Screen name="Профиль" component={DiaryScreen}
                         options={{
                             tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,
                         }}

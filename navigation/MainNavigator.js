@@ -16,6 +16,7 @@ import ChooseTime from '../screens/Priem/ChooseTime';
 import ChooseType from '../screens/Priem/ChooseType';
 import PriemScreen from '../screens/Priem/PriemScreen';
 import CreateITSMRequest from '../screens/Request/CreateOffer';
+import Notifications from '../screens/Notifications';
 import { Registration } from '../screens/Registration/RegistrationForm';
 
 import Doctors from '../screens/Doctors/Doctors';

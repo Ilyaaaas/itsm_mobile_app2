@@ -85,13 +85,13 @@ export default class Notifications extends React.Component{
         return (
             <Container>
                 <Header style={styles.headerTop}>
-                    <Left style={{ flex: 1}}>
-                        <Ionicons name="ios-menu"
-                              style={{ color: '#a2a3b7', marginLeft: 10 }}
-                              onPress={() => this.props.navigation.openDrawer()}
-                              size={24}
-                        />
-                    </Left>
+                    {/*<Left style={{ flex: 1}}>*/}
+                    {/*    <Ionicons name="ios-menu"*/}
+                    {/*          style={{ color: '#a2a3b7', marginLeft: 10 }}*/}
+                    {/*          onPress={() => this.props.navigation.openDrawer()}*/}
+                    {/*          size={24}*/}
+                    {/*    />*/}
+                    {/*</Left>*/}
                     <Body style={{ flex: 3 }}>
                         <Title style={{ color: '#a2a3b7' }}>Уведомления</Title>
                     </Body>

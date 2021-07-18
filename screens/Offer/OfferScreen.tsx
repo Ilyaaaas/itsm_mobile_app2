@@ -109,7 +109,7 @@ export default function OfferScreen({ navigation }) {
     const [catalogs, setCatalogs] = useState();
     const [deadLine, setOfferTitle] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [token, setToken] = useState('6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl');
+    const [token, setToken] = useState('RO2Q56HZACI880x4SvLbU_t5f69dhBTT');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
@@ -135,7 +135,7 @@ export default function OfferScreen({ navigation }) {
         fetch('http://api.smart24.kz/service-requests/v1/request',
             {
                 method:'POST',
-                headers: {"x-api-key": '6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl',
+                headers: {"x-api-key": token,
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
                     },
@@ -154,7 +154,7 @@ export default function OfferScreen({ navigation }) {
 
     const getCatalogs = async () =>
     {
-        fetch('http://api.smart24.kz/service-catalog/v1/catalog?access-token=6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl&_format=json',
+        fetch('http://api.smart24.kz/service-catalog/v1/catalog?access-token='+token+'&_format=json',
             {method:'GET',
                 headers: {
                     "Content-type": "application/json",
@@ -175,7 +175,7 @@ export default function OfferScreen({ navigation }) {
 
     const getServices = async () =>
     {
-        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token=6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl&_format=json',
+        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token='+token+'&_format=json',
             {method:'GET',
                 headers: {
                     "Content-type": "application/json",

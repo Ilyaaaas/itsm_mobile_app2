@@ -125,19 +125,12 @@ class DiaryScreen extends React.Component
         return (
             <Container>
                 <Header style={styles.headerTop}>
-                    <Left style={{ flex: 1}}>
-                        <Ionicons name="ios-menu"
-                                  style={{ color: '#046475', marginLeft: 10 }}
-                                  onPress={() => this.props.navigation.openDrawer()}
-                                  size={24}
-                        />
-                    </Left>
                     <Body style={{ flex: 3 }}>
-                        <Title style={{ color: '#046475' }}>Дневник пациента</Title>
+                        <Title style={{ color: '#046475' }}>Профиль</Title>
                     </Body>
                     <Right>
                         <AntDesign
-                            name="pluscircleo"
+                            name="edit"
                             size={24}
                             color="#046475"
                             style={{ marginRight: 10 }}

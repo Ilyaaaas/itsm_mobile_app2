@@ -54,7 +54,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: '6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl',
+      token: 'RO2Q56HZACI880x4SvLbU_t5f69dhBTT',
       refreshing: false,
       list: [],
       isReview: null,
@@ -152,7 +152,7 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    await this._getUrl('request?access-token=6Tx3K7aq71lPG9vNPIrqitqxBO2WIpUl&_format=json&expand=status,product,type&sort=-id').then(value => {
+    await this._getUrl('request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id').then(value => {
       if(value !== null){
         this.setState({ list: value.items});
         console.log('items');

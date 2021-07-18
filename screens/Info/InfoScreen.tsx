@@ -13,10 +13,10 @@ import {
   Title,
   ListItem,
   List,
-  Spinner,
+  Spinner, ActionSheet,
 } from 'native-base';
 import React from 'react';
-import { StyleSheet, AsyncStorage } from 'react-native';
+import { StyleSheet, AsyncStorage, TouchableOpacity, Image } from 'react-native';
 import { List as PaperList } from 'react-native-paper';
 
 import { API, getToken } from '../constants';
@@ -185,58 +185,59 @@ class InfoScreen extends React.Component {
     return (
       <Container>
         <Header style={styles.headerTop}>
-          <Left style={{ flex: 1 }}>
-            <Ionicons
-              name="ios-menu"
-              style={{ color: '#046475', marginTop: 10, marginLeft: 10 }}
-              onPress={() => this.props.navigation.openDrawer()}
-              size={24}
-            />
-          </Left>
           <Body style={{ flex: 3 }}>
             <Title style={{ color: '#046475', fontSize: 20 }}>Информация</Title>
           </Body>
-          <Right />
         </Header>
 
-        <Content padder>
-          {this.state.loadingList ? (
-            <Spinner color="red" />
-          ) : (
-            <View>
-              <ListItem>
-                <Ionicons
-                  name="ios-person"
-                  color="#047B7F"
-                  style={{ fontSize: 40, paddingVertical: 5 }}
-                />
-                <Body style={{ paddingLeft: 10 }}>
-                  <Text style={{ fontSize: 20, paddingVertical: 5 }}>
-                    {isNotUndefined(this.state.user.fname) || 'АЛИМКУЛОВ'}{' '}
-                    {this.state.user.sname || 'КАДЫР'}
-                  </Text>
-                  <Text style={{ fontSize: 12 }} note>
-                    {isNotUndefined(this.state.user.bday) || '01.01.1949'}
-                  </Text>
-                  <Text style={{ fontSize: 12 }} note>
-                    {isNotUndefined(this.state.user.iin) || '490101300712'}
-                  </Text>
-                  <Text style={{ fontSize: 12 }} note>
-                    {isNotUndefined(this.state.user.section_txt) || ''}
-                  </Text>
-                </Body>
-              </ListItem>
-              <RenderInfo
-                title="ПРЕДЫДУЩИЕ РЕКОМЕНДАЦИИ"
-                list={this.state.list}
-                onPressList={this.onPressList}
+        <Content>
+          <View style={{ flex: 1, flexDirection: 'column' }}>
+            <TouchableOpacity
+                style={{ marginVertical: 10 }}
+                onPress={() => {
+                  this.props.navigation.navigate('PriemStack');
+                }}>
+              <Image
+                  resizeMode={'contain'}
+                  style={{ width: '100%', height: 100 }}
+                  source={require('../../assets/design/home/1.png')}
               />
-            </View>
-          )}
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{ marginVertical: 10 }}
+                onPress={() => {
+                  this.props.navigation.navigate('InfoScreenStack');
+                }}>
+              <Image
+                  resizeMode={'contain'}
+                  style={{ width: '100%', height: 100 }}
+                  source={require('../../assets/design/home/2.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{ marginVertical: 10 }}
+                onPress={() => {
+                  this.props.navigation.navigate('ResultsStack');
+                }}>
+              <Image
+                  resizeMode={'contain'}
+                  style={{ width: '100%', height: 100 }}
+                  source={require('../../assets/design/home/3.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{ marginVertical: 10 }}
+                onPress={() => {
+                  this.props.navigation.navigate('ContactsScreen');
+                }}>
+              <Image
+                  resizeMode={'contain'}
+                  style={{ width: '100%', height: 100 }}
+                  source={require('../../assets/design/home/4.png')}
+              />
+            </TouchableOpacity>
+          </View>
         </Content>
-        <Footer style={{ backgroundColor: '#047B7F', height: 30 }}>
-          <FooterTab style={{ backgroundColor: '#047B7F' }} />
-        </Footer>
       </Container>
     );
   }
