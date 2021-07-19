@@ -36,9 +36,9 @@ class MainITSMScreen extends React.Component{
                     <BottomTab.Screen name=" " component={OfferScreen}
                                       options={{
                                           tabBarIcon: ({ color }) => <AntDesign
-                                              name="pluscircleo"
+                                              name="pluscircle"
                                               size={35}
-                                              color="#a2a3b7"
+                                              color="#313B73"
                                               style={{paddingBottom: 20, marginBottom: 0, zIndex: 30}}
                                               onPress={() => this.props.navigation.navigate('OfferScreen')}
                                           />,

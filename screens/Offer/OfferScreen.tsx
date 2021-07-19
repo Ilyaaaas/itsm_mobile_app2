@@ -109,7 +109,7 @@ export default function OfferScreen({ navigation }) {
     const [catalogs, setCatalogs] = useState();
     const [deadLine, setOfferTitle] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [token, setToken] = useState('RO2Q56HZACI880x4SvLbU_t5f69dhBTT');
+    const [token, setToken] = useState('Y21LEW6WnpD8yprN6CATufnIT-Q-qMCj');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();

@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
   ActionSheet,
-  Toast, Root, Button, Tab,
+  Toast, Root, Button, Tab, TabHeading, Tabs,
 } from 'native-base';
 import React from 'react';
 import {
@@ -54,7 +54,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: 'RO2Q56HZACI880x4SvLbU_t5f69dhBTT',
+      token: 'Y21LEW6WnpD8yprN6CATufnIT-Q-qMCj',
       refreshing: false,
       list: [],
       isReview: null,
@@ -70,6 +70,9 @@ class HomeScreen extends React.Component{
       filterModal: false,
       dataDocStatusId: 0,
       dataDocId: 0,
+      author_name: '',
+      created_at: '',
+      company_name: '',
     }
   }
 
@@ -155,9 +158,9 @@ class HomeScreen extends React.Component{
     await this._getUrl('request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id').then(value => {
       if(value !== null){
         this.setState({ list: value.items});
-        console.log('items');
-        console.log(value.items);
-        console.log('items');
+        // console.log('items');
+        // console.log(value.items);
+        // console.log('items');
       }
     })
   }
@@ -200,8 +203,18 @@ class HomeScreen extends React.Component{
   }
 
   onInfoButtonClicked = async (docid) => {
-    await this._getUrl('request/'+docid).then(value => {
-      this.setState({ listGrade: value, activeDoc: docid, modal: true});
+    await this._getUrl('request/'+docid+'?expand=clientUser').then(value => {
+      console.log('onInfoButtonClicked');
+      console.log(value.clientUser);
+      console.log('onInfoButtonClicked');
+        this.setState({
+          listGrade: value,
+          activeDoc: docid,
+          modal: true,
+          author_name: value.clientUser.person_name,
+          created_at: value.clientUser.created_at,
+          company_name: value.clientUser.company_name,
+        });
     })
   }
 
@@ -269,13 +282,6 @@ class HomeScreen extends React.Component{
         <Container>
           <Root>
             <Header style={styles.headerTop}>
-              <Left style={{ flex: 1}}>
-                {/*<Ionicons name="ios-menu"*/}
-                {/*          style={{ color: '#a2a3b7', marginLeft: 10 }}*/}
-                {/*          onPress={() => this.props.navigation.openDrawer()}*/}
-                {/*          size={24}*/}
-                {/*/>*/}
-              </Left>
               <Body style={{ flex: 3 }}>
                 <Title style={{ color: '#a2a3b7' }}>Мои заявки</Title>
               </Body>
@@ -392,42 +398,93 @@ class HomeScreen extends React.Component{
                 justifyContent: 'space-between',
               }}>
                 <ScrollView style={{ paddingTop: 40 }}>
+                  <ListItem>
+                    <Ionicons
+                        name="ios-person"
+                        style={{ fontSize: 40, paddingVertical: 5 }}
+                    />
+                    <Body style={{ paddingLeft: 10 }}>
+                      <Text style={{ fontSize: 20, paddingVertical: 5 }}>
+                        {this.state.author_name}
+                      </Text>
+                      <Text style={{ fontSize: 12 }}>
+                        {this.state.company_name}
+                      </Text>
+                      <Text style={{ fontSize: 12 }}>
+                        {this.state.created_at}
+                      </Text>
+                    </Body>
+                  </ListItem>
                   <View>
-                    <Text style={styles.textName}>Заголовок: </Text>
-                    <Text>{this.state.listGrade.title}</Text>
-                  </View>
-                  <View>
-                    <Text style={styles.textName}>Описание: </Text>
-                    <Text>{this.state.listGrade.descr}</Text>
-                  </View>
-                  <View>
-                    <Text style={styles.textName}>Дата создания: </Text>
-                    <Text>{this.state.listGrade.createdAt}</Text>
+                  <Tabs>
+                    <Tab heading={
+                      <TabHeading>
+                        <Text>Инфо</Text>
+                      </TabHeading>
+                    }>
+                      <List>
+                        <ListItem key={1}>
+                          <View>
+                            <Text style={styles.textName}>Заголовок: </Text>
+                            <Text>{this.state.listGrade.title}</Text>
+                          </View>
+                          <View>
+                            <Text style={styles.textName}>Описание: </Text>
+                            <Text>{this.state.listGrade.descr}</Text>
+                          </View>
+                          <View>
+                            <Text style={styles.textName}>Дата создания: </Text>
+                            <Text>{this.state.listGrade.createdAt}</Text>
+                          </View>
+                        </ListItem>
+                      </List>
+                    </Tab>
+                    <Tab heading={
+                      <TabHeading>
+                        <Text>Журнал</Text>
+                      </TabHeading>
+                    }>
+                      <List>
+                        <ListItem key={2}>
+                          <View style={{ flexDirection: "column" }}>
+                            <Text style={{ fontSize: 16 }}>Test</Text>
+                            <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>date</Text>
+                          </View>
+                        </ListItem>
+                      </List>
+                    </Tab>
+                    <Tab heading={
+                      <TabHeading>
+                        <Text>Комментарии</Text>
+                      </TabHeading>
+                    }>
+                      <List>
+                        <ListItem noBorder>
+                          <TextInput
+                              style={styles.textArea}
+                              underlineColorAndroid="transparent"
+                              placeholder="Комментарий"
+                              placeholderTextColor="grey"
+                              numberOfLines={2}
+                              multiline={true}
+                              onChangeText={text => this.setState({ otziv: text})}
+                          />
+                        </ListItem>
+                        <ListItem noBorder style={{ marginTop: -20 }}>
+                          <TextInput
+                              style={styles.contactInput}
+                              underlineColorAndroid="transparent"
+                              placeholder="Ваши контакты"
+                              placeholderTextColor="grey"
+                              onChangeText={text => this.setState({callPhone: text})}
+                          />
+                        </ListItem>
+                      </List>
+                    </Tab>
+                  </Tabs>
                   </View>
                 </ScrollView>
                 <View style={{ borderTopWidth: 1,}}>
-                  <List>
-                    <ListItem noBorder>
-                      <TextInput
-                          style={styles.textArea}
-                          underlineColorAndroid="transparent"
-                          placeholder="Комментарий"
-                          placeholderTextColor="grey"
-                          numberOfLines={2}
-                          multiline={true}
-                          onChangeText={text => this.setState({ otziv: text})}
-                      />
-                    </ListItem>
-                    <ListItem noBorder style={{ marginTop: -20 }}>
-                      <TextInput
-                          style={styles.contactInput}
-                          underlineColorAndroid="transparent"
-                          placeholder="Ваши контакты"
-                          placeholderTextColor="grey"
-                          onChangeText={text => this.setState({callPhone: text})}
-                      />
-                    </ListItem>
-                  </List>
                   <List>
                     <ListItem>
                       <Left>
