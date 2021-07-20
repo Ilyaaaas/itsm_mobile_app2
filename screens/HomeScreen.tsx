@@ -54,7 +54,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: 'Y21LEW6WnpD8yprN6CATufnIT-Q-qMCj',
+      token: 'Cl-PqcQypV_t2_DXhLALQVeD3PRYc3Mi',
       refreshing: false,
       list: [],
       isReview: null,
@@ -282,6 +282,8 @@ class HomeScreen extends React.Component{
         <Container>
           <Root>
             <Header style={styles.headerTop}>
+              <Left>
+              </Left>
               <Body style={{ flex: 3 }}>
                 <Title style={{ color: '#a2a3b7' }}>Мои заявки</Title>
               </Body>

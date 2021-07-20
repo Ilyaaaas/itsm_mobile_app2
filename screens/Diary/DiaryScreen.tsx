@@ -125,14 +125,16 @@ class DiaryScreen extends React.Component
         return (
             <Container>
                 <Header style={styles.headerTop}>
+                    <Left>
+                    </Left>
                     <Body style={{ flex: 3 }}>
-                        <Title style={{ color: '#046475' }}>Профиль</Title>
+                        <Title style={{ color: '#a2a3b7' }}>Профиль</Title>
                     </Body>
                     <Right>
                         <AntDesign
                             name="edit"
                             size={24}
-                            color="#046475"
+                            color="#a2a3b7"
                             style={{ marginRight: 10 }}
                             onPress={() => {
                                 this.getDiaryView(0);
@@ -207,7 +209,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerTop: {
-        backgroundColor: '#01A19F',
+        backgroundColor: '#1a192a',
     },
 });
 

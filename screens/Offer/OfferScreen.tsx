@@ -19,7 +19,7 @@ import {
     Body,
     FooterTab,
     Footer,
-    Toast, List, Tabs, Input,
+    Toast, List, Tabs, Input, Icon,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -32,6 +32,7 @@ import {WebView} from "react-native-webview";
 import {Modal} from "react-native-paper";
 import {StackActions} from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as DocumentPicker from 'expo-document-picker';
 
 const BottomTab = createBottomTabNavigator();
 const CHOOSE_SPEC = 'choose-spec',
@@ -108,8 +109,9 @@ export default function OfferScreen({ navigation }) {
     const [services, setServices] = useState();
     const [catalogs, setCatalogs] = useState();
     const [deadLine, setOfferTitle] = useState();
+    const [file, setFile] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [token, setToken] = useState('Y21LEW6WnpD8yprN6CATufnIT-Q-qMCj');
+    const [token, setToken] = useState('Cl-PqcQypV_t2_DXhLALQVeD3PRYc3Mi');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
@@ -212,6 +214,74 @@ export default function OfferScreen({ navigation }) {
         }
     }
 
+    async function chooseFiles()
+    {
+        let result = DocumentPicker.getDocumentAsync({
+            type: "*/*",
+            //type: "image/*",
+            // type: "audio/*",
+            // type: "application/*",
+            // type: "application/pdf",
+            // type: "application/msword",
+            // type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            // type: "vnd.ms-excel",
+            // type: "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            // type: "text/csv",
+        })
+        const Mydata = new FormData();
+        Mydata.append('file', result);
+        setFile(Mydata);
+        // const dirInfo = FileSystem.getInfoAsync();
+        console.log(result);
+        sendFile();
+    }
+
+    async function sendFile()
+    {
+        // console.log('response');
+        // console.log(file['_parts'][0][1]['_W']['name']);
+        var name = file['_parts'][0][1]['_W']['name'];
+        var size = file['_parts'][0][1]['_W']['size'];
+        var uri = file['_parts'][0][1]['_W']['uri'];
+        let formData = new FormData();
+        formData.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
+        console.log('formData');
+        const response = await fetch(
+            'http://api.smart24.kz/portal/v1/profile/login',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Accept': '*/*',
+                    'accept-encoding': 'gzip, deflate, br',
+                    'accept-language': 'en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7,kk;q=0.6',
+                    'content-length': '72645',
+                    'content-type': 'multipart/form-data; boundary=----WebKitFormBoundaryBdQRWEV1LyTwCOMj',
+                    'cookie': '_language=e4ba202ce8b49ee484abeba00167892f322de0ef34de2ac4b6865a276a04c0baa%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_language%22%3Bi%3A1%3Bs%3A2%3A%22ru%22%3B%7D; PHPSESSID=hqv1mjdh5tjcnhie43797dplns; _identity=c76101ba0f1bd1669522e6a6ffa43a99330f0322e95988bb848fa1c933e4e210a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A47%3A%22%5B3470%2C%22l85mXIMwP0-lCedJCEjK8Uzz2rqAhqcK%22%2C32400%5D%22%3B%7D; _csrf=2b0da772c9d1289801f23b0cc76d9bce084f6da07b1e2d7607512a7b1bef7d5da%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22CBZH5hbSTl2MZ-0t8BNqC8n1xyyV4Hjg%22%3B%7D',
+                    'origin': 'https://smart24.kz',
+                    'referer': 'https://smart24.kz/',
+                    'sec-ch-ua': 'Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-fetch-dest': 'empty',
+                    'sec-fetch-mode': 'cors',
+                    'sec-fetch-site': 'same-origin',
+                    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+                    'x-csrf-token': 'BmHM8thoK8PflF4DtKSD0eFO2sPEqXh9Osb3K2xrPkhFI5a67QBJkIv4bE7uibOl2QyUsoeRFkxCv459WCNULw==',
+                    'x-requested-with': 'XMLHttpRequest',
+                },
+                body: formData
+            })
+            .then(response => console.log(response.text()))
+            .then(response => console.log('response'+response))
+            .catch(error => alert(error));
+        // const responseJson = await response.json();
+        // if(responseJson !== null) {
+        //     console.log('responseJson');
+        //     console.log(responseJson);
+        // }
+        console.log('finish');
+    }
+
     return (
         <Container>
             <Header style={styles.headerTop}>
@@ -271,6 +341,13 @@ export default function OfferScreen({ navigation }) {
                                 value={offerDescr}
                                 style={{height: 100}}
                             />
+                        </View>
+                        <View style={{marginTop: 20}}>
+                            <Button full primary
+                                    onPress={() => chooseFiles()}>
+                                <Icon name='paper' />
+                                <Text style={{color: '#fff'}}>Выбрать файл</Text>
+                            </Button>
                         </View>
                     </View>
                 </View>

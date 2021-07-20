@@ -186,14 +186,19 @@ class InfoScreen extends React.Component {
       <Container>
         <Header style={styles.headerTop}>
           <Body style={{ flex: 3 }}>
-            <Title style={{ color: '#046475', fontSize: 20 }}>Информация</Title>
+            <Title style={{ color: '#a2a3b7' }}>Информация</Title>
           </Body>
         </Header>
 
         <Content>
-          <View style={{ flex: 1, flexDirection: 'column' }}>
+          <View style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',}}>
             <TouchableOpacity
-                style={{ marginVertical: 10 }}
+                style={{
+                        width: '50%',
+                        padding: 10,
+                      }}
                 onPress={() => {
                   this.props.navigation.navigate('PriemStack');
                 }}>
@@ -204,7 +209,10 @@ class InfoScreen extends React.Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ marginVertical: 10 }}
+                style={{
+                        width: '50%',
+                        padding: 10,
+                      }}
                 onPress={() => {
                   this.props.navigation.navigate('InfoScreenStack');
                 }}>
@@ -215,7 +223,10 @@ class InfoScreen extends React.Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ marginVertical: 10 }}
+                style={{
+                        width: '50%',
+                        padding: 10,
+                      }}
                 onPress={() => {
                   this.props.navigation.navigate('ResultsStack');
                 }}>
@@ -226,7 +237,10 @@ class InfoScreen extends React.Component {
               />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ marginVertical: 10 }}
+                style={{
+                        width: '50%',
+                        padding: 10,
+                      }}
                 onPress={() => {
                   this.props.navigation.navigate('ContactsScreen');
                 }}>
@@ -258,10 +272,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTop: {
-    backgroundColor: '#01A19F',
+    backgroundColor: '#1a192a',
   },
   rowBottom: {
     zIndex: 1,
     marginTop: -40,
   },
 });
+
