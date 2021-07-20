@@ -186,3 +186,4 @@ export const DrawerNavigator = (props) => {
     </Drawer.Navigator>
   );
 };
+

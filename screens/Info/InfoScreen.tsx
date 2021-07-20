@@ -186,7 +186,7 @@ class InfoScreen extends React.Component {
       <Container>
         <Header style={styles.headerTop}>
           <Body style={{ flex: 3 }}>
-            <Title style={{ color: '#a2a3b7' }}>Информация</Title>
+            <Title style={{ color: '#a2a3b7' }}>Сервисы</Title>
           </Body>
         </Header>
 
@@ -200,40 +200,12 @@ class InfoScreen extends React.Component {
                         padding: 10,
                       }}
                 onPress={() => {
-                  this.props.navigation.navigate('PriemStack');
+                  this.props.navigation.navigate('AboutStack');
                 }}>
               <Image
                   resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
+                  style={{ width: '100%', height: 300 }}
                   source={require('../../assets/design/home/1.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                        width: '50%',
-                        padding: 10,
-                      }}
-                onPress={() => {
-                  this.props.navigation.navigate('InfoScreenStack');
-                }}>
-              <Image
-                  resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
-                  source={require('../../assets/design/home/2.png')}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={{
-                        width: '50%',
-                        padding: 10,
-                      }}
-                onPress={() => {
-                  this.props.navigation.navigate('ResultsStack');
-                }}>
-              <Image
-                  resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
-                  source={require('../../assets/design/home/3.png')}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -246,8 +218,8 @@ class InfoScreen extends React.Component {
                 }}>
               <Image
                   resizeMode={'contain'}
-                  style={{ width: '100%', height: 100 }}
-                  source={require('../../assets/design/home/4.png')}
+                  style={{ width: '100%', height: 300 }}
+                  source={require('../../assets/design/home/2.png')}
               />
             </TouchableOpacity>
           </View>
