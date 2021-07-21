@@ -1,20 +1,26 @@
 import React from 'react';
-import {AntDesign, Ionicons} from '@expo/vector-icons';
-import {Container, Content, Header, Left, Body, Title, Right, List, ListItem, Toast} from 'native-base';
-import {StyleSheet, Text, AsyncStorage, RefreshControl} from 'react-native';
+import {AntDesign, Ionicons, MaterialIcons} from '@expo/vector-icons';
+import {Container, Content, Header, Left, Body, Title, Right, List, ListItem, Toast, Accordion} from 'native-base';
+import {CheckBox, StyleSheet, Text, AsyncStorage, RefreshControl, View, Image} from 'react-native';
+// import { Checkbox } from 'react-native-paper';
 
 import moment from "moment";
 import { API, getToken } from '../constants';
 import * as _ from 'lodash';
-import {Button} from "react-native-paper";
+import {Button, Checkbox} from "react-native-paper";
 
 class DiaryScreen extends React.Component
 {
+    state = {
+        trueCheckBoxIsOn: true,
+        falseCheckBoxIsOn: false,
+    };
+
     constructor(props) {
         super(props);
 
         this.state = {
-            token: '',
+            token: 'd0vpCxftx4VxTyMimUBhwCEgyvGp4qJK',
             refreshing: false,
             user: {},
             list : [],
@@ -22,6 +28,9 @@ class DiaryScreen extends React.Component
             activeId: 0,
             modal: false,
             ls: {},
+            personName: '',
+            lastName: '',
+            checkBoxIsOn: 'checked',
         }
     }
 
@@ -41,7 +50,7 @@ class DiaryScreen extends React.Component
     };
 
     _getList = async () => {
-        const API_URL = `${API}backend/diary`;
+        const API_URL = `${API}portal/v1/user/3470?access-token=d0vpCxftx4VxTyMimUBhwCEgyvGp4qJK`;
 
         try {
             const response = await fetch(API_URL, {
@@ -54,18 +63,20 @@ class DiaryScreen extends React.Component
             });
 
             const responseJson = await response.json();
+            console.log('responseJson');
+            console.log(responseJson);
 
             if (responseJson !== null) {
-                if(responseJson.success == false){
-                    Toast.show({
-                        text: responseJson.message,
-                        type: 'danger',
-                        duration: 3000
-                    });
-                    return;
-                }
+                // if(responseJson.success == false){
+                //     Toast.show({
+                //         text: responseJson.message,
+                //         type: 'danger',
+                //         duration: 3000
+                //     });
+                //     return;
+                // }
 
-                this.setState({ list: responseJson.result });
+                this.setState({ list: responseJson });
             }
         } catch (error) {
             console.log('Error when call API: ' + error.message);
@@ -74,16 +85,10 @@ class DiaryScreen extends React.Component
 
     _refreshPage = async () => {
         this.setState({refreshing: true});
-        await this._getToken();
+        // await this._getToken();
         await this._getUserData();
         this._getList();
         this.setState({refreshing: false});
-    }
-
-    getDiaryView = (ids) => {
-        this.props.navigation.navigate('DiaryScreenView', {
-            id: ids
-        });
     }
 
     UNSAFE_componentWillMount() {
@@ -94,34 +99,40 @@ class DiaryScreen extends React.Component
         this._refreshPage();
     }
 
-    getSorted = ({list}: { list: any }) => {
-        const sortedList = _.sortBy(list, (a) =>
-            moment(a.date_set, 'YYYY/MM/DD HH:mm:ss')
+    _renderContent(item) {
+        console.log(item);
+        return (
+            <View>
+                {item.id == '1' ?
+                    <Checkbox.Item
+                        status={'checked'}
+                        color="#a2a3b7"
+                        onPress={() => this.handleChecked()}
+                        label="Получать PUSH уведомления"
+                        style={{ width:"90%" }}
+                    />
+                    :
+                    null
+                }
+            </View>
         );
-
-        return this.state.sortBy === 'desc' ? _.reverse(sortedList) : sortedList;
-    };
-
-    handleSortBy = () => {
-        this.setState(
-            {
-                sortBy: this.state.sortBy === 'desc' ? 'asc' : 'desc',
-            },
-            () => {
-                this.setState({
-                    list: this.getSorted({list: this.state.list})
-                });
-            }
-        );
-    };
-
-    _viewModal = async (value: any) => {
-        this.props.navigation.navigate('DiaryScreenResult', {
-            list: value
-        });
     }
 
+    handleChecked = () => {
+        var checkBoxState = 'unchecked';
+        if(this.state.checkBoxIsOn == 'unchecked')
+        {
+            checkBoxState = 'checked';
+        }
+        this.setState({checkBoxIsOn: checkBoxState})
+    };
+
     render() {
+        const dataArray = [
+            { id: 0, title: "Контакты", content: 'username' },
+            { id: 1, title: "Настройки", content: "Нет доступных настроек" },
+            { id: 2, title: "Развозка", content: "Нет уведомлений" }
+        ];
         return (
             <Container>
                 <Header style={styles.headerTop}>
@@ -143,6 +154,7 @@ class DiaryScreen extends React.Component
                     </Right>
                 </Header>
                 <Content
+                    style={{alignContent: 'center'}}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.refreshing}
@@ -150,51 +162,24 @@ class DiaryScreen extends React.Component
                         />
                     }
                 >
-                    <ListItem>
-                        <Ionicons
-                            name="ios-person"
-                            style={{ fontSize: 40, paddingVertical: 5 }}
-                        />
-                        <Body style={{ paddingLeft: 10 }}>
-                            <Text style={{ fontSize: 20, paddingVertical: 5 }}>
-                                { this.state.user.fname } { this.state.user.sname }
-                            </Text>
-                            <Text style={{ fontSize: 12 }}>
-                                { this.state.user.bday }
-                            </Text>
-                            <Text style={{ fontSize: 12 }}>
-                                { this.state.user.iin }
-                            </Text>
-                        </Body>
-                    </ListItem>
-                    {this.state.list.length > 1? (
-                    <ListItem>
-                        <Button
-                            icon={
-                                this.state.sortBy === 'desc' ? 'chevron-down' : 'chevron-up'
+                    <ListItem style={{alignSelf: 'center',}}>
+                        <View>
+                            {this.state.list.avaFile == null ?
+                                <Image style={styles.message_img} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
+                                :
+                                <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
                             }
-                            onPress={this.handleSortBy}>
-                            Сортировать по дате
-                        </Button>
+                            <View>
+                                <Text style={{fontSize: 30, color: '#898989', textAlign: "center",}}>{this.state.list.personName}</Text>
+                                <Text style={{fontSize: 14, color: '#898989', textAlign: "center",}}>{this.state.list.companyName}</Text>
+                                <Text style={{fontSize: 14, color: '#898989', textAlign: "center",}}>{this.state.list.username}</Text>
+                            </View>
+                        </View>
                     </ListItem>
-                    ) : (
-                        <Text></Text>
-                    )}
-                    {this.state.refreshing ? (
-                        <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
-                    ) : (
-                    <List>
-                        {this.state.list.map((value, i) => (
-                            <ListItem
-                                key={i}
-                                style={{ paddingBottom: 5, paddingTop: 5 }}
-                                onPress={() => { this._viewModal(value); }}
-                            >
-                                <Text style={{ fontSize: 14, marginTop: 10, marginBottom: 10 }}>Запись наблюдения { value.date_set  }</Text>
-                            </ListItem>
-                        ))}
-                    </List>
-                    )}
+                    <Content padder>
+                        <Accordion dataArray={dataArray} expanded={0} renderContent={this._renderContent}
+                        />
+                    </Content>
                 </Content>
             </Container>
         );
@@ -211,6 +196,16 @@ const styles = StyleSheet.create({
     headerTop: {
         backgroundColor: '#1a192a',
     },
+    message_img:
+        {
+            width: 120,
+            height: 120,
+            borderRadius: 120,
+            justifyContent: 'center',
+            alignContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
+        },
 });
 
 export default DiaryScreen;
