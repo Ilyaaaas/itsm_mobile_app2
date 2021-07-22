@@ -111,7 +111,7 @@ export default function OfferScreen({ navigation }) {
     const [deadLine, setOfferTitle] = useState();
     const [file, setFile] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [token, setToken] = useState('Cl-PqcQypV_t2_DXhLALQVeD3PRYc3Mi');
+    const [token, setToken] = useState('7BdnodhTCnNRdUY1n2ZJYJP7SvfFgbCL');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();

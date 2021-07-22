@@ -1,8 +1,7 @@
 import React from 'react';
 import {AntDesign, Ionicons, MaterialIcons} from '@expo/vector-icons';
 import {Container, Content, Header, Left, Body, Title, Right, List, ListItem, Toast, Accordion} from 'native-base';
-import {CheckBox, StyleSheet, Text, AsyncStorage, RefreshControl, View, Image} from 'react-native';
-// import { Checkbox } from 'react-native-paper';
+import {Switch, StyleSheet, Text, AsyncStorage, RefreshControl, View, Image} from 'react-native';
 
 import moment from "moment";
 import { API, getToken } from '../constants';
@@ -20,7 +19,7 @@ class DiaryScreen extends React.Component
         super(props);
 
         this.state = {
-            token: 'd0vpCxftx4VxTyMimUBhwCEgyvGp4qJK',
+            token: '7BdnodhTCnNRdUY1n2ZJYJP7SvfFgbCL',
             refreshing: false,
             user: {},
             list : [],
@@ -30,7 +29,7 @@ class DiaryScreen extends React.Component
             ls: {},
             personName: '',
             lastName: '',
-            checkBoxIsOn: 'checked',
+            checkBoxIsOn: true,
         }
     }
 
@@ -50,7 +49,7 @@ class DiaryScreen extends React.Component
     };
 
     _getList = async () => {
-        const API_URL = `${API}portal/v1/user/3470?access-token=d0vpCxftx4VxTyMimUBhwCEgyvGp4qJK`;
+        const API_URL = `http://api.smart24.kz/portal/v1/user/3470?access-token=`+this.state.token;
 
         try {
             const response = await fetch(API_URL, {
@@ -63,8 +62,6 @@ class DiaryScreen extends React.Component
             });
 
             const responseJson = await response.json();
-            console.log('responseJson');
-            console.log(responseJson);
 
             if (responseJson !== null) {
                 // if(responseJson.success == false){
@@ -99,17 +96,35 @@ class DiaryScreen extends React.Component
         this._refreshPage();
     }
 
-    _renderContent(item) {
+    _renderContent  = (item) => {
         console.log(item);
         return (
             <View>
                 {item.id == '1' ?
+                    // <Checkbox.Item
+                    //     status={this.state.checkBoxIsOn}
+                    //     color="#a2a3b7"
+                    //     onPress={() => this.handleChecked()}
+                    //     label={<Text style={{color: '#313B73'}}>Получать PUSH уведомления</Text>}
+                    //     checkedIcon='dot-circle-o'
+                    //     uncheckedIcon='circle-o'
+                    // />
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={"#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={() => this.handleChecked()}
+                        value={this.state.checkBoxIsOn}
+                    />
+                    :
+                item.id == '2' ?
                     <Checkbox.Item
-                        status={'checked'}
+                        status={this.state.checkBoxIsOn}
                         color="#a2a3b7"
                         onPress={() => this.handleChecked()}
-                        label="Получать PUSH уведомления"
-                        style={{ width:"90%" }}
+                        label={<Text style={{color: '#313B73'}}>Требуется развозка</Text>}
+                        checkedIcon='dot-circle-o'
+                        uncheckedIcon='circle-o'
                     />
                     :
                     null
@@ -118,14 +133,16 @@ class DiaryScreen extends React.Component
         );
     }
 
-    handleChecked = () => {
-        var checkBoxState = 'unchecked';
-        if(this.state.checkBoxIsOn == 'unchecked')
+    handleChecked = () =>
+    {
+        var checkBoxState = true;
+        if(this.state.checkBoxIsOn == true)
         {
-            checkBoxState = 'checked';
+            checkBoxState = false;
         }
+        alert(checkBoxState);
         this.setState({checkBoxIsOn: checkBoxState})
-    };
+    }
 
     render() {
         const dataArray = [
