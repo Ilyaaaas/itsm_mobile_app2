@@ -101,31 +101,40 @@ class DiaryScreen extends React.Component
         return (
             <View>
                 {item.id == '1' ?
-                    // <Checkbox.Item
-                    //     status={this.state.checkBoxIsOn}
-                    //     color="#a2a3b7"
-                    //     onPress={() => this.handleChecked()}
-                    //     label={<Text style={{color: '#313B73'}}>Получать PUSH уведомления</Text>}
-                    //     checkedIcon='dot-circle-o'
-                    //     uncheckedIcon='circle-o'
-                    // />
-                    <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
-                        thumbColor={"#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={() => this.handleChecked()}
-                        value={this.state.checkBoxIsOn}
-                    />
+                    <View style={{flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        height: 50,
+                        alignItems: 'center',
+                    }}>
+                        <Text style={{textAlign: 'left', marginLeft: 10}}>Получать PUSH уведомления</Text>
+                        <Switch
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            thumbColor={"#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={() => this.handleChecked()}
+                            value={this.state.checkBoxIsOn}
+                            style={{marginRight: 10}}
+                        />
+                    </View>
                     :
                 item.id == '2' ?
-                    <Checkbox.Item
-                        status={this.state.checkBoxIsOn}
-                        color="#a2a3b7"
-                        onPress={() => this.handleChecked()}
-                        label={<Text style={{color: '#313B73'}}>Требуется развозка</Text>}
-                        checkedIcon='dot-circle-o'
-                        uncheckedIcon='circle-o'
-                    />
+                    <View style={{flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        height: 50,
+                        alignItems: 'center',
+                    }}>
+                        <Text style={{textAlign: 'left', marginLeft: 10}}>Требуется развозка</Text>
+                        <Switch
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            thumbColor={"#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={() => this.handleChecked()}
+                            value={this.state.checkBoxIsOn}
+                            style={{marginRight: 10}}
+                        />
+                    </View>
                     :
                     null
                 }
@@ -140,7 +149,6 @@ class DiaryScreen extends React.Component
         {
             checkBoxState = false;
         }
-        alert(checkBoxState);
         this.setState({checkBoxIsOn: checkBoxState})
     }
 
@@ -194,8 +202,7 @@ class DiaryScreen extends React.Component
                         </View>
                     </ListItem>
                     <Content padder>
-                        <Accordion dataArray={dataArray} expanded={0} renderContent={this._renderContent}
-                        />
+                        <Accordion dataArray={dataArray} expanded={0} renderContent={this._renderContent}/>
                     </Content>
                 </Content>
             </Container>
