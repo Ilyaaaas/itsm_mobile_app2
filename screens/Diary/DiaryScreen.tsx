@@ -1,12 +1,35 @@
 import React from 'react';
 import {AntDesign, Ionicons, MaterialIcons} from '@expo/vector-icons';
-import {Container, Content, Header, Left, Body, Title, Right, List, ListItem, Toast, Accordion} from 'native-base';
-import {Switch, StyleSheet, Text, AsyncStorage, RefreshControl, View, Image} from 'react-native';
+import {
+    Container,
+    Content,
+    Header,
+    Left,
+    Body,
+    Title,
+    Right,
+    List,
+    ListItem,
+    Toast,
+    Accordion,
+    Input
+} from 'native-base';
+import {
+    Switch,
+    StyleSheet,
+    Text,
+    AsyncStorage,
+    RefreshControl,
+    View,
+    Image,
+    Button,
+    TouchableOpacityComponent
+} from 'react-native';
 
 import moment from "moment";
 import { API, getToken } from '../constants';
 import * as _ from 'lodash';
-import {Button, Checkbox} from "react-native-paper";
+import {Checkbox} from "react-native-paper";
 
 class DiaryScreen extends React.Component
 {
@@ -101,21 +124,55 @@ class DiaryScreen extends React.Component
         return (
             <View>
                 {item.id == '1' ?
-                    <View style={{flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        height: 50,
-                        alignItems: 'center',
-                    }}>
-                        <Text style={{textAlign: 'left', marginLeft: 10}}>Получать PUSH уведомления</Text>
-                        <Switch
+                    <View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10}}>Получать PUSH уведомления</Text>
+                            <Switch
+                                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                thumbColor={"#f4f3f4"}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => this.handleChecked()}
+                                value={this.state.checkBoxIsOn}
+                                style={{marginRight: 10}}
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10}}>Получать SMS уведомления</Text>
+                            <Switch
                             trackColor={{ false: "#767577", true: "#81b0ff" }}
                             thumbColor={"#f4f3f4"}
                             ios_backgroundColor="#3e3e3e"
                             onValueChange={() => this.handleChecked()}
                             value={this.state.checkBoxIsOn}
                             style={{marginRight: 10}}
-                        />
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10}}>Получать уведомления по почте</Text>
+                            <Switch
+                                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                thumbColor={"#f4f3f4"}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => this.handleChecked()}
+                                value={this.state.checkBoxIsOn}
+                                style={{marginRight: 10}}
+                            />
+                        </View>
                     </View>
                     :
                 item.id == '2' ?
@@ -136,7 +193,113 @@ class DiaryScreen extends React.Component
                         />
                     </View>
                     :
-                    null
+                    <View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            marginRight: 10,
+                            marginLeft: 10,
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Имя</Text>
+                            <Input
+                                   style={styles.input}
+                                   placeholder={'Имя'}
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        height: 50,
+                                        alignItems: 'center',
+                                        marginRight: 10,
+                                        marginLeft: 10,
+                                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Фамилия</Text>
+                            <Input
+                                style={styles.input}
+                                placeholder={'Фамилия'}
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            marginRight: 10,
+                            marginLeft: 10,
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Отчество</Text>
+                            <Input
+                                style={styles.input}
+                                placeholder={'Отчество'}
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            marginRight: 10,
+                            marginLeft: 10,
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Почта</Text>
+                            <Input
+                                style={styles.input}
+                                placeholder={'Почта'}
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            marginRight: 10,
+                            marginLeft: 10,
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Рабочий телефон</Text>
+                            <Input
+                                style={styles.input}
+                                placeholder={'Рабочий телефон'}
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            marginRight: 10,
+                            marginLeft: 10,
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Мобильный телефон</Text>
+                            <Input
+                                style={styles.input}
+                                placeholder={'Мобильный телефон'}
+                            />
+                        </View>
+                        <View style={{flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            marginRight: 10,
+                            marginLeft: 10,
+                        }}>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Номер кабинета</Text>
+                            <Input
+                                style={styles.input}
+                                placeholder={'Номер кабинета'}
+                            />
+                        </View>
+                        <View>
+                            <Button
+                            style={{
+                                marginVertical: 10,
+                                backgroundColor: '#42976f'
+                            }} title={'Сохранить'} onPress={() => alert('test')}/>
+                        </View>
+                    </View>
                 }
             </View>
         );
@@ -164,13 +327,13 @@ class DiaryScreen extends React.Component
                     <Left>
                     </Left>
                     <Body style={{ flex: 3 }}>
-                        <Title style={{ color: '#a2a3b7' }}>Профиль</Title>
+                        <Title style={{ color: '#1a192a' }}>Профиль</Title>
                     </Body>
                     <Right>
                         <AntDesign
                             name="edit"
                             size={24}
-                            color="#a2a3b7"
+                            color="#1a192a"
                             style={{ marginRight: 10 }}
                             onPress={() => {
                                 this.getDiaryView(0);
@@ -218,7 +381,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerTop: {
-        backgroundColor: '#1a192a',
+        backgroundColor: '#fff',
     },
     message_img:
         {
@@ -230,6 +393,14 @@ const styles = StyleSheet.create({
             alignItems: 'center',
             alignSelf: 'center',
         },
+    input: {
+        borderWidth: 1,
+        borderRadius: 5,
+        width: 20,
+        marginRight: 10,
+        marginLeft: 10,
+        height: 30,
+    },
 });
 
 export default DiaryScreen;

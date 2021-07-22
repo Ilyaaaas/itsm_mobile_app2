@@ -288,13 +288,13 @@ export default function OfferScreen({ navigation }) {
                 <Left style={{ flex: 1 }}>
                     <Ionicons
                         name="md-arrow-back"
-                        style={{ color: '#a2a3b7', marginLeft: 10 }}
+                        style={{ color: '#1a192a', marginLeft: 10 }}
                         onPress={() => navigation.goBack()}
                         size={24}
                     />
                 </Left>
                 <Body style={{ flex: 3 }}>
-                    <Title style={{ color: '#a2a3b7', fontSize: 20 }}>
+                    <Title style={{ color: '#1a192a', fontSize: 20 }}>
                         Новая заявка
                     </Title>
                 </Body>
@@ -380,6 +380,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerTop: {
-        backgroundColor: '#1a192a',
+        backgroundColor: '#fff',
     },
 });

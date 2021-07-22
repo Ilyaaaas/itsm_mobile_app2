@@ -285,20 +285,20 @@ class HomeScreen extends React.Component{
               <Left>
               </Left>
               <Body style={{ flex: 3 }}>
-                <Title style={{ color: '#a2a3b7' }}>Мои заявки</Title>
+                <Title style={{ color: '#1a192a' }}>Мои заявки</Title>
               </Body>
               <Right>
                 <AntDesign
                     name="pluscircleo"
                     size={24}
-                    color="#a2a3b7"
+                    color="#1a192a"
                     style={{marginRight: 10}}
                     onPress={() => this.goToCreateReq()}
                 />
                 <AntDesign
                     name="filter"
                     size={24}
-                    color="#a2a3b7"
+                    color="#1a192a"
                     style={{marginRight: 10}}
                     onPress={() => this.showFilter()}
                 />
@@ -591,7 +591,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTop: {
-    backgroundColor: '#1a192a',
+    backgroundColor: '#fff',
   },
   textName: {
     fontSize: 14,

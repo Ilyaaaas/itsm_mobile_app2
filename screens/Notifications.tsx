@@ -93,7 +93,7 @@ export default class Notifications extends React.Component{
                     {/*    />*/}
                     {/*</Left>*/}
                     <Body style={{ flex: 3 }}>
-                        <Title style={{ color: '#a2a3b7' }}>Уведомления</Title>
+                        <Title style={{ color: '#1a192a' }}>Уведомления</Title>
                     </Body>
                 </Header>
                 <Content
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerTop: {
-        backgroundColor: '#1a192a',
+        backgroundColor: '#fff',
     },
 
     tab_heading: {
