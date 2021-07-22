@@ -186,7 +186,7 @@ class InfoScreen extends React.Component {
       <Container>
         <Header style={styles.headerTop}>
           <Body style={{ flex: 3 }}>
-            <Title style={{ color: '#a2a3b7' }}>Сервисы</Title>
+            <Title style={{ color: '#1a192a' }}>Сервисы</Title>
           </Body>
         </Header>
 
@@ -244,7 +244,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTop: {
-    backgroundColor: '#1a192a',
+    backgroundColor: '#fff',
+    borderBottomColor: '#898989',
   },
   rowBottom: {
     zIndex: 1,

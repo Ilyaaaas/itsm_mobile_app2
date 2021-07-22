@@ -358,8 +358,8 @@ class DiaryScreen extends React.Component
                                 <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
                             }
                             <View>
-                                <Text style={{fontSize: 30, color: '#898989', textAlign: "center",}}>{this.state.list.personName}</Text>
-                                <Text style={{fontSize: 14, color: '#898989', textAlign: "center",}}>{this.state.list.companyName}</Text>
+                                <Text style={{fontSize: 30, color: '#1a192a', textAlign: "center",}}>{this.state.list.personName}</Text>
+                                <Text style={{fontSize: 14, color: '#1a192a', textAlign: "center",}}>{this.state.list.companyName}</Text>
                                 <Text style={{fontSize: 14, color: '#898989', textAlign: "center",}}>{this.state.list.username}</Text>
                             </View>
                         </View>
@@ -382,6 +382,7 @@ const styles = StyleSheet.create({
     },
     headerTop: {
         backgroundColor: '#fff',
+        borderBottomColor: '#898989',
     },
     message_img:
         {

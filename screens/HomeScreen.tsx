@@ -418,8 +418,8 @@ class HomeScreen extends React.Component{
                     </Body>
                   </ListItem>
                   <View>
-                  <Tabs>
-                    <Tab heading={
+                  <Tabs style={{backgroundColor: '#fff'}}>
+                    <Tab style={{backgroundColor: '#fff'}} heading={
                       <TabHeading>
                         <Text>Инфо</Text>
                       </TabHeading>
@@ -592,6 +592,7 @@ const styles = StyleSheet.create({
   },
   headerTop: {
     backgroundColor: '#fff',
+    borderColor: '#898989',
   },
   textName: {
     fontSize: 14,
@@ -709,8 +710,8 @@ const styles = StyleSheet.create({
         color: '#1a192a',
         padding: 5,
         height: 40,
-        borderColor: '#5e6064',
-        borderWidth: 1,
+        borderColor: '#898989',
+        borderWidth: 0.5,
         textTransform: 'uppercase',
       }
 })
