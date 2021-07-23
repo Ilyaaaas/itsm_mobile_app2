@@ -18,7 +18,7 @@ const Stack = createStackNavigator();
 export const StackNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="MainITSMScreen" headerMode="none">
+      <Stack.Navigator initialRouteName="OfferStack" headerMode="none">
         <Stack.Screen name="MainITSMScreen" component={MainITSMScreen} />
         <Stack.Screen name="Registration" component={RegistrationScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />

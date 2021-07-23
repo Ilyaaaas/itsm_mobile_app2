@@ -15,7 +15,7 @@ import {
   ActionSheet,
   Toast, Root, Button, Tab, TabHeading, Tabs,
 } from 'native-base';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -54,7 +54,7 @@ class HomeScreen extends React.Component{
     super(props);
 
     this.state = {
-      token: '7BdnodhTCnNRdUY1n2ZJYJP7SvfFgbCL',
+      token: '',
       refreshing: false,
       list: [],
       isReview: null,
@@ -76,16 +76,24 @@ class HomeScreen extends React.Component{
     }
   }
 
+  componentDidMount = async (url) =>
+  {
+    AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+        .then(json => console.log(json))
+        .catch(error => console.log('error!777'));
+  }
+
   _getUrl = async (url) => {
     const API_URL = API+url;
 
     await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
         .then(json => console.log('accessToken '+json[0].accessToken))
         .then(json => {
+          alert(json[0].accessToken);
           this.setState({ token: json[0].accessToken });
         })
         .then()
-        .catch(error => console.log('error!'));
+        .catch(error => console.log('error!2'));
 
     try {
       const response = await fetch(API_URL, {
@@ -158,9 +166,6 @@ class HomeScreen extends React.Component{
     await this._getUrl('request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id').then(value => {
       if(value !== null){
         this.setState({ list: value.items});
-        // console.log('items');
-        // console.log(value.items);
-        // console.log('items');
       }
     })
   }
@@ -178,9 +183,23 @@ class HomeScreen extends React.Component{
   }
 
   _getToken = async () => {
-    await getToken().then(itoken => {
-      this.setState({token: this.state.token});
-    })
+    console.log('_getToken');
+    await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+        .then(json => console.log('accessToken '+json[0].accessToken))
+        .then(json => {
+          alert(json[0].accessToken);
+          console.log('json[0].accessToken');
+          console.log(json[0].accessToken);
+          console.log('json[0].accessToken');
+          this.setState({ token: json[0].accessToken });
+        })
+        .then()
+        .catch(error => console.log('error!2'));
+    console.log('_getToken');
+    // await getToken().then(itoken => {
+    //   alert(itoken);
+    //   this.setState({token: itoken});
+    // })
   }
 
   _refreshPage = async () => {
@@ -204,17 +223,14 @@ class HomeScreen extends React.Component{
 
   onInfoButtonClicked = async (docid) => {
     await this._getUrl('request/'+docid+'?expand=clientUser').then(value => {
-      console.log('onInfoButtonClicked');
-      console.log(value.clientUser);
-      console.log('onInfoButtonClicked');
-        this.setState({
-          listGrade: value,
-          activeDoc: docid,
-          modal: true,
-          author_name: value.clientUser.person_name,
-          created_at: value.clientUser.created_at,
-          company_name: value.clientUser.company_name,
-        });
+      this.setState({
+        listGrade: value,
+        activeDoc: docid,
+        modal: true,
+        author_name: value.clientUser.person_name,
+        created_at: value.clientUser.created_at,
+        company_name: value.clientUser.company_name,
+      });
     })
   }
 

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import {View, StyleSheet, AsyncStorage, Picker, Platform, TextInput} from 'react-native';
 import 'moment/locale/ru';
 import CalendarStrip from 'react-native-calendar-strip';
-import {AntDesign, Ionicons, Entypo, MaterialIcons} from '@expo/vector-icons';
+import {AntDesign, Ionicons, FontAwesome} from '@expo/vector-icons';
 import HomeScreen from '../HomeScreen';
 import axios from 'axios';
 import {
@@ -98,6 +98,7 @@ export default function OfferScreen({ navigation }) {
     ]);
 
     const [customDatesStyles, setDatesStyles] = useState([]);
+    const [sendedFileId, setSendedFileId] = useState([]);
 
     const [openCheck, setOpenCheck] = useState(false);
     const [firstClick, setfirstClick] = useState(true);
@@ -111,7 +112,8 @@ export default function OfferScreen({ navigation }) {
     const [deadLine, setOfferTitle] = useState();
     const [file, setFile] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [token, setToken] = useState('7BdnodhTCnNRdUY1n2ZJYJP7SvfFgbCL');
+    const [selectedCatalog, setSelectedCatalog] = useState();
+    const [token, setToken] = useState('qyYVrigGJkT0d-9kmZDq_uAk2iBaR17v');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
@@ -165,9 +167,6 @@ export default function OfferScreen({ navigation }) {
         )
             .then(response => response.json())
             .then(function(data){
-                console.log('setCatalogs');
-                console.log(data.items);
-                console.log('setCatalogs');
                 setCatalogs(data.items);
             })
             .catch(error => console.error(error))
@@ -238,47 +237,36 @@ export default function OfferScreen({ navigation }) {
 
     async function sendFile()
     {
+        console.log('response');
+        console.log(file);
         // console.log('response');
         // console.log(file['_parts'][0][1]['_W']['name']);
         var name = file['_parts'][0][1]['_W']['name'];
         var size = file['_parts'][0][1]['_W']['size'];
         var uri = file['_parts'][0][1]['_W']['uri'];
-        let formData = new FormData();
-        formData.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
+        let body = new FormData();
+        body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
+        body.append('', '\\')
         console.log('formData');
         const response = await fetch(
-            'http://api.smart24.kz/portal/v1/profile/login',
+            'http://api.smart24.kz/storage/v1/file/upload',
             {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Accept': '*/*',
-                    'accept-encoding': 'gzip, deflate, br',
-                    'accept-language': 'en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7,kk;q=0.6',
-                    'content-length': '72645',
-                    'content-type': 'multipart/form-data; boundary=----WebKitFormBoundaryBdQRWEV1LyTwCOMj',
-                    'cookie': '_language=e4ba202ce8b49ee484abeba00167892f322de0ef34de2ac4b6865a276a04c0baa%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_language%22%3Bi%3A1%3Bs%3A2%3A%22ru%22%3B%7D; PHPSESSID=hqv1mjdh5tjcnhie43797dplns; _identity=c76101ba0f1bd1669522e6a6ffa43a99330f0322e95988bb848fa1c933e4e210a%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A47%3A%22%5B3470%2C%22l85mXIMwP0-lCedJCEjK8Uzz2rqAhqcK%22%2C32400%5D%22%3B%7D; _csrf=2b0da772c9d1289801f23b0cc76d9bce084f6da07b1e2d7607512a7b1bef7d5da%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22CBZH5hbSTl2MZ-0t8BNqC8n1xyyV4Hjg%22%3B%7D',
-                    'origin': 'https://smart24.kz',
-                    'referer': 'https://smart24.kz/',
-                    'sec-ch-ua': 'Not;A Brand";v="99", "Google Chrome";v="91", "Chromium";v="91',
-                    'sec-ch-ua-mobile': '?0',
-                    'sec-fetch-dest': 'empty',
-                    'sec-fetch-mode': 'cors',
-                    'sec-fetch-site': 'same-origin',
-                    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-                    'x-csrf-token': 'BmHM8thoK8PflF4DtKSD0eFO2sPEqXh9Osb3K2xrPkhFI5a67QBJkIv4bE7uibOl2QyUsoeRFkxCv459WCNULw==',
-                    'x-requested-with': 'XMLHttpRequest',
+                    'x-api-key': token,
                 },
-                body: formData
+                body,
             })
-            .then(response => console.log(response.text()))
-            .then(response => console.log('response'+response))
-            .catch(error => alert(error));
-        // const responseJson = await response.json();
-        // if(responseJson !== null) {
-        //     console.log('responseJson');
-        //     console.log(responseJson);
-        // }
+            .then(response => {
+                return response.json()
+                    .then(responseJson => {
+                        setSendedFileId(responseJson.id)
+                        console.log(responseJson.id);
+                        console.log(responseJson.name);
+                    });
+                });
         console.log('finish');
     }
 
@@ -300,7 +288,7 @@ export default function OfferScreen({ navigation }) {
                 </Body>
                 <Right />
             </Header>
-            <Content style={{ paddingHorizontal: 20, backgroundColor: '#edeef4' }}>
+            <Content style={{ paddingHorizontal: 20, backgroundColor: '#fff' }}>
                 <View style={{ paddingHorizontal: 20, backgroundColor: '#fff', marginTop: 20 }}>
                     <View style={{ marginVertical: 10 }}>
                         {/*{_renderShifts()}*/}
@@ -308,23 +296,24 @@ export default function OfferScreen({ navigation }) {
                         <View style={{zIndex: 10}}>
                             <Text>Выберите каталог</Text>
                             {catalogs != undefined ?
-                                <DropDownPicker style={{backgroundColor: '#fff'}}
+                                <DropDownPicker
+                                    style={{backgroundColor: '#F2F2F2', borderRadius: 10,}}
                                     items={catalogs.map(item=> ({label: item.name, value: item.id}))}
-                                    onChangeItem={item => setSelectedService(item.value)}
-                                    dropDownStyle={{backgroundColor: '#fff'}}
+                                    onChangeItem={item => setSelectedCatalog(item.value)}
+                                    dropDownStyle={{backgroundColor: '#F2F2F2'}}
                                     zIndex={1000}
                                 />
                                 :
                                 null
                             }
                         </View>
-                        <View style={{zIndex: 9}}>
+                        <View style={{zIndex: 9, marginTop: 20}}>
                             <Text>Выберите услугу</Text>
                             {services != undefined ?
-                                <DropDownPicker style={{backgroundColor: '#fff'}}
+                                <DropDownPicker style={{backgroundColor: '#F2F2F2', borderRadius: 10}}
                                                 items={services.map(item=> ({label: item.subject, value: item.id}))}
                                                 onChangeItem={item => setSelectedService(item.value)}
-                                                dropDownStyle={{backgroundColor: '#fff'}}
+                                                dropDownStyle={{backgroundColor: '#F2F2F2'}}
                                                 zIndex={1000}
                                 />
                                 :
@@ -332,38 +321,40 @@ export default function OfferScreen({ navigation }) {
                             }
                         </View>
                         <View style={{zIndex: -10, marginTop: 20}}>
-                            <Text>Описание</Text>
                             <TextInput
-                                placeholder="Описание"
+                                placeholder="Опишите услугу"
                                 multiline={true}
                                 numberOfLines={4}
                                 onChangeText={setOfferDescr}
                                 value={offerDescr}
-                                style={{height: 100}}
+                                style={{height: 100, backgroundColor: '#F2F2F2', borderRadius: 10}}
                             />
                         </View>
                         <View style={{marginTop: 20}}>
                             <Button full primary
-                                    onPress={() => chooseFiles()}>
-                                <Icon name='paper' />
-                                <Text style={{color: '#fff'}}>Выбрать файл</Text>
+                                    onPress={() => chooseFiles()}
+                                    style={{backgroundColor: '#F2F2F2', justifyContent: 'space-between', borderRadius: 10,}}
+                            >
+                                <Text style={{color: '#616161'}}>Вложение</Text>
+                                <Icon style={{color: '#616161'}} name='paper'/>
                             </Button>
                         </View>
                     </View>
+                    <Button
+                        block
+                        style={{
+                            marginVertical: 10,
+                            backgroundColor: !shedId ? '#313B73' : '#222e73',
+                            zIndex: -10,
+                            borderRadius: 10,
+                        }}
+                        onPress={() => createOffer()}>
+                        <Text style={{ color: !shedId ? '#fff' : '#fff' }}>
+                            Создать заявку
+                        </Text>
+                        <FontAwesome style={{color: '#fff'}} name="send-o" size={24} color="black" />
+                    </Button>
                 </View>
-                <Button
-                    block
-                    style={{
-                        marginVertical: 10,
-                        backgroundColor: !shedId ? '#42976f' : '#42976f',
-                        zIndex: -10,
-                    }}
-                    onPress={() => createOffer()}>
-                    <Text style={{ color: !shedId ? '#fff' : '#fff' }}>
-                        <AntDesign style={{color: '#fff'}} name="check" size={24} color="black" />
-                        Создать заявку
-                    </Text>
-                </Button>
             </Content>
             <Footer style={{ backgroundColor: '#1a192a', height: 30 }}>
                 {/*<FooterTab style={{ backgroundColor: '#1a192a' }}></FooterTab>*/}

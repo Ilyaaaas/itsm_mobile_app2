@@ -53,15 +53,15 @@ export async function provToken(){
 }
 
 export async function getToken() {
-  try {
-    const value = await AsyncStorage.getItem('token');
-    if (value !== null) {
-      timer.timeStart = moment();
-      timer.timeEnd = moment().add(timeInterval, 'minutes');
-      return value.replace(/['"«»]/g, '');
-    }
-  } catch (error) {
-    return null;
-  }
+  console.log('getToken constant');
+    await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+        .then(json => console.log('accessToken2 '+json[0].accessToken))
+        .then(json => {
+          console.log(json[0].accessToken);
+          return json[0].accessToken;
+        })
+        .then()
+        .catch(error => console.log(error));
+    console.log('getToken constant');
   return null;
 }

@@ -69,9 +69,8 @@ export const LoginScreen = () => {
               }
               else
               {
-                alert('success')
                 setAccessTokenFunc('@accessToken', json.accessToken, json.userId);
-                navigation.dispatch(StackActions.replace('DiaryStack'));
+                navigation.dispatch(StackActions.replace('Home'));
               }
             }
         )
@@ -83,7 +82,6 @@ export const LoginScreen = () => {
     try {
       await AsyncStorage.setItem(key, value);
       const items = [{"accessToken": value}, {"userId": userId}];
-      console.log(items);
       AsyncStorage.setItem("accessToken", JSON.stringify(items));
     } catch(e) {
       console.log('error');
