@@ -28,7 +28,7 @@ import {
   Modal,
   ScrollView,
   TextInput,
-  Dimensions
+  Dimensions, AppState
 } from 'react-native';
 import * as Location from 'expo-location';
 import Main from './Main';
@@ -73,27 +73,49 @@ class HomeScreen extends React.Component{
       author_name: '',
       created_at: '',
       company_name: '',
+      user: {
+        fname: '',
+        sname: '',
+        section_txt: '',
+      },
     }
   }
 
-  componentDidMount = async (url) =>
-  {
-    AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-        .then(json => console.log(json))
-        .catch(error => console.log('error!777'));
+  componentDidMount = async () => {
+    console.log('componentDidMount');
+    this.checkLogIn();
+    this._refreshPage();
   }
+
+  _retrieveData = () => {
+    AsyncStorage.getItem('user_data').then((value) => {
+      if (value) {
+        const obj = JSON.parse(value);
+        this.setState({ user: obj });
+      }
+    });
+  };
+
+  checkLogIn = async () => {
+    console.log('checkLogIn');
+    await AsyncStorage.getItem('accessToken').then(req => console.log(req))
+        .then(json => {
+                alert(json[0].accessToken);
+                this.setState({ token: json[0].accessToken });
+              })
+        .catch(error => console.log('error!2'));
+  };
 
   _getUrl = async (url) => {
     const API_URL = API+url;
 
-    await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-        .then(json => console.log('accessToken '+json[0].accessToken))
-        .then(json => {
-          alert(json[0].accessToken);
-          this.setState({ token: json[0].accessToken });
-        })
-        .then()
-        .catch(error => console.log('error!2'));
+    // await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+    //     .then(json => console.log('accessToken '+json[0].accessToken))
+    //     .then(json => {
+    //       alert(json[0].accessToken);
+    //       this.setState({ token: json[0].accessToken });
+    //     })
+    //     .catch(error => console.log('error!2'));
 
     try {
       const response = await fetch(API_URL, {
@@ -163,11 +185,17 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    await this._getUrl('request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id').then(value => {
-      if(value !== null){
-        this.setState({ list: value.items});
-      }
-    })
+    console.log('this.state.token222'+this.state.token+'this.state.token222');
+    console.log(this.state.token);
+    if(this.state.token != '')
+    {
+      console.log('_getDoctorList');
+      await this._getUrl('request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id').then(value => {
+        if(value !== null){
+          this.setState({ list: value.items});
+        }
+      })
+    }
   }
 
   _alert = async (msgToast, onSuccess = false) => {
@@ -183,23 +211,25 @@ class HomeScreen extends React.Component{
   }
 
   _getToken = async () => {
-    console.log('_getToken');
     await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-        .then(json => console.log('accessToken '+json[0].accessToken))
+        .then(json => console.log(json[0].accessToken))
         .then(json => {
-          alert(json[0].accessToken);
-          console.log('json[0].accessToken');
           console.log(json[0].accessToken);
-          console.log('json[0].accessToken');
-          this.setState({ token: json[0].accessToken });
+          console.log(json[1].userId);
+          console.log('fetchMyAPI22');
+          this.setState({token: json[0].accessToken})
         })
-        .then()
-        .catch(error => console.log('error!2'));
-    console.log('_getToken');
-    // await getToken().then(itoken => {
-    //   alert(itoken);
-    //   this.setState({token: itoken});
-    // })
+        .then(json2 => console.log('json2'))
+        .catch(error => console.log('error!'));
+    console.log(this.state.token);
+    if(this.state.token == '')
+    {
+      console.log('token is null');
+      console.log(this.state.token);
+      this._refreshPage();
+    }else{
+      return
+    }
   }
 
   _refreshPage = async () => {
@@ -210,6 +240,7 @@ class HomeScreen extends React.Component{
   }
 
   UNSAFE_componentWillMount() {
+    this._getToken();
     this._refreshPage();
   }
 
@@ -262,7 +293,6 @@ class HomeScreen extends React.Component{
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/x-www-form-urlencoded',
-          // 'token': this.state.token,
           'token': this.state.token,
         },
         body: `id_doctor=${this.state.activeDoc}&grade=${this.state.ratingSet}&note=${this.state.otziv}&feedback=${this.state.callPhone}`,
