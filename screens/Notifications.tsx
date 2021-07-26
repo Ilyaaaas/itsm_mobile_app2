@@ -1,5 +1,5 @@
 import React from "react";
-import {RefreshControl, StyleSheet, Text, View} from "react-native";
+import {AsyncStorage, RefreshControl, StyleSheet, Text, View} from "react-native";
 import {Body, Container, Header, Left, Tab, TabHeading, Tabs, Title, Toast, Content, List, ListItem} from "native-base";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {API, getToken} from './constants';
@@ -21,36 +21,30 @@ export default class Notifications extends React.Component{
     }
 
     _getToken = async () => {
-        await getToken().then(itoken => {
-            this.setState({token: itoken});
-        })
+        await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+            .then(json => this.setState({token: json[0].accessToken}))
+            .catch(error => console.log(error))
     }
 
     _getUrl = async (url) => {
-        const API_URL = `${API}backend/${url}`
+        const API_URL = `${API}${url}`;
+        console.log('API_URL');
+        console.log(API_URL);
 
         try {
-            const response = await fetch(API_URL, {
+            console.log(await fetch(API_URL, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
-                    //'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                     'token': this.state.token,
                 },
-            });
+            }))
 
-            const responseJson = await response.json();
-            if (responseJson !== null) {
-                if(responseJson.success == false){
-                    Toast.show({
-                        text: responseJson.message,
-                        type: 'danger',
-                        duration: 3000
-                    });
-                    return null;
-                }
-                return responseJson.result;
-            }
+            // const responseJson = await response;
+            // console.log('_getUrl');
+            // console.log(responseJson.json());
+            // return responseJson.json();
         } catch (error) {
             console.log('Error when call API: ' + error.message);
         }
@@ -58,12 +52,14 @@ export default class Notifications extends React.Component{
     }
 
     _list = async () => {
-        await this._getUrl('notifications').then(list => {
+        await this._getUrl('portal/v1/notification?access-token='+this.state.token+'&_format=json').then(list => {
+            console.log(list);
             if(list !== null) {
-                this.setState({list_new: list.new, list_old: list.old});
+                this.setState({list_new: list, list_old: list});
             }
         })
     }
+
     _refreshPage = async () => {
         await this._getToken();
         await this._list();
@@ -82,16 +78,10 @@ export default class Notifications extends React.Component{
     }
 
     render() {
+        {console.log(this.state.list_new)}
         return (
             <Container>
                 <Header style={styles.headerTop}>
-                    {/*<Left style={{ flex: 1}}>*/}
-                    {/*    <Ionicons name="ios-menu"*/}
-                    {/*          style={{ color: '#a2a3b7', marginLeft: 10 }}*/}
-                    {/*          onPress={() => this.props.navigation.openDrawer()}*/}
-                    {/*          size={24}*/}
-                    {/*    />*/}
-                    {/*</Left>*/}
                     <Body style={{ flex: 3 }}>
                         <Title style={{ color: '#1a192a' }}>Уведомления</Title>
                     </Body>
@@ -118,16 +108,16 @@ export default class Notifications extends React.Component{
                                 <NotNotification />
                             ) : (
                                 <List>
-                                {this.state.list_new.map((value_new, num) => (
-                                    <ListItem key={num} onPress={() => {
-                                        this._setRead(value_new.id)
-                                    }}>
-                                        <View style={{ flexDirection: "column" }}>
-                                            <Text style={{ fontSize: 16 }}>{ value_new.n_text }</Text>
-                                            <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_new.n_datetime }</Text>
-                                        </View>
-                                    </ListItem>
-                                ))}
+                                {/*{this.state.list_new.map((value_new, num) => (*/}
+                                {/*    <ListItem key={num} onPress={() => {*/}
+                                {/*        this._setRead(value_new.id)*/}
+                                {/*    }}>*/}
+                                {/*        <View style={{ flexDirection: "column" }}>*/}
+                                {/*            <Text style={{ fontSize: 16 }}>{ value_new.id }</Text>*/}
+                                {/*            <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_new.n_datetime }</Text>*/}
+                                {/*        </View>*/}
+                                {/*    </ListItem>*/}
+                                {/*))}*/}
                                 </List>
                             )}
                         </Tab>
@@ -137,20 +127,20 @@ export default class Notifications extends React.Component{
                                     <Text style={this.state.activeTab == 1 ? styles.tab_heading_text_active : styles.tab_heading_text}>Прочитанные</Text>
                                 </TabHeading>
                             }>
-                            {this.state.list_old.length === 0 ? (
-                                <NotNotification />
-                            ) : (
-                                <List>
-                                    {this.state.list_old.map((value_old, nums) => (
-                                        <ListItem key={nums}>
-                                            <View style={{ flexDirection: "column" }}>
-                                                <Text style={{ fontSize: 16 }}>{ value_old.n_text }</Text>
-                                                <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_old.n_datetime }</Text>
-                                            </View>
-                                        </ListItem>
-                                    ))}
-                                </List>
-                            )}
+                            {/*{this.state.list_old.length === 0 ? (*/}
+                            {/*    <NotNotification />*/}
+                            {/*) : (*/}
+                            {/*    <List>*/}
+                            {/*        {this.state.list_old.map((value_old, nums) => (*/}
+                            {/*            <ListItem key={nums}>*/}
+                            {/*                <View style={{ flexDirection: "column" }}>*/}
+                            {/*                    <Text style={{ fontSize: 16 }}>{ value_old.n_text }</Text>*/}
+                            {/*                    <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_old.n_datetime }</Text>*/}
+                            {/*                </View>*/}
+                            {/*            </ListItem>*/}
+                            {/*        ))}*/}
+                            {/*    </List>*/}
+                            {/*)}*/}
                         </Tab>
                     </Tabs>
                 </Content>

@@ -12,7 +12,7 @@ const Stack = createStackNavigator();
 
 export const OfferStack = () => {
     return (
-        <Stack.Navigator initialRouteName="OfferScreen" headerMode="none">
+        <Stack.Navigator initialRouteName="MainITSMScreen" headerMode="none">
             <Stack.Screen name="MainITSMScreen" component={MainITSMScreen} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="DiaryScreenView" component={DiaryScreenView} />

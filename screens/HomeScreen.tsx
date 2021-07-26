@@ -44,11 +44,6 @@ import DiaryScreenView from "./Diary/DiaryScreenView";
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
 
-var BUTTONS = ["Вызов", "Отправить геоданные", "Отмена"];
-var DESTRUCTIVE_INDEX = 2;
-var CANCEL_INDEX = 3;
-const BottomTab = createBottomTabNavigator();
-
 class HomeScreen extends React.Component{
   constructor(props) {
     super(props);
@@ -81,62 +76,34 @@ class HomeScreen extends React.Component{
     }
   }
 
-  componentDidMount = async () => {
-    console.log('componentDidMount');
-    this.checkLogIn();
-    this._refreshPage();
-  }
-
-  _retrieveData = () => {
-    AsyncStorage.getItem('user_data').then((value) => {
-      if (value) {
-        const obj = JSON.parse(value);
-        this.setState({ user: obj });
-      }
-    });
-  };
-
-  checkLogIn = async () => {
-    console.log('checkLogIn');
-    await AsyncStorage.getItem('accessToken').then(req => console.log(req))
-        .then(json => {
-                alert(json[0].accessToken);
-                this.setState({ token: json[0].accessToken });
-              })
-        .catch(error => console.log('error!2'));
-  };
-
   _getUrl = async (url) => {
     const API_URL = API+url;
-
-    // await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-    //     .then(json => console.log('accessToken '+json[0].accessToken))
-    //     .then(json => {
-    //       alert(json[0].accessToken);
-    //       this.setState({ token: json[0].accessToken });
-    //     })
-    //     .catch(error => console.log('error!2'));
+    console.log(API_URL);
 
     try {
       const response = await fetch(API_URL, {
         method: 'GET',
         headers: {
-          'x-api-key': this.state.token,
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'token': this.state.token,
         },
       });
 
       const responseJson = await response.json();
+      console.log('responseJson');
+      console.log(responseJson);
       return responseJson;
       // if (responseJson !== null) {
-      //     if(responseJson.success == false){
-      //         Toast.show({
-      //             text: responseJson.message,
-      //             type: 'danger',
-      //             duration: 3000
-      //         });
-      //         return null;
-      //     }
-      //     return responseJson.result;
+      //   if(responseJson.success == false){
+      //     Toast.show({
+      //       text: responseJson.message,
+      //       type: 'danger',
+      //       duration: 3000
+      //     });
+      //     return null;
+      //   }
+      //   return responseJson.result;
       // }
     } catch (error) {
       console.log('Error when call API: ' + error.message);
@@ -144,58 +111,15 @@ class HomeScreen extends React.Component{
     return null;
   }
 
-  acceptRequest = async (docId) => {
-    fetch('http://api.smart24.kz/service-requests/v1/request/'+docId,
-        {method:'PATCH',
-          headers: {"x-api-key": this.state.token,
-            "Content-type": "application/json",
-            "Accept": "application/json"},
-          body: '{"status_id": 2}'}
-    )
-        .then(response => response.json())
-        .then(function(data){
-          //console.log(data);
-        })
-        .catch(error => console.error(error))
-        .then()
-        .finally()
-      this.setState({ modal: false});
-      alert('Заявка прияната на исполнение')
-  }
-
-  closeRequest = async (docId) => {
-    fetch('http://api.smart24.kz/service-requests/v1/request/'+docId,
-        {
-          method:'PATCH',
-          headers: {"x-api-key": this.state.token,
-            "Content-type": "application/json",
-            "Accept": "application/json"},
-          body: '{"status_id": 12}'
-        })
-        .then(response => response.json())
-        .then(function(data){
-          //console.log('data');
-          //console.log(data);
-        })
-        .catch(error => console.error(error))
-        .then()
-        .finally()
-    this.setState({ modal: false});
-    alert('Заявка успешно закрыта')
-  }
-
   _getDoctorList = async () => {
-    console.log('this.state.token222'+this.state.token+'this.state.token222');
-    console.log(this.state.token);
-    if(this.state.token != '')
-    {
-      console.log('_getDoctorList');
-      await this._getUrl('request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id').then(value => {
+    console.log(this.state.token)
+    await this._getUrl('service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id')
+      .then(value => {
         if(value !== null){
           this.setState({ list: value.items});
         }
-      })
-    }
+      }
+    )
   }
 
   _alert = async (msgToast, onSuccess = false) => {
@@ -212,24 +136,11 @@ class HomeScreen extends React.Component{
 
   _getToken = async () => {
     await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-        .then(json => console.log(json[0].accessToken))
-        .then(json => {
-          console.log(json[0].accessToken);
-          console.log(json[1].userId);
-          console.log('fetchMyAPI22');
-          this.setState({token: json[0].accessToken})
-        })
-        .then(json2 => console.log('json2'))
-        .catch(error => console.log('error!'));
-    console.log(this.state.token);
-    if(this.state.token == '')
-    {
-      console.log('token is null');
-      console.log(this.state.token);
-      this._refreshPage();
-    }else{
-      return
-    }
+        .then(json => this.setState({token: json[0].accessToken}))
+        // .then(json => {
+        //   return json[0].accessToken;
+        // })
+        .catch(error => console.log(error))
   }
 
   _refreshPage = async () => {
@@ -240,7 +151,6 @@ class HomeScreen extends React.Component{
   }
 
   UNSAFE_componentWillMount() {
-    this._getToken();
     this._refreshPage();
   }
 
@@ -252,31 +162,31 @@ class HomeScreen extends React.Component{
     }
   }
 
-  onInfoButtonClicked = async (docid) => {
-    await this._getUrl('request/'+docid+'?expand=clientUser').then(value => {
-      this.setState({
-        listGrade: value,
-        activeDoc: docid,
-        modal: true,
-        author_name: value.clientUser.person_name,
-        created_at: value.clientUser.created_at,
-        company_name: value.clientUser.company_name,
-      });
-    })
-  }
-
-  goToCreateReq = () => {
-    this.props.navigation.navigate('OfferScreen');
-  }
-
-  showFilter = () => {
-    this.setState({ filterModal: true});
+  searchRequest = async (searchText) =>
+  {
+    let data = this.state.filteredList;
+    data = data.filter(function(item){
+      return item.fio.includes(searchText.text.toUpperCase());
+    }).map(function({avg_grade, category_name, doc_id, fio, fname, lname, rnum, science_degree, sname, spr_value}){
+      return {avg_grade, category_name, doc_id, fio, fname, lname, rnum, science_degree, sname, spr_value};
+    });
+    this.setState({ list: data});
   }
 
   _setRetview = async () => {
     let API_URL = `${API}backend/set_grade`
     let showToast = false;
     let msgToast = '';
+    /*
+    if(this.state.otziv == ''){
+        showToast = true;
+        msgToast = 'Пустой текст сообщения';
+    }
+    if(this.state.callPhone == ''){
+        showToast = true;
+        msgToast = 'Пустой текст обратной связи';
+    }
+     */
     if(this.state.ratingSet == 0){
       showToast = true;
       msgToast = 'Поставьте пожалуйста оценку';
@@ -299,7 +209,6 @@ class HomeScreen extends React.Component{
       });
 
       const responseJson = await response.json();
-      //console.log(responseJson);
       if (responseJson !== null) {
         let itype = 'success';
 
@@ -311,19 +220,34 @@ class HomeScreen extends React.Component{
         this._alert(responseJson.message, responseJson.success);
       }
     } catch (error) {
-      //console.log(error.message);
       this._alert("Ошибка отправки данных. Повторите еще раз");
     }
   }
 
-  render() {
-    function Test() {
-      return (
-          <Text>test</Text>
-      );
-    }
+  onInfoButtonClicked = async (docid) => {
+    await this._getUrl('service-requests/v1/request/'+docid+'?expand=clientUser').then(value => {
+      this.setState({
+        listGrade: value,
+        activeDoc: docid,
+        modal: true,
+        author_name: value.clientUser.person_name,
+        created_at: value.clientUser.created_at,
+        company_name: value.clientUser.company_name,
+      });
+    })
+  }
 
-    var color = 'blue';
+  goToCreateReq = () => {
+    this.props.navigation.navigate('OfferScreen');
+  }
+
+  showFilter = () => {
+    this.setState({ filterModal: true});
+  }
+
+  render() {
+    {console.log('this.state.list')}
+    {console.log(this.state.list)}
     return (
         <Container>
           <Root>
@@ -464,72 +388,72 @@ class HomeScreen extends React.Component{
                     </Body>
                   </ListItem>
                   <View>
-                  <Tabs style={{backgroundColor: '#fff'}}>
-                    <Tab style={{backgroundColor: '#fff'}} heading={
-                      <TabHeading>
-                        <Text>Инфо</Text>
-                      </TabHeading>
-                    }>
-                      <List>
-                        <ListItem key={1}>
-                          <View>
-                            <Text style={styles.textName}>Заголовок: </Text>
-                            <Text>{this.state.listGrade.title}</Text>
-                          </View>
-                          <View>
-                            <Text style={styles.textName}>Описание: </Text>
-                            <Text>{this.state.listGrade.descr}</Text>
-                          </View>
-                          <View>
-                            <Text style={styles.textName}>Дата создания: </Text>
-                            <Text>{this.state.listGrade.createdAt}</Text>
-                          </View>
-                        </ListItem>
-                      </List>
-                    </Tab>
-                    <Tab heading={
-                      <TabHeading>
-                        <Text>Журнал</Text>
-                      </TabHeading>
-                    }>
-                      <List>
-                        <ListItem key={2}>
-                          <View style={{ flexDirection: "column" }}>
-                            <Text style={{ fontSize: 16 }}>Test</Text>
-                            <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>date</Text>
-                          </View>
-                        </ListItem>
-                      </List>
-                    </Tab>
-                    <Tab heading={
-                      <TabHeading>
-                        <Text>Комментарии</Text>
-                      </TabHeading>
-                    }>
-                      <List>
-                        <ListItem noBorder>
-                          <TextInput
-                              style={styles.textArea}
-                              underlineColorAndroid="transparent"
-                              placeholder="Комментарий"
-                              placeholderTextColor="grey"
-                              numberOfLines={2}
-                              multiline={true}
-                              onChangeText={text => this.setState({ otziv: text})}
-                          />
-                        </ListItem>
-                        <ListItem noBorder style={{ marginTop: -20 }}>
-                          <TextInput
-                              style={styles.contactInput}
-                              underlineColorAndroid="transparent"
-                              placeholder="Ваши контакты"
-                              placeholderTextColor="grey"
-                              onChangeText={text => this.setState({callPhone: text})}
-                          />
-                        </ListItem>
-                      </List>
-                    </Tab>
-                  </Tabs>
+                    <Tabs style={{backgroundColor: '#fff'}}>
+                      <Tab style={{backgroundColor: '#fff'}} heading={
+                        <TabHeading>
+                          <Text>Инфо</Text>
+                        </TabHeading>
+                      }>
+                        <List>
+                          <ListItem key={1}>
+                            <View>
+                              <Text style={styles.textName}>Заголовок: </Text>
+                              <Text>{this.state.listGrade.title}</Text>
+                            </View>
+                            <View>
+                              <Text style={styles.textName}>Описание: </Text>
+                              <Text>{this.state.listGrade.descr}</Text>
+                            </View>
+                            <View>
+                              <Text style={styles.textName}>Дата создания: </Text>
+                              <Text>{this.state.listGrade.createdAt}</Text>
+                            </View>
+                          </ListItem>
+                        </List>
+                      </Tab>
+                      <Tab heading={
+                        <TabHeading>
+                          <Text>Журнал</Text>
+                        </TabHeading>
+                      }>
+                        <List>
+                          <ListItem key={2}>
+                            <View style={{ flexDirection: "column" }}>
+                              <Text style={{ fontSize: 16 }}>Test</Text>
+                              <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>date</Text>
+                            </View>
+                          </ListItem>
+                        </List>
+                      </Tab>
+                      <Tab heading={
+                        <TabHeading>
+                          <Text>Комментарии</Text>
+                        </TabHeading>
+                      }>
+                        <List>
+                          <ListItem noBorder>
+                            <TextInput
+                                style={styles.textArea}
+                                underlineColorAndroid="transparent"
+                                placeholder="Комментарий"
+                                placeholderTextColor="grey"
+                                numberOfLines={2}
+                                multiline={true}
+                                onChangeText={text => this.setState({ otziv: text})}
+                            />
+                          </ListItem>
+                          <ListItem noBorder style={{ marginTop: -20 }}>
+                            <TextInput
+                                style={styles.contactInput}
+                                underlineColorAndroid="transparent"
+                                placeholder="Ваши контакты"
+                                placeholderTextColor="grey"
+                                onChangeText={text => this.setState({callPhone: text})}
+                            />
+                          </ListItem>
+                        </List>
+                      </Tab>
+                    </Tabs>
                   </View>
                 </ScrollView>
                 <View style={{ borderTopWidth: 1,}}>
@@ -614,8 +538,6 @@ class HomeScreen extends React.Component{
     )
   }
 }
-
-export default HomeScreen;
 
 const styles = StyleSheet.create({
   danger: {
@@ -761,3 +683,5 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase',
       }
 })
+
+export default HomeScreen;
