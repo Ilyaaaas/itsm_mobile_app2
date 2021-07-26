@@ -3,6 +3,7 @@ import {AsyncStorage, RefreshControl, StyleSheet, Text, View} from "react-native
 import {Body, Container, Header, Left, Tab, TabHeading, Tabs, Title, Toast, Content, List, ListItem} from "native-base";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {API, getToken} from './constants';
+import { WebView } from 'react-native-webview';
 
 export default class Notifications extends React.Component{
     constructor(props) {
@@ -32,19 +33,19 @@ export default class Notifications extends React.Component{
         console.log(API_URL);
 
         try {
-            console.log(await fetch(API_URL, {
+            const response = await fetch(API_URL, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'token': this.state.token,
                 },
-            }))
+            })
 
-            // const responseJson = await response;
+            const responseJson = await response;
             // console.log('_getUrl');
             // console.log(responseJson.json());
-            // return responseJson.json();
+            return responseJson.json();
         } catch (error) {
             console.log('Error when call API: ' + error.message);
         }
@@ -53,9 +54,10 @@ export default class Notifications extends React.Component{
 
     _list = async () => {
         await this._getUrl('portal/v1/notification?access-token='+this.state.token+'&_format=json').then(list => {
-            console.log(list);
+            // console.log('list');
+            // console.log(list);
             if(list !== null) {
-                this.setState({list_new: list, list_old: list});
+                this.setState({list_new: list.items, list_old: list});
             }
         })
     }
@@ -78,7 +80,9 @@ export default class Notifications extends React.Component{
     }
 
     render() {
+        {console.log('this.state.list_new')}
         {console.log(this.state.list_new)}
+        {console.log(this.state.list_new.length)}
         return (
             <Container>
                 <Header style={styles.headerTop}>
@@ -108,16 +112,19 @@ export default class Notifications extends React.Component{
                                 <NotNotification />
                             ) : (
                                 <List>
-                                {/*{this.state.list_new.map((value_new, num) => (*/}
-                                {/*    <ListItem key={num} onPress={() => {*/}
-                                {/*        this._setRead(value_new.id)*/}
-                                {/*    }}>*/}
-                                {/*        <View style={{ flexDirection: "column" }}>*/}
-                                {/*            <Text style={{ fontSize: 16 }}>{ value_new.id }</Text>*/}
-                                {/*            <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_new.n_datetime }</Text>*/}
-                                {/*        </View>*/}
-                                {/*    </ListItem>*/}
-                                {/*))}*/}
+                                    {this.state.list_new.map((value_new, nums) => (
+                                        <ListItem key={nums}>
+                                            <View style={{ flexDirection: "column" }}>
+                                                <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
+                                                <WebView
+                                                    style={{height: 100}}
+                                                    originWhitelist={['*']}
+                                                    source={{ html: `${value_new.descr}` }}
+                                                />
+                                                <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
+                                            </View>
+                                        </ListItem>
+                                    ))}
                                 </List>
                             )}
                         </Tab>

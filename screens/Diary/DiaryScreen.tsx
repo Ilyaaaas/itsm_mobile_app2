@@ -42,7 +42,7 @@ class DiaryScreen extends React.Component
         super(props);
 
         this.state = {
-            token: '7BdnodhTCnNRdUY1n2ZJYJP7SvfFgbCL',
+            token: '',
             refreshing: false,
             user: {},
             list : [],
@@ -53,13 +53,15 @@ class DiaryScreen extends React.Component
             personName: '',
             lastName: '',
             checkBoxIsOn: true,
+            userId: 0,
         }
     }
 
     _getToken = async () => {
-        await getToken().then(itoken => {
-            this.setState({token: itoken});
-        })
+        console.log('_getToken');
+        await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+            .then(json => this.setState({token: json[0].accessToken, userId: json[1].userId}))
+            .catch(error => console.log(error))
     }
 
     _getUserData = () => {
@@ -69,11 +71,10 @@ class DiaryScreen extends React.Component
                 this.setState({ user: obj });
             }
         });
-    };
+    }
 
     _getList = async () => {
-        const API_URL = `http://api.smart24.kz/portal/v1/user/3470?access-token=`+this.state.token;
-
+        const API_URL = `http://api.smart24.kz/portal/v1/user/`+this.state.userId+`?access-token=`+this.state.token;
         try {
             const response = await fetch(API_URL, {
                 method: 'GET',
@@ -87,15 +88,6 @@ class DiaryScreen extends React.Component
             const responseJson = await response.json();
 
             if (responseJson !== null) {
-                // if(responseJson.success == false){
-                //     Toast.show({
-                //         text: responseJson.message,
-                //         type: 'danger',
-                //         duration: 3000
-                //     });
-                //     return;
-                // }
-
                 this.setState({ list: responseJson });
             }
         } catch (error) {
@@ -105,7 +97,7 @@ class DiaryScreen extends React.Component
 
     _refreshPage = async () => {
         this.setState({refreshing: true});
-        // await this._getToken();
+        await this._getToken();
         await this._getUserData();
         this._getList();
         this.setState({refreshing: false});
@@ -206,6 +198,7 @@ class DiaryScreen extends React.Component
                             <Input
                                    style={styles.input}
                                    placeholder={'Имя'}
+                                   value={this.state.list.personName}
                             />
                         </View>
                         <View style={{flex: 1,
