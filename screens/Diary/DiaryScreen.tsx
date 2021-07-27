@@ -363,7 +363,7 @@ class DiaryScreen extends React.Component
                         </View>
                     </ListItem>
                     <Content padder>
-                        <Accordion dataArray={dataArray} expanded={0} renderContent={this._renderContent}/>
+                        <Accordion dataArray={dataArray} renderContent={this._renderContent}/>
                     </Content>
                 </Content>
             </Container>

@@ -542,20 +542,32 @@ class HomeScreen extends React.Component{
             </Root>
           </Modal>
           <Modal
+              animationType={"slide"}
+              style={{backgroundColor: 'black'}}
               transparent={true}
               visible={this.state.filterModal}
               contentContainerStyle={styles.filterModal}
               onRequestClose={()=>this.setState({ filterModal: false})}>
             <View style={{
+              backgroundColor: 'rgba(30, 30, 45, 0.8)',
               flex: 1,
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center'}}>
               <View style={{
                 backgroundColor: 'white',
-                width: 400,
-                height: 300}}>
-                <Text onPress={()=>this.setState({ filterModal: false})} style={{alignSelf:'flex-end', fontSize: 20}}>X</Text>
+                width: 350,
+                height: 300,
+                borderRadius: 10,
+              }}>
+                <Text onPress={()=>this.setState({ filterModal: false})} style={{alignSelf:'flex-end', fontSize: 20}}>
+                  <MaterialIcons
+                      name="close"
+                      size={34}
+                      color="#1a192a"
+                      style={{ marginRight: 10 }}
+                  />
+                </Text>
                 <DropDownPicker
                     items={[
                       {label: 'Новые заявки', value: 0},
