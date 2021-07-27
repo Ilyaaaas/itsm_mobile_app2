@@ -76,8 +76,14 @@ class HomeScreen extends React.Component{
         sname: '',
         section_txt: '',
       },
-      page: 0,
-      perPage: 2,
+      currentPage: 0,
+      prevPage: 0,
+      firstPage: 0,
+      lastPage: 0,
+      totalPage: 0,
+      totalReqCount: 0,
+      reqCountInOnePage: 0,
+      currentPageLink: '',
     }
   }
 
@@ -121,8 +127,20 @@ class HomeScreen extends React.Component{
     await this._getUrl('service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id')
       .then(value => {
         if(value !== null){
-          this.setState({ list: value.items});
-          this.setState({ total: value._meta.totalCount});
+          this.setState({
+                                list: value.items,
+                                currentPage: value._links.self.href,
+                                // prevPage: value._links.prev.href,
+                                nextPage: value._links.next.href,
+                                firstPage: value._links.first.href,
+                                lastPage: value._links.last.href,
+                                totalPage: value._meta.pageCount,
+                                totalReqCount: value._meta.totalCount,
+                                reqCountInOnePage: value._meta.perPage,
+                        });
+          console.log('value._meta');
+          console.log(value._meta.totalCount);
+          console.log(value._links);
         }
       }
     )
@@ -364,22 +382,23 @@ class HomeScreen extends React.Component{
                   </List>
               )}
             </Content>
-            <View style={{alignItems: 'center', flexDirection: 'row', width: 50}}>
-              <Text>Всего заявок:</Text>
-              <Text>Страниц:</Text>
+            <View style={{alignItems: 'center', flexDirection: 'column', backgroundColor: '#1a192a'}}>
+              <Text style={{color: 'white'}}>Показано {this.state.reqCountInOnePage} из {this.state.totalReqCount} заявок</Text>
             </View>
             <Footer style={{
-                              backgroundColor: 'rgba(157,157,157,0.02)',
-                              alignItems: 'center',
-                              width: '100%',
-                              height: 50,
+                              backgroundColor: 'white',
                               flexDirection: 'row',
+                              justifyContent: 'space-between',
+                          }}>
+              <View style={{
+                              alignItems: 'center',
+                              flexDirection: 'row',
+                              width: 70,
                               justifyContent: 'space-between',
                               paddingLeft: 10,
                           }}>
-              <View style={{alignItems: 'center', flexDirection: 'row', width: 50}}>
-                <AntDesign name="verticleright" size={20} color="black" />
-                <AntDesign name="left" size={24} color="black" />
+                <AntDesign name="verticleright" size={20} color='#5e6064' />
+                <AntDesign name="left" size={24} color='#5e6064'/>
               </View>
               <Body style={{justifyContent: 'center', alignItems: 'center', marginLeft: 5, marginRight: 5, width: 200}}>
                 <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
@@ -396,15 +415,15 @@ class HomeScreen extends React.Component{
                 </TouchableOpacity>
               </Body>
               <View style={{
-                            width: 50,
+                            width: 70,
                             backgroundColor: 'white',
                             alignItems: 'center',
                             flexDirection: 'row',
-                            justifyContent: 'flex-end',
+                            justifyContent: 'space-between',
                             paddingRight: 10,
                           }}>
-                <AntDesign name="right" size={24} color="black" />
-                <AntDesign name="verticleleft" size={20} color="black" />
+                <AntDesign name="right" size={24} color='#5e6064' />
+                <AntDesign name="verticleleft" size={20} color='#5e6064' />
               </View>
             </Footer>
           </Root>
