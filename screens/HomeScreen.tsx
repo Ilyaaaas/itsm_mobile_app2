@@ -40,9 +40,12 @@ import DropDownPicker from "react-native-dropdown-picker";
 // import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DiaryScreenView from "./Diary/DiaryScreenView";
+import {DataTable} from "react-native-paper";
 
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
+
+const numberOfItemsPerPageList = [2, 3, 4];
 
 class HomeScreen extends React.Component{
   constructor(props) {
@@ -73,6 +76,8 @@ class HomeScreen extends React.Component{
         sname: '',
         section_txt: '',
       },
+      page: 0,
+      perPage: 2,
     }
   }
 
@@ -246,6 +251,50 @@ class HomeScreen extends React.Component{
   }
 
   render() {
+    const data = [
+      {
+        name: 'Frozen Yogurt',
+        calories: '159',
+        fat: '6.0',
+        carbs: '24',
+        protein: '4',
+      },
+      {
+        name: 'Ice Cream Sandwhich',
+        calories: '237',
+        fat: '9.0',
+        carbs: '37',
+        protein: '4.3',
+      },
+      {
+        name: 'Blizzard',
+        calories: '480',
+        fat: '3.4',
+        carbs: '80',
+        protein: '1',
+      },
+      {
+        name: 'Frosty',
+        calories: '200',
+        fat: '2.0',
+        carbs: '12',
+        protein: '8',
+      },
+      {
+        name: 'DillyBar',
+        calories: '120',
+        fat: '15',
+        carbs: '30',
+        protein: '10',
+      },
+      {
+        name: 'PushPop',
+        calories: '50',
+        fat: '1',
+        carbs: '2',
+        protein: '2',
+      },
+    ];
     {console.log('this.state.list')}
     {console.log(this.state.list)}
     return (
@@ -358,6 +407,27 @@ class HomeScreen extends React.Component{
                   </List>
               )}
             </Content>
+            <Footer style={{ backgroundColor: '#1a192a', height: 300 }}>
+              <DataTable style={{backgroundColor: 'white'}}>
+                <DataTable.Pagination
+                    style={{paddingBottom: 20}}
+                    page={2}
+                    numberOfPages={5}
+                    onPageChange={(page) => console.log(page)}
+                    label="1-2 of 6"
+                    itemsPerPage={[1, 2, 3, 4]}
+                    setItemsPerPage={() => this.setState({page: 1})}
+                    showFastPagination={true}
+                    optionsLabel={'Rows per page'}
+                    numberOfItemsPerPage={5}
+                    numberOfItemsPerPageList={5}
+                    onItemsPerPageChange={5}
+                    accessibilityLabel="test"
+                    selectPageDropdownAccessibilityLabel="test"
+                    optionsPerPage={[1, 2, 3, 4]}
+                />
+              </DataTable>
+            </Footer>
           </Root>
           <Modal
               animationType={"slide"}

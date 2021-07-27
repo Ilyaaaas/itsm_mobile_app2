@@ -29,7 +29,7 @@ import DiaryScreenView from "../Diary/DiaryScreenView";
 import { resetFormInfo, setFormInfo } from '../../actions/form-actions';
 import { isEmpty, DATE_T, SHED_ID_T, TIME_T, TIMES_T, API, getToken } from '../constants';
 import {WebView} from "react-native-webview";
-import {Modal} from "react-native-paper";
+import {Modal, DataTable} from "react-native-paper";
 import {StackActions} from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as DocumentPicker from 'expo-document-picker';
