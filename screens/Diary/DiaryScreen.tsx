@@ -308,6 +308,11 @@ class DiaryScreen extends React.Component
         this.setState({checkBoxIsOn: checkBoxState})
     }
 
+    logout = () =>
+    {
+        this.props.navigation.navigate('Login');
+    }
+
     render() {
         const dataArray = [
             { id: 0, title: "Контакты", content: 'username' },
@@ -323,13 +328,13 @@ class DiaryScreen extends React.Component
                         <Title style={{ color: '#1a192a' }}>Профиль</Title>
                     </Body>
                     <Right>
-                        <AntDesign
-                            name="edit"
+                        <MaterialIcons
+                            name="exit-to-app"
                             size={24}
                             color="#1a192a"
                             style={{ marginRight: 10 }}
                             onPress={() => {
-                                this.getDiaryView(0);
+                                this.logout();
                             }}
                         />
                     </Right>

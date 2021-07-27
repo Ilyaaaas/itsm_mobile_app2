@@ -45,7 +45,7 @@
     "react-native-keyboard-aware-scroll-view": "0.9.2",
     "react-native-masked-text": "1.13.0",
     "react-native-modal-datetime-picker": "^6.0.0",
-    "react-native-paper": "^4.4.1",
+    "react-native-paper": "^4.9.2",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",

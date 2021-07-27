@@ -251,50 +251,6 @@ class HomeScreen extends React.Component{
   }
 
   render() {
-    const data = [
-      {
-        name: 'Frozen Yogurt',
-        calories: '159',
-        fat: '6.0',
-        carbs: '24',
-        protein: '4',
-      },
-      {
-        name: 'Ice Cream Sandwhich',
-        calories: '237',
-        fat: '9.0',
-        carbs: '37',
-        protein: '4.3',
-      },
-      {
-        name: 'Blizzard',
-        calories: '480',
-        fat: '3.4',
-        carbs: '80',
-        protein: '1',
-      },
-      {
-        name: 'Frosty',
-        calories: '200',
-        fat: '2.0',
-        carbs: '12',
-        protein: '8',
-      },
-      {
-        name: 'DillyBar',
-        calories: '120',
-        fat: '15',
-        carbs: '30',
-        protein: '10',
-      },
-      {
-        name: 'PushPop',
-        calories: '50',
-        fat: '1',
-        carbs: '2',
-        protein: '2',
-      },
-    ];
     {console.log('this.state.list')}
     {console.log(this.state.list)}
     return (
@@ -408,7 +364,27 @@ class HomeScreen extends React.Component{
               )}
             </Content>
             <Footer style={{ backgroundColor: '#1a192a', height: 300 }}>
-              <DataTable style={{backgroundColor: 'white'}}>
+              <DataTable style={{
+                                  backgroundColor: 'white',
+                                  flex: 1,
+                                  flexDirection: 'row',
+                                  justifyContent: 'flex-end',
+                                }}
+              >
+                <DropDownPicker
+                    items={[
+                      {label: 'Новые заявки', value: 0},
+                      {label: 'Требуют исполнения', value: 1},
+                      {label: 'Назначенные мне', value: 2},
+                      {label: 'Созданные мной', value: 3},
+                      {label: 'Назначенные на группу', value: 4},
+                      {label: 'Требуют внимания', value: 5},
+                      {label: 'Акуатльные инценденты', value: 6},
+                      {label: 'Инценденты', value: 7},
+                    ]}
+                    containerStyle={{height: 40}}
+                    onChangeItem={() => alert('Filter')}
+                />
                 <DataTable.Pagination
                     style={{paddingBottom: 20}}
                     page={2}
@@ -420,7 +396,6 @@ class HomeScreen extends React.Component{
                     showFastPagination={true}
                     optionsLabel={'Rows per page'}
                     numberOfItemsPerPage={5}
-                    numberOfItemsPerPageList={5}
                     onItemsPerPageChange={5}
                     accessibilityLabel="test"
                     selectPageDropdownAccessibilityLabel="test"
