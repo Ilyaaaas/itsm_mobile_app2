@@ -363,7 +363,7 @@ class HomeScreen extends React.Component{
                   </List>
               )}
             </Content>
-            <Footer style={{ backgroundColor: '#1a192a', height: 300 }}>
+            <Footer style={{ backgroundColor: '#1a192a', height: 50 }}>
               <DataTable style={{
                                   backgroundColor: 'white',
                                   flex: 1,
