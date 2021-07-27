@@ -122,6 +122,7 @@ class HomeScreen extends React.Component{
       .then(value => {
         if(value !== null){
           this.setState({ list: value.items});
+          this.setState({ total: value._meta.totalCount});
         }
       }
     )
@@ -363,45 +364,48 @@ class HomeScreen extends React.Component{
                   </List>
               )}
             </Content>
-            <Footer style={{ backgroundColor: '#1a192a', height: 50 }}>
-              <DataTable style={{
-                                  backgroundColor: 'white',
-                                  flex: 1,
-                                  flexDirection: 'row',
-                                  justifyContent: 'flex-end',
-                                }}
-              >
-                <DropDownPicker
-                    items={[
-                      {label: 'Новые заявки', value: 0},
-                      {label: 'Требуют исполнения', value: 1},
-                      {label: 'Назначенные мне', value: 2},
-                      {label: 'Созданные мной', value: 3},
-                      {label: 'Назначенные на группу', value: 4},
-                      {label: 'Требуют внимания', value: 5},
-                      {label: 'Акуатльные инценденты', value: 6},
-                      {label: 'Инценденты', value: 7},
-                    ]}
-                    containerStyle={{height: 40}}
-                    onChangeItem={() => alert('Filter')}
-                />
-                <DataTable.Pagination
-                    style={{paddingBottom: 20}}
-                    page={2}
-                    numberOfPages={5}
-                    onPageChange={(page) => console.log(page)}
-                    label="1-2 of 6"
-                    itemsPerPage={[1, 2, 3, 4]}
-                    setItemsPerPage={() => this.setState({page: 1})}
-                    showFastPagination={true}
-                    optionsLabel={'Rows per page'}
-                    numberOfItemsPerPage={5}
-                    onItemsPerPageChange={5}
-                    accessibilityLabel="test"
-                    selectPageDropdownAccessibilityLabel="test"
-                    optionsPerPage={[1, 2, 3, 4]}
-                />
-              </DataTable>
+            <View style={{alignItems: 'center', flexDirection: 'row', width: 50}}>
+              <Text>Всего заявок:</Text>
+              <Text>Страниц:</Text>
+            </View>
+            <Footer style={{
+                              backgroundColor: 'rgba(157,157,157,0.02)',
+                              alignItems: 'center',
+                              width: '100%',
+                              height: 50,
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
+                              paddingLeft: 10,
+                          }}>
+              <View style={{alignItems: 'center', flexDirection: 'row', width: 50}}>
+                <AntDesign name="verticleright" size={20} color="black" />
+                <AntDesign name="left" size={24} color="black" />
+              </View>
+              <Body style={{justifyContent: 'center', alignItems: 'center', marginLeft: 5, marginRight: 5, width: 200}}>
+                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
+                  <Text>1</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
+                  <Text>2</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
+                  <Text>3</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
+                  <Text>4</Text>
+                </TouchableOpacity>
+              </Body>
+              <View style={{
+                            width: 50,
+                            backgroundColor: 'white',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            paddingRight: 10,
+                          }}>
+                <AntDesign name="right" size={24} color="black" />
+                <AntDesign name="verticleleft" size={20} color="black" />
+              </View>
             </Footer>
           </Root>
           <Modal
@@ -542,7 +546,7 @@ class HomeScreen extends React.Component{
             </Root>
           </Modal>
           <Modal
-              animationType={"slide"}
+              animationType={"fade"}
               style={{backgroundColor: 'black'}}
               transparent={true}
               visible={this.state.filterModal}
