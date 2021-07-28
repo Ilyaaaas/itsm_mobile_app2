@@ -153,22 +153,30 @@ class HomeScreen extends React.Component{
     let content = [];
     var z = currentPageNum;
     var x = currentPageNum+4;
-    var backColor = 'white';
-    var textColor = '#5e6064';
+    var backColor = '';
+    var textColor = '';
 
     if(currentPageNum > 1)
     {
-      z = z--;
+      z--;
     }
     if(x > this.state.pageCount)
     {
       x = this.state.pageCount;
     }
     for (let i = z; i < x; i++) {
+      backColor = 'white';
+      textColor = '#5e6064';
+      if(i == currentPageNum)
+      {
+        backColor = '#5e6064';
+        textColor = 'white';
+      }
       content.push(
-          <TouchableOpacity onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)} style={{backgroundColor: `${backColor}`, borderWidth: 1, borderRadius: 20, padding: 12, borderColor: 'black', margin: 5}}>
+          <TouchableOpacity onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)}
+                            style={{backgroundColor: `${backColor}`,
+                                    borderRadius: 20, padding: 12, borderColor: 'black', margin: 5}}>
             <Text style={{color: `${textColor}`}}>{i}</Text>
-            {console.log('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)}
           </TouchableOpacity>
       );
     }
