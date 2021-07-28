@@ -53,6 +53,10 @@ class DiaryScreen extends React.Component
             personName: '',
             lastName: '',
             checkBoxIsOn: true,
+            pushNotif: true,
+            smshNotif: true,
+            emailNotif: true,
+            shuttle: true,
             userId: 0,
         }
     }
@@ -112,9 +116,8 @@ class DiaryScreen extends React.Component
     }
 
     _renderContent  = (item) => {
-        console.log(item);
         return (
-            <View>
+            <View style={{backgroundColor: '#E0E0E0', borderRadius: 5, marginBottom: 10}}>
                 {item.id == '1' ?
                     <View>
                         <View style={{flex: 1,
@@ -123,13 +126,13 @@ class DiaryScreen extends React.Component
                             height: 50,
                             alignItems: 'center',
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10}}>Получать PUSH уведомления</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, color: '#898989'}}>Получать PUSH уведомления</Text>
                             <Switch
                                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                                 thumbColor={"#f4f3f4"}
                                 ios_backgroundColor="#3e3e3e"
-                                onValueChange={() => this.handleChecked()}
-                                value={this.state.checkBoxIsOn}
+                                onValueChange={() => this.setState({pushNotif: !this.state.pushNotif})}
+                                value={this.state.pushNotif}
                                 style={{marginRight: 10}}
                             />
                         </View>
@@ -139,13 +142,13 @@ class DiaryScreen extends React.Component
                             height: 50,
                             alignItems: 'center',
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10}}>Получать SMS уведомления</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, color: '#898989'}}>Получать SMS уведомления</Text>
                             <Switch
                             trackColor={{ false: "#767577", true: "#81b0ff" }}
                             thumbColor={"#f4f3f4"}
                             ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => this.handleChecked()}
-                            value={this.state.checkBoxIsOn}
+                            onValueChange={() => this.setState({smsNotif: !this.state.smsNotif})}
+                            value={this.state.smsNotif}
                             style={{marginRight: 10}}
                             />
                         </View>
@@ -155,13 +158,13 @@ class DiaryScreen extends React.Component
                             height: 50,
                             alignItems: 'center',
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10}}>Получать уведомления по почте</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, color: '#898989'}}>Получать уведомления по почте</Text>
                             <Switch
                                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                                 thumbColor={"#f4f3f4"}
                                 ios_backgroundColor="#3e3e3e"
-                                onValueChange={() => this.handleChecked()}
-                                value={this.state.checkBoxIsOn}
+                                onValueChange={() => this.setState({emailNotif: !this.state.emailNotif})}
+                                value={this.state.emailNotif}
                                 style={{marginRight: 10}}
                             />
                         </View>
@@ -174,13 +177,13 @@ class DiaryScreen extends React.Component
                         height: 50,
                         alignItems: 'center',
                     }}>
-                        <Text style={{textAlign: 'left', marginLeft: 10}}>Требуется развозка</Text>
+                        <Text style={{textAlign: 'left', marginLeft: 10, color: '#898989'}}>Требуется развозка</Text>
                         <Switch
                             trackColor={{ false: "#767577", true: "#81b0ff" }}
                             thumbColor={"#f4f3f4"}
                             ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => this.handleChecked()}
-                            value={this.state.checkBoxIsOn}
+                            onValueChange={() => this.setState({shuttle: !this.state.shuttle})}
+                            value={this.state.shuttle}
                             style={{marginRight: 10}}
                         />
                     </View>
@@ -194,7 +197,7 @@ class DiaryScreen extends React.Component
                             marginRight: 10,
                             marginLeft: 10,
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Имя</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Имя</Text>
                             <Input
                                    style={styles.input}
                                    placeholder={'Имя'}
@@ -209,7 +212,7 @@ class DiaryScreen extends React.Component
                                         marginRight: 10,
                                         marginLeft: 10,
                                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Фамилия</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Фамилия</Text>
                             <Input
                                 style={styles.input}
                                 placeholder={'Фамилия'}
@@ -223,7 +226,7 @@ class DiaryScreen extends React.Component
                             marginRight: 10,
                             marginLeft: 10,
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Отчество</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Отчество</Text>
                             <Input
                                 style={styles.input}
                                 placeholder={'Отчество'}
@@ -237,7 +240,7 @@ class DiaryScreen extends React.Component
                             marginRight: 10,
                             marginLeft: 10,
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Почта</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Почта</Text>
                             <Input
                                 style={styles.input}
                                 placeholder={'Почта'}
@@ -251,7 +254,7 @@ class DiaryScreen extends React.Component
                             marginRight: 10,
                             marginLeft: 10,
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Рабочий телефон</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Рабочий телефон</Text>
                             <Input
                                 style={styles.input}
                                 placeholder={'Рабочий телефон'}
@@ -265,7 +268,7 @@ class DiaryScreen extends React.Component
                             marginRight: 10,
                             marginLeft: 10,
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Мобильный телефон</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Мобильный телефон</Text>
                             <Input
                                 style={styles.input}
                                 placeholder={'Мобильный телефон'}
@@ -279,7 +282,7 @@ class DiaryScreen extends React.Component
                             marginRight: 10,
                             marginLeft: 10,
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80,}}>Номер кабинета</Text>
+                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Номер кабинета</Text>
                             <Input
                                 style={styles.input}
                                 placeholder={'Номер кабинета'}
@@ -295,6 +298,71 @@ class DiaryScreen extends React.Component
                     </View>
                 }
             </View>
+        );
+    }
+
+    _renderHeader  = (item) => {
+        return (
+                    <View style={{
+                        borderWidth: 0.2,
+                        borderColor: '#898989',
+                        borderRadius: 10,
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        height: 50,
+                        alignItems: 'center',
+                        shadowColor: '#898989',
+                        shadowOffset: {
+                            width: 0,
+                            height: 2
+                        },
+                        shadowRadius: 2,
+                        shadowOpacity: 0.5,
+                        marginBottom: 10,
+                        backgroundColor: 'white',
+                    }}>
+                        <View style={{width: 60, }}>
+                            {item.id == '0' ?
+                            <MaterialIcons
+                                name="contacts"
+                                size={18}
+                                style={{
+                                    color: '#898989',
+                                    paddingLeft: 20,
+                                }}/>
+                                :
+                                item.id == '1' ?
+                                <Ionicons name="ios-settings"
+                                          size={18}
+                                          style={{
+                                              color: '#898989',
+                                              paddingLeft: 20,
+                                          }}/>
+                                :
+                                    <MaterialIcons
+                                            name="airport-shuttle"
+                                            size={18}
+                                            style={{
+                                                color: '#898989',
+                                                paddingLeft: 20,
+                                            }} />
+                            }
+                        </View>
+                        <Body style={{paddingLeft: -40, width: 400, alignItems: 'left', justifyContent: 'flex-start'}}>
+                            <Text style={{color: '#898989', textAlign: 'left', fontSize: 14, justifyContent: 'flex-start', alignContent: 'flex-start'}}>
+                                {item.title}
+                            </Text>
+                        </Body>
+                        <Right>
+                            <AntDesign
+                                name="down"
+                                size={12}
+                                color='#898989'
+                                style={{marginRight: 10}}
+                            />
+                        </Right>
+                    </View>
         );
     }
 
@@ -363,7 +431,12 @@ class DiaryScreen extends React.Component
                         </View>
                     </ListItem>
                     <Content padder>
-                        <Accordion dataArray={dataArray} renderContent={this._renderContent}/>
+                        <Accordion
+                            style={{backgroundColor: 'white', shadowColor: 'red'}}
+                            dataArray={dataArray}
+                            renderContent={this._renderContent}
+                            renderHeader={this._renderHeader}
+                        />
                     </Content>
                 </Content>
             </Container>
@@ -393,12 +466,12 @@ const styles = StyleSheet.create({
             alignSelf: 'center',
         },
     input: {
-        borderWidth: 1,
         borderRadius: 5,
         width: 20,
         marginRight: 10,
         marginLeft: 10,
         height: 30,
+        backgroundColor: 'white',
     },
 });
 
