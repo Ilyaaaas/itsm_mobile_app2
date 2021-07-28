@@ -47,6 +47,11 @@ let ScreenWidth = Dimensions.get("window").width;
 
 const numberOfItemsPerPageList = [2, 3, 4];
 
+function PagesPagin()
+{
+  return
+}
+
 class HomeScreen extends React.Component{
   constructor(props) {
     super(props);
@@ -80,10 +85,10 @@ class HomeScreen extends React.Component{
       prevPage: 0,
       firstPage: 0,
       lastPage: 0,
-      totalPage: 0,
+      totalPageCount: 0,
       totalReqCount: 0,
       reqCountInOnePage: 0,
-      currentPageLink: '',
+      currentPageLink: '0',
     }
   }
 
@@ -122,19 +127,75 @@ class HomeScreen extends React.Component{
     return null;
   }
 
+  _getUrlWithFullURL = async (url) => {
+      const API_URL = url;
+      console.log('_getUrlWithFullURL '+API_URL);
+
+      try {
+          const response = await fetch(API_URL, {
+              method: 'GET',
+              headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'token': this.state.token,
+              },
+          });
+
+          const responseJson = await response.json();
+          return responseJson;
+      } catch (error) {
+          console.log('Error when call API: ' + error.message);
+      }
+      return null;
+  }
+
+  pagePagin = (currentPageNum) => {
+    let content = [];
+    var z = currentPageNum;
+    var x = currentPageNum+4;
+    var backColor = 'white';
+    var textColor = '#5e6064';
+
+    if(currentPageNum > 1)
+    {
+      z = z--;
+    }
+    if(x > this.state.pageCount)
+    {
+      x = this.state.pageCount;
+    }
+    for (let i = z; i < x; i++) {
+      content.push(
+          <TouchableOpacity onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)} style={{backgroundColor: `${backColor}`, borderWidth: 1, borderRadius: 20, padding: 12, borderColor: 'black', margin: 5}}>
+            <Text style={{color: `${textColor}`}}>{i}</Text>
+            {console.log('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)}
+          </TouchableOpacity>
+      );
+    }
+    return content;
+  }
+
   _getDoctorList = async () => {
-    console.log(this.state.token)
-    await this._getUrl('service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id')
+    console.log('this.state.currentPage');
+    console.log(this.state.currentPageLink);
+    console.log('this.state.currentPage');
+    var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id';
+    if(this.state.currentPageLink != '0')
+    {
+        url = this.state.currentPageLink;
+    }
+    await this._getUrlWithFullURL(url)
       .then(value => {
         if(value !== null){
           this.setState({
                                 list: value.items,
-                                currentPage: value._links.self.href,
+                                currentPageLink: value._links.self.href,
                                 // prevPage: value._links.prev.href,
                                 nextPage: value._links.next.href,
                                 firstPage: value._links.first.href,
                                 lastPage: value._links.last.href,
-                                totalPage: value._meta.pageCount,
+                                currentPage: value._meta.currentPage,
+                                totalPageCountCount: value._meta.pageCount,
                                 totalReqCount: value._meta.totalCount,
                                 reqCountInOnePage: value._meta.perPage,
                         });
@@ -265,6 +326,15 @@ class HomeScreen extends React.Component{
     this.props.navigation.navigate('OfferScreen');
   }
 
+  changePage = async (url) => {
+    console.log('link ');
+    console.log(url);
+    await this.setState({
+      currentPageLink: url,
+    });
+    this._refreshPage();
+  }
+
   showFilter = () => {
     this.setState({ filterModal: true});
   }
@@ -385,6 +455,14 @@ class HomeScreen extends React.Component{
             <View style={{alignItems: 'center', flexDirection: 'column', backgroundColor: '#1a192a'}}>
               <Text style={{color: 'white'}}>Показано {this.state.reqCountInOnePage} из {this.state.totalReqCount} заявок</Text>
             </View>
+              {/*currentPage: value._links.self.href,*/}
+              {/*// prevPage: value._links.prev.href,*/}
+              {/*nextPage: value._links.next.href,*/}
+              {/*firstPage: value._links.first.href,*/}
+              {/*lastPage: value._links.last.href,*/}
+              {/*totalPageCount: value._meta.pageCount,*/}
+              {/*totalReqCount: value._meta.totalCount,*/}
+              {/*reqCountInOnePage: value._meta.perPage,*/}
             <Footer style={{
                               backgroundColor: 'white',
                               flexDirection: 'row',
@@ -397,22 +475,11 @@ class HomeScreen extends React.Component{
                               justifyContent: 'space-between',
                               paddingLeft: 10,
                           }}>
-                <AntDesign name="verticleright" size={20} color='#5e6064' />
-                <AntDesign name="left" size={24} color='#5e6064'/>
+                <AntDesign onPress={() => this.changePage(this.state.firstPage)} name="verticleright" size={20} color='#5e6064' />
+                <AntDesign onPress={() => this.changePage(this.state.prevPage)} name="left" size={24} color='#5e6064'/>
               </View>
               <Body style={{justifyContent: 'center', alignItems: 'center', marginLeft: 5, marginRight: 5, width: 200}}>
-                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
-                  <Text>1</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
-                  <Text>2</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
-                  <Text>3</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{borderWidth: 1, borderRadius: 20, padding: 10, borderColor: 'black', margin: 5}}>
-                  <Text>4</Text>
-                </TouchableOpacity>
+                {this.pagePagin(this.state.currentPage)}
               </Body>
               <View style={{
                             width: 70,
@@ -422,8 +489,8 @@ class HomeScreen extends React.Component{
                             justifyContent: 'space-between',
                             paddingRight: 10,
                           }}>
-                <AntDesign name="right" size={24} color='#5e6064' />
-                <AntDesign name="verticleleft" size={20} color='#5e6064' />
+                <AntDesign onPress={() => this.changePage(this.state.nextPage)} name="right" size={24} color='#5e6064' />
+                <AntDesign onPress={() => this.changePage(this.state.lastPage)} name="verticleleft" size={20} color='#5e6064' />
               </View>
             </Footer>
           </Root>
