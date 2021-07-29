@@ -35,59 +35,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as DocumentPicker from 'expo-document-picker';
 
 const BottomTab = createBottomTabNavigator();
-const CHOOSE_SPEC = 'choose-spec',
-    CHOOSE_DOCTOR = 'choose-doctor';
-
-const datesWhitelistEmpty = [];
-
-const datesBlacklistEmpty = [],
-    datesBlacklist = []; // 1 day disabled
-
-const locale = {
-    name: 'ru',
-    config: {
-        months: 'Январь_Февраль_Март_Апрель_Май_Июнь_Июль_Август_Сентябрь_Октябрь_Ноябрь_Декабрь'.split(
-            '_'
-        ),
-        monthsParseExact: true,
-        weekdays: 'Воскресенье_Понедельник_Вторник_Среда_Четверг_Пятница_Суббота'.split(
-            '_'
-        ),
-        weekdaysShort: 'Вс_Пн_Вт_Ср_Чт_Пт_Сб'.split('_'),
-        weekdaysMin: 'Вс_Пн_Вт_Ср_Чт_Пт_Сб'.split('_'),
-        weekdaysParseExact: true,
-        meridiem(hours, minutes, isLower) {
-            return hours < 12 ? 'PD' : 'MD';
-        },
-        week: {
-            dow: 0,
-        },
-    },
-};
-
-function Test() {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Test</Text>
-        </View>
-    );
-}
-
-function Test2() {
-    return (
-        <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Test2</Text>
-        </View>
-    );
-}
-
-function Test3() {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Test3</Text>
-        </View>
-    );
-}
 
 export default function OfferScreen({ navigation }) {
     const [datesWhitelist, setDatesWhitelist] = useState([
@@ -113,15 +60,34 @@ export default function OfferScreen({ navigation }) {
     const [file, setFile] = useState();
     const [selectedService, setSelectedService] = useState();
     const [selectedCatalog, setSelectedCatalog] = useState();
-    const [token, setToken] = useState('qyYVrigGJkT0d-9kmZDq_uAk2iBaR17v');
+    const [token, setToken] = useState('');
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
 
     useEffect(() => {
-        getServices();
-        getCatalogs();
-    }, []);
+        // console.log({route.params});
+        async function fetchMyAPI() {
+            await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+                .then(json =>
+                {
+                    setToken(json[0].accessToken);
+                    getServices(json[0].accessToken);
+                    getCatalogs(json[0].accessToken);
+                })
+                .catch(error => console.log(error))
+
+        }
+        fetchMyAPI()
+
+    }, [])
+
+    async function _getToken()
+    {
+        await AsyncStorage.getItem('accessToken2').then(req => JSON.parse(req))
+            .then(json => setToken(json[0].accessToken))
+            .catch(error => console.log(error))
+    }
 
     const createOffer = async () =>
     {
@@ -147,7 +113,7 @@ export default function OfferScreen({ navigation }) {
         )
             .then(response => response.text())
             .then(function(data){
-                // console.log(data);
+                console.log(data);
             })
             .catch(error => console.error(error))
             .then()
@@ -156,9 +122,14 @@ export default function OfferScreen({ navigation }) {
             navigation.goBack();
     }
 
-    const getCatalogs = async () =>
+    const getCatalogs = async (tokenParam) =>
     {
-        fetch('http://api.smart24.kz/service-catalog/v1/catalog?access-token='+token+'&_format=json',
+        var usingToken = token;
+        if(token == '')
+        {
+            usingToken = tokenParam
+        }
+        fetch('http://api.smart24.kz/service-catalog/v1/catalog?access-token='+usingToken+'&_format=json',
             {method:'GET',
                 headers: {
                     "Content-type": "application/json",
@@ -174,9 +145,14 @@ export default function OfferScreen({ navigation }) {
             .finally()
     }
 
-    const getServices = async () =>
+    const getServices = async (tokenParam) =>
     {
-        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token='+token+'&_format=json',
+        var usingToken = token;
+        if(token == '')
+        {
+            usingToken = tokenParam
+        }
+        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token='+usingToken+'&_format=json',
             {method:'GET',
                 headers: {
                     "Content-type": "application/json",
@@ -302,9 +278,10 @@ export default function OfferScreen({ navigation }) {
                                     onChangeItem={item => setSelectedCatalog(item.value)}
                                     dropDownStyle={{backgroundColor: '#F2F2F2'}}
                                     zIndex={1000}
+                                    placeholder={'Не выбрано'}
                                 />
                                 :
-                                null
+                                <Text>Загрузка...</Text>
                             }
                         </View>
                         <View style={{zIndex: 9, marginTop: 20}}>
@@ -315,9 +292,10 @@ export default function OfferScreen({ navigation }) {
                                                 onChangeItem={item => setSelectedService(item.value)}
                                                 dropDownStyle={{backgroundColor: '#F2F2F2'}}
                                                 zIndex={1000}
+                                                placeholder={'Не выбрано'}
                                 />
                                 :
-                                null
+                                <Text>Загрузка...</Text>
                             }
                         </View>
                         <View style={{zIndex: -10, marginTop: 20}}>

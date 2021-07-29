@@ -62,7 +62,6 @@ class DiaryScreen extends React.Component
     }
 
     _getToken = async () => {
-        console.log('_getToken');
         await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
             .then(json => this.setState({token: json[0].accessToken, userId: json[1].userId}))
             .catch(error => console.log(error))

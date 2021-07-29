@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
   ActionSheet,
-  Toast, Root, Button, Tab, TabHeading, Tabs,
+  Toast, Root, Button, Tab, TabHeading, Tabs, ActivityIndicator,
 } from 'native-base';
 import React, {useEffect} from 'react';
 import {
@@ -155,14 +155,18 @@ class HomeScreen extends React.Component{
     var x = currentPageNum+4;
     var backColor = '';
     var textColor = '';
+    if(this.state.totalPageCount == 0)
+    {
+      return <Text>Загрузка...</Text>
+    }
 
     if(currentPageNum > 1)
     {
       z--;
     }
-    if(x > this.state.pageCount)
+    if(x > this.state.totalPageCount)
     {
-      x = this.state.pageCount;
+      x = this.state.totalPageCount;
     }
     for (let i = z; i < x; i++) {
       backColor = 'white';
@@ -203,7 +207,7 @@ class HomeScreen extends React.Component{
                                 firstPage: value._links.first.href,
                                 lastPage: value._links.last.href,
                                 currentPage: value._meta.currentPage,
-                                totalPageCountCount: value._meta.pageCount,
+                                totalPageCount: value._meta.pageCount,
                                 totalReqCount: value._meta.totalCount,
                                 reqCountInOnePage: value._meta.perPage,
                         });
