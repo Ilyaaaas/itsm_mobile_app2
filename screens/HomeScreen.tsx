@@ -30,17 +30,8 @@ import {
   TextInput,
   Dimensions, AppState
 } from 'react-native';
-import * as Location from 'expo-location';
-import Main from './Main';
-import { isNotUndefined } from './helpers';
 import {API, getToken} from './constants';
-import StarRating from "react-native-star-rating";
-import {WebView} from "react-native-webview";
 import DropDownPicker from "react-native-dropdown-picker";
-// import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import DiaryScreenView from "./Diary/DiaryScreenView";
-import {DataTable} from "react-native-paper";
 
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;

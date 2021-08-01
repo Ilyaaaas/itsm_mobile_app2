@@ -1,20 +1,12 @@
 import React from 'react';
-import {
-    Text,
-    Button,
-    View
-} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import DiaryScreenView from "./Diary/DiaryScreenView";
 import DiaryScreen from "./Diary/DiaryScreen";
 import HomeScreen from "./HomeScreen";
-import About from "./About/About";
 import InfoScreen from "./Info/InfoScreen";
 import Notifications from "./Notifications";
 import OfferScreen from "../screens/Offer/OfferScreen";
 import {Root} from "native-base";
 import {Ionicons, Feather, AntDesign} from '@expo/vector-icons';
-import {BaseButton} from "react-native-gesture-handler";
 
 const BottomTab = createBottomTabNavigator();
 

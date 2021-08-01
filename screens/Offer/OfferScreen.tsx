@@ -12,25 +12,15 @@ import {
     Title,
     Content,
     Button,
-    ListItem,
     Text,
     Left,
     Right,
     Body,
-    FooterTab,
     Footer,
-    Toast, List, Tabs, Input, Icon,
+    Icon,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
-import * as Notifications from "expo-notifications";
-import DiaryScreenView from "../Diary/DiaryScreenView";
-
-import { resetFormInfo, setFormInfo } from '../../actions/form-actions';
-import { isEmpty, DATE_T, SHED_ID_T, TIME_T, TIMES_T, API, getToken } from '../constants';
-import {WebView} from "react-native-webview";
-import {Modal, DataTable} from "react-native-paper";
-import {StackActions} from "@react-navigation/native";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -52,11 +42,8 @@ export default function OfferScreen({ navigation }) {
     const [typeUrl, setTypeURL] = useState(0);
     const [vidPriem, setVidPriem] = useState('');
     const [offerDescr, setOfferDescr] = useState('');
-    const [disType, setDisType] = useState(true);
-    const [activeTab, setActiveTab] = useState(0);
     const [services, setServices] = useState();
     const [catalogs, setCatalogs] = useState();
-    const [deadLine, setOfferTitle] = useState();
     const [file, setFile] = useState();
     const [selectedService, setSelectedService] = useState();
     const [selectedCatalog, setSelectedCatalog] = useState();
