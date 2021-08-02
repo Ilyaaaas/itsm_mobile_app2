@@ -116,7 +116,7 @@ class DiaryScreen extends React.Component
 
     _renderContent  = (item) => {
         return (
-            <View style={{backgroundColor: '#E0E0E0', borderRadius: 5, marginBottom: 10}}>
+            <View key={item.id} style={{backgroundColor: '#E0E0E0', borderRadius: 5, marginBottom: 10}}>
                 {item.id == '1' ?
                     <View>
                         <View style={{flex: 1,
@@ -302,25 +302,27 @@ class DiaryScreen extends React.Component
 
     _renderHeader  = (item) => {
         return (
-                    <View style={{
-                        borderWidth: 0.2,
-                        borderColor: '#898989',
-                        borderRadius: 10,
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        height: 50,
-                        alignItems: 'center',
-                        shadowColor: '#898989',
-                        shadowOffset: {
-                            width: 0,
-                            height: 2
-                        },
-                        shadowRadius: 2,
-                        shadowOpacity: 0.5,
-                        marginBottom: 10,
-                        backgroundColor: 'white',
-                    }}>
+                    <View
+                        key={item.id}
+                        style={{
+                            borderWidth: 0.2,
+                            borderColor: '#898989',
+                            borderRadius: 10,
+                            flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            shadowColor: '#898989',
+                            shadowOffset: {
+                                width: 0,
+                                height: 2
+                            },
+                            shadowRadius: 2,
+                            shadowOpacity: 0.5,
+                            marginBottom: 10,
+                            backgroundColor: 'white',
+                        }}>
                         <View style={{width: 60, }}>
                             {item.id == '0' ?
                             <MaterialIcons
@@ -434,7 +436,7 @@ class DiaryScreen extends React.Component
                             style={{backgroundColor: 'white', shadowColor: 'red'}}
                             dataArray={dataArray}
                             renderContent={this._renderContent}
-                            renderHeader={this._renderHeader}
+                            // renderHeader={this._renderHeader}
                         />
                     </Content>
                 </Content>
