@@ -334,9 +334,6 @@ class HomeScreen extends React.Component{
         listGrade: value,
         activeDoc: docid,
         modal: true,
-        // author_name: value.clientUser.person_name,
-        // created_at: value.clientUser.created_at,
-        // company_name: value.clientUser.company_name,
       });
       this._getAuthor(value.createdBy);
     })
@@ -522,10 +519,10 @@ class HomeScreen extends React.Component{
                       </Text>
                     </Body>
                   </ListItem>
-                  <View>
+                  <View style={{backgroundColor: '#fff'}}>
                     <Tabs style={{backgroundColor: '#fff'}}>
                       <Tab style={{backgroundColor: '#fff'}} heading={
-                        <TabHeading>
+                        <TabHeading style={{backgroundColor: '#fff'}}>
                           <Text>Инфо</Text>
                         </TabHeading>
                       }>
@@ -546,8 +543,8 @@ class HomeScreen extends React.Component{
                           </ListItem>
                         </List>
                       </Tab>
-                      <Tab heading={
-                        <TabHeading>
+                      <Tab  style={{backgroundColor: '#fff'}} heading={
+                        <TabHeading style={{backgroundColor: '#fff'}}>
                           <Text>Журнал</Text>
                         </TabHeading>
                       }>
@@ -561,8 +558,8 @@ class HomeScreen extends React.Component{
                         </List>
                       </Tab>
                       <Tab heading={
-                        <TabHeading>
-                          <Text>Комментарии</Text>
+                        <TabHeading style={{backgroundColor: '#fff'}}>
+                          <Text style={{backgroundColor: '#fff'}}>Комментарии</Text>
                         </TabHeading>
                       }>
                         <List>
