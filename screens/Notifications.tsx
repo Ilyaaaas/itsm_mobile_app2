@@ -53,12 +53,16 @@ export default class Notifications extends React.Component{
     }
 
     _list = async () => {
+        var readedNotif = [];
+        var unreadedNotif = [];
         await this._getUrl('portal/v1/notification?access-token='+this.state.token+'&_format=json').then(list => {
-            // console.log('list');
-            // console.log(list);
             if(list !== null) {
-                this.setState({list_new: list.items, list_old: list});
+                this.setState({list_new: list.items, list_old: list.items});
             }
+
+            // list.items.map((artist, results) => {
+            //     if(results.length === 0) { ... }
+            // })
         })
     }
 
@@ -113,16 +117,15 @@ export default class Notifications extends React.Component{
                             ) : (
                                 <List>
                                     {this.state.list_new.map((value_new, nums) => (
-                                        <ListItem key={nums}>
-                                            <View style={{ flexDirection: "column" }}>
-                                                <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
-                                                <WebView
-                                                    style={{height: 100}}
-                                                    originWhitelist={['*']}
-                                                    source={{ html: `${value_new.descr}` }}
-                                                />
-                                                <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
-                                            </View>
+                                        <ListItem key={value_new.id}>
+                                            {value_new.isRead == 0 ?
+                                                <View style={{ flexDirection: "column" }}>
+                                                    <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
+                                                    <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
+                                                </View>
+                                                :
+                                                null
+                                            }
                                         </ListItem>
                                     ))}
                                 </List>
@@ -134,20 +137,24 @@ export default class Notifications extends React.Component{
                                     <Text style={this.state.activeTab == 1 ? styles.tab_heading_text_active : styles.tab_heading_text}>Прочитанные</Text>
                                 </TabHeading>
                             }>
-                            {/*{this.state.list_old.length === 0 ? (*/}
-                            {/*    <NotNotification />*/}
-                            {/*) : (*/}
-                            {/*    <List>*/}
-                            {/*        {this.state.list_old.map((value_old, nums) => (*/}
-                            {/*            <ListItem key={nums}>*/}
-                            {/*                <View style={{ flexDirection: "column" }}>*/}
-                            {/*                    <Text style={{ fontSize: 16 }}>{ value_old.n_text }</Text>*/}
-                            {/*                    <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_old.n_datetime }</Text>*/}
-                            {/*                </View>*/}
-                            {/*            </ListItem>*/}
-                            {/*        ))}*/}
-                            {/*    </List>*/}
-                            {/*)}*/}
+                            {this.state.list_old.length === 0 ? (
+                                <NotNotification />
+                            ) : (
+                                <List>
+                                    {this.state.list_new.map((value_new, nums) => (
+                                        <ListItem key={value_new.id}>
+                                            {value_new.isRead == 1 ?
+                                                <View style={{ flexDirection: "column" }}>
+                                                    <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
+                                                    <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
+                                                </View>
+                                                :
+                                                null
+                                            }
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            )}
                         </Tab>
                     </Tabs>
                 </Content>

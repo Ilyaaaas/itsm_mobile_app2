@@ -23,6 +23,7 @@ import {
     View,
     Image,
     Button,
+    Platform,
     TouchableOpacityComponent
 } from 'react-native';
 
@@ -300,7 +301,7 @@ class DiaryScreen extends React.Component
         );
     }
 
-    _renderHeader  = (item) => {
+    _renderHeaderIOS  = (item) => {
         return (
                     <View
                         key={item.id}
@@ -363,6 +364,72 @@ class DiaryScreen extends React.Component
                                 style={{marginRight: 10}}
                             />
                         </Right>
+                    </View>
+        );
+    }
+
+    _renderHeaderAndroid  = (item) => {
+        return (
+                    <View
+                        key={item.id}
+                        style={{
+                            borderWidth: 0.2,
+                            borderColor: '#898989',
+                            borderRadius: 10,
+                            flex: 1,
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            height: 50,
+                            alignItems: 'center',
+                            shadowColor: '#898989',
+                            shadowOffset: {
+                                width: 0,
+                                height: 2
+                            },
+                            shadowRadius: 2,
+                            shadowOpacity: 0.5,
+                            marginBottom: 10,
+                            backgroundColor: 'white',
+                        }}>
+                        <View style={{width: 60, }}>
+                            {item.id == '0' ?
+                            <MaterialIcons
+                                name="contacts"
+                                size={18}
+                                style={{
+                                    color: '#898989',
+                                    paddingLeft: 20,
+                                }}/>
+                                :
+                                item.id == '1' ?
+                                <Ionicons name="ios-settings"
+                                          size={18}
+                                          style={{
+                                              color: '#898989',
+                                              paddingLeft: 20,
+                                          }}/>
+                                :
+                                    <MaterialIcons
+                                            name="airport-shuttle"
+                                            size={18}
+                                            style={{
+                                                color: '#898989',
+                                                paddingLeft: 20,
+                                            }} />
+                            }
+                        </View>
+                            <Text style={{
+                                            color: '#898989',
+                                            textAlign: 'left', fontSize: 14, justifyContent: 'flex-start', alignContent: 'flex-start'
+                                        }}>
+                                {item.title}
+                            </Text>
+                            <AntDesign
+                                name="down"
+                                size={12}
+                                color='#898989'
+                                style={{marginRight: 10}}
+                            />
                     </View>
         );
     }
@@ -432,12 +499,21 @@ class DiaryScreen extends React.Component
                         </View>
                     </ListItem>
                     <Content padder>
-                        <Accordion
-                            style={{backgroundColor: 'white', shadowColor: 'red'}}
-                            dataArray={dataArray}
-                            renderContent={this._renderContent}
-                            // renderHeader={this._renderHeader}
-                        />
+                        {Platform.OS === 'ios' ?
+                            <Accordion
+                                style={{backgroundColor: 'white', shadowColor: 'red'}}
+                                dataArray={dataArray}
+                                renderContent={this._renderContent}
+                                renderHeader={this._renderHeaderIOS}
+                            />
+                            :
+                            <Accordion
+                                style={{backgroundColor: 'white', shadowColor: 'red'}}
+                                dataArray={dataArray}
+                                renderContent={this._renderContent}
+                                renderHeader={this._renderHeaderAndroid}
+                            />
+                        }
                     </Content>
                 </Content>
             </Container>
