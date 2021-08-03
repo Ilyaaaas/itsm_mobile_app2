@@ -56,13 +56,20 @@ export default class Notifications extends React.Component{
         var readedNotif = [];
         var unreadedNotif = [];
         await this._getUrl('portal/v1/notification?access-token='+this.state.token+'&_format=json').then(list => {
-            if(list !== null) {
-                this.setState({list_new: list.items, list_old: list.items});
-            }
+            // if(list !== null) {
+            //     this.setState({list_new: list.items, list_old: list.items});
+            // }
 
-            // list.items.map((artist, results) => {
-            //     if(results.length === 0) { ... }
-            // })
+            list.items.map((artist, results) => {
+                if(artist.isRead === 0)
+                {
+                    this.setState({ list_new: [...this.state.list_new, artist] })
+                }
+                    else if(artist.isRead === 1)
+                {
+                    this.setState({ list_old: [...this.state.list_old, artist] })
+                }
+            })
         })
     }
 
@@ -84,9 +91,6 @@ export default class Notifications extends React.Component{
     }
 
     render() {
-        {console.log('this.state.list_new')}
-        {console.log(this.state.list_new)}
-        {console.log(this.state.list_new.length)}
         return (
             <Container>
                 <Header style={styles.headerTop}>
@@ -118,14 +122,10 @@ export default class Notifications extends React.Component{
                                 <List>
                                     {this.state.list_new.map((value_new, nums) => (
                                         <ListItem key={value_new.id}>
-                                            {value_new.isRead == 0 ?
                                                 <View style={{ flexDirection: "column" }}>
                                                     <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
                                                     <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
                                                 </View>
-                                                :
-                                                null
-                                            }
                                         </ListItem>
                                     ))}
                                 </List>
@@ -141,16 +141,12 @@ export default class Notifications extends React.Component{
                                 <NotNotification />
                             ) : (
                                 <List>
-                                    {this.state.list_new.map((value_new, nums) => (
+                                    {this.state.list_old.map((value_new, nums) => (
                                         <ListItem key={value_new.id}>
-                                            {value_new.isRead == 1 ?
                                                 <View style={{ flexDirection: "column" }}>
                                                     <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
                                                     <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
                                                 </View>
-                                                :
-                                                null
-                                            }
                                         </ListItem>
                                     ))}
                                 </List>
