@@ -80,12 +80,14 @@ class HomeScreen extends React.Component{
       totalReqCount: 0,
       reqCountInOnePage: 0,
       currentPageLink: '0',
+      authorName: '',
     }
   }
 
   _getUrl = async (url) => {
     const API_URL = API+url;
     console.log(API_URL);
+    console.log(this.state.token);
 
     try {
       const response = await fetch(API_URL, {
@@ -231,6 +233,17 @@ class HomeScreen extends React.Component{
         .catch(error => console.log(error))
   }
 
+  _getAuthor = async (authorId) => {
+    console.log('_getAuthor');
+    console.log(authorId);
+    console.log('_getAuthor');
+    await this._getUrl('portal/v1/person/'+authorId+'?access-token='+this.state.token+'&_format=json').then(value => {
+      this.setState({
+        authorName: value,
+      });
+    })
+  }
+
   _refreshPage = async () => {
     this.setState({refreshing: true});
     await this._getToken();
@@ -313,15 +326,19 @@ class HomeScreen extends React.Component{
   }
 
   onInfoButtonClicked = async (docid) => {
-    await this._getUrl('service-requests/v1/request/'+docid+'?expand=clientUser').then(value => {
+    await this._getUrl('service-requests/v1/request/'+docid).then(value => {
+      console.log('onInfoButtonClicked');
+      console.log(value);
+      console.log('onInfoButtonClicked');
       this.setState({
         listGrade: value,
         activeDoc: docid,
         modal: true,
-        author_name: value.clientUser.person_name,
-        created_at: value.clientUser.created_at,
-        company_name: value.clientUser.company_name,
+        // author_name: value.clientUser.person_name,
+        // created_at: value.clientUser.created_at,
+        // company_name: value.clientUser.company_name,
       });
+      this._getAuthor(value.createdBy);
     })
   }
 
@@ -379,13 +396,13 @@ class HomeScreen extends React.Component{
                   />
                 }
             >
-              <View>
-                <TextInput
-                    style={styles.textInput}
-                    placeholder="Поиск"
-                    onChangeText={text => this.searchRequest({text})}
-                />
-              </View>
+              {/*<View>*/}
+              {/*  <TextInput*/}
+              {/*      style={styles.textInput}*/}
+              {/*      placeholder="Поиск"*/}
+              {/*      onChangeText={text => this.searchRequest({text})}*/}
+              {/*  />*/}
+              {/*</View>*/}
               {this.state.refreshing ? (
                   <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
               ) : (
@@ -393,29 +410,38 @@ class HomeScreen extends React.Component{
                     {this.state.list.map((doc, i) => (
                         <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
                           <Body>
-                            <Text style={styles.textSpecialty}>№: { doc.id }</Text>
-                            <Text style={styles.textSpecialty}>{ doc.createdAt }</Text>
-
-                            <Text style={styles.textName}>{doc.descr}</Text>
-                            <View style={styles.starContainer}>
-                              <Text style={styles.textSpecialty}>{doc.spr_value}</Text>
-                            </View>
                             <TouchableOpacity
                                 activeOpacity={0.7}
                                 // style={[styles.button, styles.btn]}
                                 onPress={() => this._onReviewButtonClicked(i)}
                             >
-                              <AntDesign
-                                  name="down"
-                                  size={24}
-                                  color={doc.status.color_class}
-                                  style={{marginRight: 10}}
-                              />
-                              {/*<Text style={{ color: '#fff' }}>Подробнее</Text>*/}
+                              <View style={styles.row}>
+                                <View>
+                                  <View style={styles.nameContainer}>
+                                    <Text style={styles.nameTxt}>{doc.descr}</Text>
+                                  </View>
+                                  <View style={styles.end}>
+                                    <Text style={styles.time}>{doc.createdAt}</Text>
+                                  </View>
+                                  <View style={styles.end}>
+                                    <Text style={styles.time}>{this.state.authorName}</Text>
+                                  </View>
+                                </View>
+                                <View style={{flexDirection: 'column', alignContent: 'center'}}>
+                                  <AntDesign
+                                      name="warning"
+                                      size={24}
+                                      style={{marginRight: 10, color: '#17a2b8'}}
+                                  />
+                                  <Text style={styles.textSpecialtyDanger}>{doc.status.name}</Text>
+                                </View>
+                              </View>
                             </TouchableOpacity>
                             {this.state.isDocReviewSelected == i &&
                             <View style={{ marginBottom: 10, marginTop: 10 }}>
-                              <Text style={styles.textSpecialty}>Дата: { doc.category_name || "" }</Text>
+                              <Text style={styles.textSpecialty}>Дата обновления: { doc.product.updated_at || "" }</Text>
+                              <Text style={styles.textSpecialty}>Дедлайн: { doc.product.deadline_at || "" }</Text>
+                              <Text style={styles.textSpecialty}>Название продукта: {doc.product.subject}</Text>
                               <Text style={styles.textSpecialty}>Описание: {doc.descr}</Text>
                               <View style={styles.buttonsContainer}>
                                 <TouchableOpacity
@@ -429,27 +455,6 @@ class HomeScreen extends React.Component{
                             </View>
                             }
                           </Body>
-                          <Right>
-                            <Text style={styles.textSpecialtyDanger}>18.07.2021</Text>
-                            <View style={{ marginBottom: 10, marginTop: 10 }}>
-                              {doc.status.colorClass == 'success' ?
-                                  <MaterialIcons name="done" size={24} color="black" />
-                                  :
-                                  null
-                              }
-                              {/*{doc.status.colorClass == 'info' ?*/}
-                              <AntDesign
-                                  name="warning"
-                                  size={24}
-                                  style={{marginRight: 10, color: '#17a2b8'}}
-                                  onPress={() => this.getPriemForm()}
-                              />
-                              {/*    :*/}
-                              {/*    null*/}
-                              {/*}*/}
-                              <Text style={styles.textSpecialty}>{doc.status.name}</Text>
-                            </View>
-                          </Right>
                         </ListItem>
                     ))}
                   </List>
@@ -458,14 +463,6 @@ class HomeScreen extends React.Component{
             <View style={{alignItems: 'center', flexDirection: 'column', backgroundColor: '#1a192a'}}>
               <Text style={{color: 'white'}}>Показано {this.state.reqCountInOnePage} из {this.state.totalReqCount} заявок</Text>
             </View>
-              {/*currentPage: value._links.self.href,*/}
-              {/*// prevPage: value._links.prev.href,*/}
-              {/*nextPage: value._links.next.href,*/}
-              {/*firstPage: value._links.first.href,*/}
-              {/*lastPage: value._links.last.href,*/}
-              {/*totalPageCount: value._meta.pageCount,*/}
-              {/*totalReqCount: value._meta.totalCount,*/}
-              {/*reqCountInOnePage: value._meta.perPage,*/}
             <Footer style={{
                               backgroundColor: 'white',
                               flexDirection: 'row',
@@ -690,6 +687,9 @@ class HomeScreen extends React.Component{
 }
 
 const styles = StyleSheet.create({
+  mainContent: {
+    marginRight: 60
+  },
   danger: {
     color: '#ff1016'
   },
@@ -783,11 +783,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginTop: 20
   },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
   modalText: {
     marginBottom: 15,
     textAlign: "center"
@@ -822,16 +817,53 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   textInput:
-      {
-        fontSize: 14,
-        backgroundColor: '#fff',
-        color: '#1a192a',
-        padding: 5,
-        height: 40,
-        borderColor: '#898989',
-        borderWidth: 0.5,
-        textTransform: 'uppercase',
-      }
+  {
+    fontSize: 14,
+    backgroundColor: '#fff',
+    color: '#1a192a',
+    padding: 5,
+    height: 40,
+    borderColor: '#898989',
+    borderWidth: 0.5,
+    textTransform: 'uppercase',
+  },
+
+
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    justifyContent: 'space-between',
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 270,
+  },
+  nameTxt: {
+    fontWeight: '600',
+    color: '#222',
+    fontSize: 15,
+  },
+  mblTxt: {
+    fontWeight: '200',
+    color: '#777',
+    fontSize: 13,
+  },
+  end: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  time: {
+    fontWeight: '400',
+    color: '#666',
+    fontSize: 12,
+
+  },
+  icon:{
+    height: 28,
+    width: 28,
+  }
 })
 
 export default HomeScreen;

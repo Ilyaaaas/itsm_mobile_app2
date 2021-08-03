@@ -1,9 +1,34 @@
 import React from "react";
-import {AsyncStorage, RefreshControl, StyleSheet, Text, View} from "react-native";
-import {Body, Container, Header, Left, Tab, TabHeading, Tabs, Title, Toast, Content, List, ListItem} from "native-base";
+import {
+    AsyncStorage,
+    Modal,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from "react-native";
+import {
+    Body,
+    Container,
+    Header,
+    Left,
+    Tab,
+    TabHeading,
+    Tabs,
+    Title,
+    Toast,
+    Content,
+    List,
+    ListItem,
+    Root, Button
+} from "native-base";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {API, getToken} from './constants';
 import { WebView } from 'react-native-webview';
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default class Notifications extends React.Component{
     constructor(props) {
@@ -15,6 +40,8 @@ export default class Notifications extends React.Component{
             list_old: [],
             activeTab: 0,
             refreshing: false,
+            reqModal: false,
+            currentNotifId: 0,
         }
 
         this.isFocused = this.props.navigation.isFocused();
@@ -56,20 +83,15 @@ export default class Notifications extends React.Component{
         var readedNotif = [];
         var unreadedNotif = [];
         await this._getUrl('portal/v1/notification?access-token='+this.state.token+'&_format=json').then(list => {
-            // if(list !== null) {
-            //     this.setState({list_new: list.items, list_old: list.items});
-            // }
-
-            list.items.map((artist, results) => {
-                if(artist.isRead === 0)
-                {
-                    this.setState({ list_new: [...this.state.list_new, artist] })
-                }
-                    else if(artist.isRead === 1)
-                {
-                    this.setState({ list_old: [...this.state.list_old, artist] })
-                }
-            })
+            if(list !== null) {
+                list.items.map((reqItem, results) => {
+                    if (reqItem.isRead === 0) {
+                        this.setState({list_new: [...this.state.list_new, reqItem]})
+                    } else if (reqItem.isRead === 1) {
+                        this.setState({list_old: [...this.state.list_old, reqItem]})
+                    }
+                })
+            }
         })
     }
 
@@ -88,6 +110,10 @@ export default class Notifications extends React.Component{
                 this.setState({list_new: list.new, list_old: list.old});
             }
         });
+    }
+
+    openNotif = (id) => {
+        this.setState({reqModal: true, currentNotifId: id});
     }
 
     render() {
@@ -121,7 +147,7 @@ export default class Notifications extends React.Component{
                             ) : (
                                 <List>
                                     {this.state.list_new.map((value_new, nums) => (
-                                        <ListItem key={value_new.id}>
+                                        <ListItem onPress={() => this.openNotif(value_new.id)} key={value_new.id}>
                                                 <View style={{ flexDirection: "column" }}>
                                                     <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
                                                     <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
@@ -142,7 +168,7 @@ export default class Notifications extends React.Component{
                             ) : (
                                 <List>
                                     {this.state.list_old.map((value_new, nums) => (
-                                        <ListItem key={value_new.id}>
+                                        <ListItem onPress={() => this.openNotif(value_new.id)} key={value_new.id}>
                                                 <View style={{ flexDirection: "column" }}>
                                                     <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
                                                     <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
@@ -154,6 +180,46 @@ export default class Notifications extends React.Component{
                         </Tab>
                     </Tabs>
                 </Content>
+                <Modal
+                    animationType={"slide"}
+                    visible={this.state.reqModal}
+                >
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                    }}>
+                        <View>
+                            <Text>{this.state.currentNotifId}</Text>
+                        </View>
+                    </View>
+                    <View style={{ borderTopWidth: 1,}}>
+                        <List>
+                            <ListItem>
+                                <Left>
+                                    <Button
+                                        success={true}
+                                        style={{ width: '90%', borderRadius: 10 }}
+                                        onPress={() => {
+                                            this.setState({reqModal: false});
+                                        }}
+                                    >
+                                        <Text style={{ width: '100%', textAlign: "center"}}>Закрыть</Text>
+                                    </Button>
+                                </Left>
+                                <Body>
+                                    <Button
+                                        block
+                                        onPress={() => this.acceptRequest(this.state.listGrade.id)}
+                                        style={{backgroundColor: 'green'}}
+                                    >
+                                        <Text>Начать исполнение</Text>
+                                    </Button>
+                                </Body>
+                            </ListItem>
+                        </List>
+                    </View>
+                </Modal>
             </Container>
         );
     }
