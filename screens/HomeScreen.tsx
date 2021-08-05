@@ -86,8 +86,8 @@ class HomeScreen extends React.Component{
 
   _getUrl = async (url) => {
     const API_URL = API+url;
-    console.log(API_URL);
-    console.log(this.state.token);
+    //console.log(API_URL);
+    //console.log(this.state.token);
 
     try {
       const response = await fetch(API_URL, {
@@ -100,8 +100,8 @@ class HomeScreen extends React.Component{
       });
 
       const responseJson = await response.json();
-      console.log('responseJson');
-      console.log(responseJson);
+      //console.log('responseJson');
+      //console.log(responseJson);
       return responseJson;
       // if (responseJson !== null) {
       //   if(responseJson.success == false){
@@ -115,14 +115,14 @@ class HomeScreen extends React.Component{
       //   return responseJson.result;
       // }
     } catch (error) {
-      console.log('Error when call API: ' + error.message);
+      //console.log('Error when call API: ' + error.message);
     }
     return null;
   }
 
   _getUrlWithFullURL = async (url) => {
       const API_URL = url;
-      console.log('_getUrlWithFullURL '+API_URL);
+      //console.log('_getUrlWithFullURL '+API_URL);
 
       try {
           const response = await fetch(API_URL, {
@@ -137,7 +137,7 @@ class HomeScreen extends React.Component{
           const responseJson = await response.json();
           return responseJson;
       } catch (error) {
-          console.log('Error when call API: ' + error.message);
+          //console.log('Error when call API: ' + error.message);
       }
       return null;
   }
@@ -170,7 +170,7 @@ class HomeScreen extends React.Component{
         textColor = 'white';
       }
       content.push(
-          <TouchableOpacity onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)}
+          <TouchableOpacity key={i} onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)}
                             style={{backgroundColor: `${backColor}`,
                                     borderRadius: 20, padding: 12, borderColor: 'black', margin: 5}}>
             <Text style={{color: `${textColor}`}}>{i}</Text>
@@ -181,9 +181,9 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    console.log('this.state.currentPage');
-    console.log(this.state.currentPageLink);
-    console.log('this.state.currentPage');
+    //console.log('this.state.currentPage');
+    //console.log(this.state.currentPageLink);
+    //console.log('this.state.currentPage');
     var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id';
     if(this.state.currentPageLink != '0')
     {
@@ -204,9 +204,9 @@ class HomeScreen extends React.Component{
                                 totalReqCount: value._meta.totalCount,
                                 reqCountInOnePage: value._meta.perPage,
                         });
-          console.log('value._meta');
-          console.log(value._meta.totalCount);
-          console.log(value._links);
+          //console.log('value._meta');
+          //console.log(value._meta.totalCount);
+          //console.log(value._links);
         }
       }
     )
@@ -234,12 +234,23 @@ class HomeScreen extends React.Component{
   }
 
   _getAuthor = async (authorId) => {
-    console.log('_getAuthor');
-    console.log(authorId);
-    console.log('_getAuthor');
+    //console.log('_getAuthor');
+    //console.log(authorId);
+    //console.log('_getAuthor');
     await this._getUrl('portal/v1/person/'+authorId+'?access-token='+this.state.token+'&_format=json').then(value => {
       this.setState({
         authorName: value,
+      });
+    })
+  }
+
+  _getJournal = async (requestId) => {
+    //console.log('_getJournal');
+    //console.log(requestId);
+    //console.log('_getJournal');
+    await this._getUrl('service-requests/v1/journal?access-token='+this.state.token).then(value => {
+      this.setState({
+        journalList: value,
       });
     })
   }
@@ -327,9 +338,9 @@ class HomeScreen extends React.Component{
 
   onInfoButtonClicked = async (docid) => {
     await this._getUrl('service-requests/v1/request/'+docid).then(value => {
-      console.log('onInfoButtonClicked');
-      console.log(value);
-      console.log('onInfoButtonClicked');
+      //console.log('onInfoButtonClicked');
+      //console.log(value);
+      //console.log('onInfoButtonClicked');
       this.setState({
         listGrade: value,
         activeDoc: docid,
@@ -344,8 +355,8 @@ class HomeScreen extends React.Component{
   }
 
   changePage = async (url) => {
-    console.log('link ');
-    console.log(url);
+    //console.log('link ');
+    //console.log(url);
     await this.setState({
       currentPageLink: url,
     });
@@ -357,8 +368,8 @@ class HomeScreen extends React.Component{
   }
 
   render() {
-    {console.log('this.state.list')}
-    {console.log(this.state.list)}
+    //{console.log('this.state.list')}
+    //{console.log(this.state.list)}
     return (
         <Container>
           <Root>

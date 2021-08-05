@@ -86,7 +86,7 @@ export const LoginScreen = () => {
     } catch(e) {
       console.log('error');
     }
-    console.log('Done.')
+    // console.log('Done')
   }
 
   const AlertShow = async () => {

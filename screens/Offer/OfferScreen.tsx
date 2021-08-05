@@ -36,6 +36,8 @@ export default function OfferScreen({ navigation }) {
 
     const [customDatesStyles, setDatesStyles] = useState([]);
     const [sendedFileId, setSendedFileId] = useState([]);
+    const [sendedFileName, setSendedFileName] = useState([]);
+    const [reqId, setReqId] = useState([]);
 
     const [openCheck, setOpenCheck] = useState(false);
     const [firstClick, setfirstClick] = useState(true);
@@ -89,7 +91,7 @@ export default function OfferScreen({ navigation }) {
             return
         }
 
-        fetch('http://api.smart24.kz/service-requests/v1/request',
+        await fetch('http://api.smart24.kz/service-requests/v1/request',
             {
                 method:'POST',
                 headers: {"x-api-key": token,
@@ -98,12 +100,16 @@ export default function OfferScreen({ navigation }) {
                     },
                 body: '{"product_id": "'+selectedService+'", "descr": "'+offerDescr+'"}'}
         )
-            .then(response => response.text())
+            .then(response => response.json())
             .then(function(data){
+                console.log('data');
+                setReqId(data);
                 console.log(data);
+                console.log(token);
+                console.log('data');
+                sendFileId(data.id, sendedFileId, sendedFileName);
             })
             .catch(error => console.error(error))
-            .then()
             .finally()
             alert('Заявка успешно отправлена!');
             navigation.goBack();
@@ -122,7 +128,7 @@ export default function OfferScreen({ navigation }) {
                     "Content-type": "application/json",
                     "Accept": "application/json"},
                 }
-        )
+            )
             .then(response => response.json())
             .then(function(data){
                 setCatalogs(data.items);
@@ -178,6 +184,7 @@ export default function OfferScreen({ navigation }) {
 
     async function chooseFiles()
     {
+        console.log('chooseFiles');
         let result = DocumentPicker.getDocumentAsync({
             type: "*/*",
             //type: "image/*",
@@ -193,15 +200,19 @@ export default function OfferScreen({ navigation }) {
         const Mydata = new FormData();
         Mydata.append('file', result);
         setFile(Mydata);
+        console.log(Mydata);
+        this.sendFile(Mydata)
         // const dirInfo = FileSystem.getInfoAsync();
-        console.log(result);
-        sendFile();
+        // console.log('Mydata');
+        // console.log(Mydata);
+        // sendFile();
     }
 
     async function sendFile()
     {
-        console.log('response');
+        console.log('sendFile');
         console.log(file);
+        console.log('sendFile');
         // console.log('response');
         // console.log(file['_parts'][0][1]['_W']['name']);
         var name = file['_parts'][0][1]['_W']['name'];
@@ -210,8 +221,7 @@ export default function OfferScreen({ navigation }) {
         let body = new FormData();
         body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
         body.append('', '\\')
-        console.log('formData');
-        const response = await fetch(
+        const response = fetch(
             'http://api.smart24.kz/storage/v1/file/upload',
             {
                 method: 'POST',
@@ -226,11 +236,33 @@ export default function OfferScreen({ navigation }) {
                 return response.json()
                     .then(responseJson => {
                         setSendedFileId(responseJson.id)
-                        console.log(responseJson.id);
-                        console.log(responseJson.name);
+                        setSendedFileName(responseJson.name)
+                        console.log(responseJson);
                     });
                 });
         console.log('finish');
+    }
+
+    async function sendFileId(reqId, sendedFileId, sendedFileName)
+    {
+        console.log('{"fileId": '+sendedFileId+', "typeId": 2, "descr": "'+sendedFileName+'"}');
+        fetch("http://api.smart24.kz/service-requests/v1/request/"+reqId+"/add-attachments", {
+            body: '{"fileId": '+sendedFileId+', "typeId": 2, "descr": "'+sendedFileName+'"}',
+            headers: {
+                "Content-Type": "application/json",
+                "X-Api-Key": token
+            },
+            method: "POST"
+        })
+            .then(response => response.json())
+            .then(function(data){
+                console.log('sendFile');
+                console.log(data);
+                console.log('sendFile');
+            })
+            .catch(error => console.error(error))
+            .then()
+            .finally()
     }
 
     return (
@@ -256,7 +288,7 @@ export default function OfferScreen({ navigation }) {
                     <View style={{ marginVertical: 10 }}>
                         {/*{_renderShifts()}*/}
                         {/*{ _renderServices() }*/}
-                        <View style={{zIndex: 10}}>
+                        <View style={{zIndex: 1}}>
                             <Text>Выберите каталог</Text>
                             {catalogs != undefined ?
                                 <DropDownPicker
@@ -271,14 +303,14 @@ export default function OfferScreen({ navigation }) {
                                 <Text>Загрузка...</Text>
                             }
                         </View>
-                        <View style={{zIndex: 9, marginTop: 20}}>
+                        <View style={{marginTop: 20}}>
                             <Text>Выберите услугу</Text>
                             {services != undefined ?
                                 <DropDownPicker style={{backgroundColor: '#F2F2F2', borderRadius: 10}}
                                                 items={services.map(item=> ({label: item.subject, value: item.id}))}
                                                 onChangeItem={item => setSelectedService(item.value)}
                                                 dropDownStyle={{backgroundColor: '#F2F2F2'}}
-                                                zIndex={1000}
+                                                // zIndex={1000}
                                                 placeholder={'Не выбрано'}
                                 />
                                 :
@@ -296,6 +328,7 @@ export default function OfferScreen({ navigation }) {
                             />
                         </View>
                         <View style={{marginTop: 20}}>
+                            <Text>{sendedFileName}</Text>
                             <Button full primary
                                     onPress={() => chooseFiles()}
                                     style={{backgroundColor: '#F2F2F2', justifyContent: 'space-between', borderRadius: 10,}}
