@@ -38,6 +38,7 @@ export default function OfferScreen({ navigation }) {
     const [sendedFileId, setSendedFileId] = useState([]);
     const [sendedFileName, setSendedFileName] = useState([]);
     const [reqId, setReqId] = useState([]);
+    const [sendFileState, setSendFileState] = useState(false);
 
     const [openCheck, setOpenCheck] = useState(false);
     const [firstClick, setfirstClick] = useState(true);
@@ -185,7 +186,7 @@ export default function OfferScreen({ navigation }) {
     async function chooseFiles()
     {
         console.log('chooseFiles');
-        let result = DocumentPicker.getDocumentAsync({
+        let result = await DocumentPicker.getDocumentAsync({
             type: "*/*",
             //type: "image/*",
             // type: "audio/*",
@@ -200,26 +201,52 @@ export default function OfferScreen({ navigation }) {
         const Mydata = new FormData();
         Mydata.append('file', result);
         setFile(Mydata);
-        console.log(Mydata);
-        this.sendFile(Mydata)
+        setSendFileState(true)
+        // this.sendFile(Mydata)
         // const dirInfo = FileSystem.getInfoAsync();
         // console.log('Mydata');
         // console.log(Mydata);
         // sendFile();
     }
 
-    async function sendFile()
-    {
-        console.log('sendFile');
+    useEffect(() => {
+        console.log('file');
         console.log(file);
+        if(sendFileState == true)
+        {
+            if(file != undefined)
+            {
+                sendFile(file)
+                setSendFileState(false)
+            }
+        }
+        console.log('sendedFileId '+sendedFileId)
+        console.log('sendedFileName '+sendedFileName)
+    });
+
+    async function sendFile(fileArg)
+    {
+        if(fileArg == undefined)
+        {
+            chooseFiles();
+        }
+        console.log('sendFile');
+        console.log(fileArg);
         console.log('sendFile');
         // console.log('response');
-        // console.log(file['_parts'][0][1]['_W']['name']);
-        var name = file['_parts'][0][1]['_W']['name'];
-        var size = file['_parts'][0][1]['_W']['size'];
-        var uri = file['_parts'][0][1]['_W']['uri'];
+        console.log(fileArg['_parts'][0][1].name);
+        console.log(fileArg['_parts'][0][1].size);
+        console.log(fileArg['_parts'][0][1].uri);
+        console.log('_parts');
+        var name = fileArg['_parts'][0][1].name;
+        var size = fileArg['_parts'][0][1].size;
+        var uri = fileArg['_parts'][0][1].uri;
+        // var name = fileArg['_parts'][0][1]['_W']['name'];
+        // var size = fileArg['_parts'][0][1]['_W']['size'];
+        // var uri = fileArg['_parts'][0][1]['_W']['uri'];
         let body = new FormData();
         body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
+        console.log('222 file'+uri+' '+name+' '+size);
         body.append('', '\\')
         const response = fetch(
             'http://api.smart24.kz/storage/v1/file/upload',
@@ -256,9 +283,9 @@ export default function OfferScreen({ navigation }) {
         })
             .then(response => response.json())
             .then(function(data){
-                console.log('sendFile');
+                console.log('sendFileId');
                 console.log(data);
-                console.log('sendFile');
+                console.log('sendFileId');
             })
             .catch(error => console.error(error))
             .then()
