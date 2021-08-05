@@ -226,10 +226,10 @@ export default function OfferScreen({ navigation }) {
 
     async function sendFile(fileArg)
     {
-        if(fileArg == undefined)
-        {
-            chooseFiles();
-        }
+        // if(fileArg == undefined)
+        // {
+        //     chooseFiles();
+        // }
         console.log('sendFile');
         console.log(fileArg);
         console.log('sendFile');
@@ -246,8 +246,8 @@ export default function OfferScreen({ navigation }) {
         // var uri = fileArg['_parts'][0][1]['_W']['uri'];
         let body = new FormData();
         body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
-        console.log('222 file'+uri+' '+name+' '+size);
-        body.append('', '\\')
+        console.log('222 '+uri+' '+name+' '+size);
+        // body.append('', '\\')
         const response = fetch(
             'http://api.smart24.kz/storage/v1/file/upload',
             {
@@ -264,9 +264,11 @@ export default function OfferScreen({ navigation }) {
                     .then(responseJson => {
                         setSendedFileId(responseJson.id)
                         setSendedFileName(responseJson.name)
+                        console.log('responseJson');
                         console.log(responseJson);
                     });
                 });
+            // .then(responce => console.log('test'))
         console.log('finish');
     }
 
