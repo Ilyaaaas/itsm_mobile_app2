@@ -35,8 +35,8 @@ export default function OfferScreen({ navigation }) {
     ]);
 
     const [customDatesStyles, setDatesStyles] = useState([]);
-    const [sendedFileId, setSendedFileId] = useState([]);
-    const [sendedFileName, setSendedFileName] = useState([]);
+    const [sendedFileId, setSendedFileId] = useState(0);
+    const [sendedFileName, setSendedFileName] = useState('');
     const [reqId, setReqId] = useState([]);
     const [sendFileState, setSendFileState] = useState(false);
 
@@ -210,12 +210,17 @@ export default function OfferScreen({ navigation }) {
     }
 
     useEffect(() => {
+        console.log('useEffect');
         console.log('file');
         console.log(file);
+        console.log('sendFileState '+sendFileState);
+        console.log('file '+file);
         if(sendFileState == true)
         {
             if(file != undefined)
             {
+                console.log('sendFile все условия сработали')
+                // sendFileByAxios(file)
                 sendFile(file)
                 setSendFileState(false)
             }
@@ -223,6 +228,36 @@ export default function OfferScreen({ navigation }) {
         console.log('sendedFileId '+sendedFileId)
         console.log('sendedFileName '+sendedFileName)
     });
+
+    async function sendFileByAxios(fileArg) {
+        var name = fileArg['_parts'][0][1].name;
+        var size = fileArg['_parts'][0][1].size;
+        var uri = fileArg['_parts'][0][1].uri;
+        let body = new FormData();
+        body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
+        console.log('333 '+uri+' '+name+' '+size);
+        await axios({
+            url    : 'http://api.smart24.kz/storage/v1/file/upload',
+            method : 'POST',
+            data   : body,
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+                'x-api-key': token,
+            }
+        })
+            .then(function (response) {
+                console.log("response :", response);
+                setSendedFileId(response.data.id)
+                setSendedFileName(response.data.name)
+                console.log(response.data.name);
+                console.log(response.data.id);
+            })
+            .catch(function (error) {
+                console.log('errorerror');
+                console.log(error);
+            })
+    }
 
     async function sendFile(fileArg)
     {
@@ -248,7 +283,7 @@ export default function OfferScreen({ navigation }) {
         body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
         console.log('222 '+uri+' '+name+' '+size);
         // body.append('', '\\')
-        const response = fetch(
+        fetch(
             'http://api.smart24.kz/storage/v1/file/upload',
             {
                 method: 'POST',
@@ -260,6 +295,7 @@ export default function OfferScreen({ navigation }) {
                 body,
             })
             .then(response => {
+                console.log('fetch');
                 return response.json()
                     .then(responseJson => {
                         setSendedFileId(responseJson.id)
@@ -267,8 +303,9 @@ export default function OfferScreen({ navigation }) {
                         console.log('responseJson');
                         console.log(responseJson);
                     });
-                });
+                })
             // .then(responce => console.log('test'))
+            .catch(error => console.error(error));
         console.log('finish');
     }
 
