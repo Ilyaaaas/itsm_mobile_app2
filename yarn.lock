@@ -1266,10 +1266,10 @@
     "exec-sh" "^0.3.2"
     "minimist" "^1.2.0"
 
-"@codler/react-native-keyboard-aware-scroll-view@1.0.0":
-  "integrity" "sha512-syLIolsZEe9quJ9RUF+PaswA+TLXCHkbIJVe54E4fuVu3mrL+9B1fjcX0Grq0hbu/s5EE+mVPIXvFY/3cADpqg=="
-  "resolved" "https://registry.npmjs.org/@codler/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-1.0.0.tgz"
-  "version" "1.0.0"
+"@codler/react-native-keyboard-aware-scroll-view@1.0.1":
+  "integrity" "sha512-ACGSY+VPJ1KwdNQi/oKt74ld2PtGW+o09hJNsllHyBWcrnke0aOxXdtaS87nRLvVXwWadRawnSrYR/PDxr5QEg=="
+  "resolved" "https://registry.npmjs.org/@codler/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-1.0.1.tgz"
+  "version" "1.0.1"
   dependencies:
     "react-native-iphone-x-helper" "^1.0.3"
 
@@ -1377,6 +1377,11 @@
     "noop-fn" "^1.0.0"
     "pouchdb-collections" "^1.0.1"
     "tiny-queue" "^0.2.1"
+
+"@freakycoder/react-native-text-area@^0.1.4":
+  "integrity" "sha512-69t7PhO5NCfq1NbchHYjWw2XzoRQSeMQyzhdBTL3wGAIe4fJtibznEMth+EtsEElJTVxs8ZjlEBkvJzYz1jePg=="
+  "resolved" "https://registry.npmjs.org/@freakycoder/react-native-text-area/-/react-native-text-area-0.1.4.tgz"
+  "version" "0.1.4"
 
 "@hapi/address@2.x.x":
   "integrity" "sha512-QD1PhQk+s31P1ixsX0H0Suoupp3VMXzIVMSwobR3F3MSUO2YCV0B7xqLcUw/Bh8yuvd3LhpyqLQWTNcRmp6IdQ=="
@@ -1592,6 +1597,13 @@
     "sudo-prompt" "^9.0.0"
     "wcwidth" "^1.0.1"
 
+"@react-native-community/datetimepicker@^3.0.2":
+  "integrity" "sha512-TWRuAtr/DnrEcRewqvXMLea2oB+YF+SbtuYLHguALLxNJQLl/RFB7aTNZeF+OoH75zKFqtXECXV1/uxQUpA+sg=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-3.5.2.tgz"
+  "version" "3.5.2"
+  dependencies:
+    "invariant" "^2.2.4"
+
 "@react-native-community/datetimepicker@3.0.0":
   "integrity" "sha512-GqKnUd5oZ5iy0PhkeRimxrgHiJur6zUYJaU4OI3JnInKuTqbuBRviHackIhTHIJtIKyGPRnHXrH1XhWiHlf4AQ=="
   "resolved" "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-3.0.0.tgz"
@@ -1606,15 +1618,15 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.10.tgz"
   "version" "0.1.10"
 
-"@react-native-community/picker@^1.6.6":
-  "integrity" "sha512-Sj9DzX1CSnmYiuEQ5fQhExoo4XjSKoZkqLPAAybycq6RHtCuWppf+eJXRMCOJki25BlKSSt+qVqg0fIe//ujNQ=="
-  "resolved" "https://registry.npmjs.org/@react-native-community/picker/-/picker-1.8.1.tgz"
-  "version" "1.8.1"
-
 "@react-native-community/toolbar-android@0.1.0-rc.2":
   "integrity" "sha512-UCblqsitOcoYxVc6QzcaqCKogeRnePPMw7cbGvW5GI/GXIwQel8Kge9d910W3MUPUzw3pFzhIZVug6U3W067Pg=="
   "resolved" "https://registry.npmjs.org/@react-native-community/toolbar-android/-/toolbar-android-0.1.0-rc.2.tgz"
   "version" "0.1.0-rc.2"
+
+"@react-native-picker/picker@^1.9.7":
+  "integrity" "sha512-IYfMXdUsfQe4RBLJPZq6GoPkr2otOTZqej/gU93x+oIjrR+UCcCb0fsqmXHT8qX29E+0cEQZd/4bWnzbICHNrg=="
+  "resolved" "https://registry.npmjs.org/@react-native-picker/picker/-/picker-1.16.5.tgz"
+  "version" "1.16.5"
 
 "@react-navigation/bottom-tabs@^5.11.11":
   "integrity" "sha512-hThj6Vfw+ITzAVj5TgLEoxkVEcBD+gYeieWOe6FryBRgokgKNCzFQzqArJ5UCmNMxklNH0rstJfcdyHflLuPtw=="
@@ -4234,13 +4246,6 @@
   dependencies:
     "react-is" "^16.7.0"
 
-"hoist-non-react-statics@^3.3.2":
-  "integrity" "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="
-  "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
-  "version" "3.3.2"
-  dependencies:
-    "react-is" "^16.7.0"
-
 "hosted-git-info@^2.1.4":
   "integrity" "sha512-f/wzC2QaWBs7t9IYqB4T3sR1xviIViXJRJTWBlx2Gf3g0Xi5vI7Yy4koXQ1c9OYDGHN9sBy1DQ2AB8fqZBWhUg=="
   "resolved" "https://registry.npmjs.org/hosted-git-info/-/hosted-git-info-2.8.8.tgz"
@@ -4855,8 +4860,6 @@
   "integrity" "sha1-NzaitCi4e72gzIO1P6PWM6NcKug="
   "resolved" "https://registry.npmjs.org/jsonfile/-/jsonfile-2.4.0.tgz"
   "version" "2.4.0"
-  dependencies:
-    "graceful-fs" "^4.1.6"
   optionalDependencies:
     "graceful-fs" "^4.1.6"
 
@@ -5528,12 +5531,13 @@
     "prop-types" "^15.5.10"
 
 "native-base@^2.13.15":
-  "integrity" "sha512-kvY2R+dDw9AdTWlEmA3T0KXsR8TpQ1fXUbgCM0694v2tmJU6Lr2VHYmo0pt+lJmqQuAitxLxJvpkf47xFlLpjg=="
-  "resolved" "https://registry.npmjs.org/native-base/-/native-base-2.13.15.tgz"
-  "version" "2.13.15"
+  "integrity" "sha512-Oa42UOlOVgzA6oNc5ai86r3DFom9Wj5JuJ3ShsHmEkqhnqWw7TBKpuIDNV8Zt9NmycH5xMdMcgxliob6jniZjw=="
+  "resolved" "https://registry.npmjs.org/native-base/-/native-base-2.15.2.tgz"
+  "version" "2.15.2"
   dependencies:
-    "@codler/react-native-keyboard-aware-scroll-view" "1.0.0"
-    "@react-native-community/picker" "^1.6.6"
+    "@codler/react-native-keyboard-aware-scroll-view" "1.0.1"
+    "@react-native-community/datetimepicker" "^3.0.2"
+    "@react-native-picker/picker" "^1.9.7"
     "blueimp-md5" "^2.5.0"
     "clamp" "^1.0.1"
     "color" "~3.1.2"
@@ -6302,6 +6306,11 @@
   "resolved" "https://registry.npmjs.org/react-native-device-info/-/react-native-device-info-6.0.4.tgz"
   "version" "6.0.4"
 
+"react-native-document-picker@^5.2.0":
+  "integrity" "sha512-zXK34hW6fM0gXoo6v7edZZxKvLT7DyjOdBXi7WrxbKqZchDokTEQ/tNTeZxky+7oI8sVz8T3uXBBEW0sp+VfXQ=="
+  "resolved" "https://registry.npmjs.org/react-native-document-picker/-/react-native-document-picker-5.2.0.tgz"
+  "version" "5.2.0"
+
 "react-native-drawer@2.5.1":
   "integrity" "sha512-cxcQNbSWy5sbGi7anSVp6EDr6JarOBMY9lbFOeLFeVYbONiudoqRKbgEsSDgSw3/LFCLvUXK5zdjXCOedeytxQ=="
   "resolved" "https://registry.npmjs.org/react-native-drawer/-/react-native-drawer-2.5.1.tgz"
@@ -6429,6 +6438,13 @@
   dependencies:
     "prop-types" "^15.6.1"
 
+"react-native-textarea@^1.0.4":
+  "integrity" "sha512-XM78hqlpUom+YOtjZn69sPZn3ReRXsJfjV0t790k/qNPuc7NG8akfU7vSeKsuRSRH2zVaqk5FbxdkITkeh+3jw=="
+  "resolved" "https://registry.npmjs.org/react-native-textarea/-/react-native-textarea-1.0.4.tgz"
+  "version" "1.0.4"
+  dependencies:
+    "prop-types" "^15.5.10"
+
 "react-native-vector-icons@*", "react-native-vector-icons@^7.0.0":
   "integrity" "sha512-V2a1zJ4i+kS8O4j183gIwX14St9AxxXabxwYpFBgRhvr2NDXyFcjHDEAgrOYYlt2W57e20aN1tBDU/I+wn9WtQ=="
   "resolved" "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-7.1.0.tgz"
@@ -6494,7 +6510,7 @@
     "uuid" "^3.3.2"
     "xml-parser" "^1.2.1"
 
-"react-native@*", "react-native@^0.62.0-0", "react-native@>=0.42.0", "react-native@>=0.59", "react-native@>=0.60 <0.63", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz":
+"react-native@*", "react-native@^0.62.0-0", "react-native@>= 0.33", "react-native@>=0.38.0", "react-native@>=0.42.0", "react-native@>=0.43.0", "react-native@>=0.56.0", "react-native@>=0.57", "react-native@>=0.59", "react-native@>=0.60 <0.63", "react-native@>=0.62.0-rc.0 <0.64.0", "react-native@>=0.63.0", "react-native@>=0.63.x", "react-native@https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz":
   "integrity" "sha512-xb7qKCp5pJotQLMUQkF2vr6DxRFVkUeXj3m+tjrBXL8l3FMjHwR3hOiXmTPOGJXKszwvv6CK2yU9RLzh76g4/g=="
   "resolved" "https://github.com/expo/react-native/archive/sdk-39.0.3.tar.gz"
   "version" "0.63.2"
@@ -6595,7 +6611,7 @@
     "raf" "^3.1.0"
     "tween-functions" "^1.0.1"
 
-"react@*", "react@^16.13.1", "react@^16.3.0", "react@^16.8", "react@>=16.5.1", "react@>=16.8.3", "react@16.11.0", "react@16.13.1":
+"react@*", "react@^16.13.1", "react@^16.3.0", "react@^16.8", "react@>= 16.x.x", "react@>=16.0.0-alpha.3", "react@>=16.4.1", "react@>=16.5.1", "react@>=16.8.3", "react@16 || 17", "react@16.11.0", "react@16.13.1":
   "integrity" "sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w=="
   "resolved" "https://registry.npmjs.org/react/-/react-16.13.1.tgz"
   "version" "16.13.1"

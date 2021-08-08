@@ -27,11 +27,6 @@ import {
     TouchableOpacityComponent
 } from 'react-native';
 
-import moment from "moment";
-import { API, getToken } from '../constants';
-import * as _ from 'lodash';
-import {Checkbox} from "react-native-paper";
-
 class DiaryScreen extends React.Component
 {
     state = {
@@ -144,12 +139,12 @@ class DiaryScreen extends React.Component
                         }}>
                             <Text style={{textAlign: 'left', marginLeft: 10, color: '#898989'}}>Получать SMS уведомления</Text>
                             <Switch
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={"#f4f3f4"}
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => this.setState({smsNotif: !this.state.smsNotif})}
-                            value={this.state.smsNotif}
-                            style={{marginRight: 10}}
+                                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                thumbColor={"#f4f3f4"}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => this.setState({smsNotif: !this.state.smsNotif})}
+                                value={this.state.smsNotif}
+                                style={{marginRight: 10}}
                             />
                         </View>
                         <View style={{flex: 1,
@@ -170,132 +165,132 @@ class DiaryScreen extends React.Component
                         </View>
                     </View>
                     :
-                item.id == '2' ?
-                    <View style={{flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        height: 50,
-                        alignItems: 'center',
-                    }}>
-                        <Text style={{textAlign: 'left', marginLeft: 10, color: '#898989'}}>Требуется развозка</Text>
-                        <Switch
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={"#f4f3f4"}
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={() => this.setState({shuttle: !this.state.shuttle})}
-                            value={this.state.shuttle}
-                            style={{marginRight: 10}}
-                        />
-                    </View>
-                    :
-                    <View>
+                    item.id == '2' ?
                         <View style={{flex: 1,
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             height: 50,
                             alignItems: 'center',
-                            marginRight: 10,
-                            marginLeft: 10,
                         }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Имя</Text>
-                            <Input
-                                   style={styles.input}
-                                   placeholder={'Имя'}
-                                   value={this.state.list.personName}
+                            <Text style={{textAlign: 'left', marginLeft: 10, color: '#898989'}}>Требуется развозка</Text>
+                            <Switch
+                                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                thumbColor={"#f4f3f4"}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => this.setState({shuttle: !this.state.shuttle})}
+                                value={this.state.shuttle}
+                                style={{marginRight: 10}}
                             />
                         </View>
-                        <View style={{flex: 1,
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        height: 50,
-                                        alignItems: 'center',
-                                        marginRight: 10,
-                                        marginLeft: 10,
-                                        }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Фамилия</Text>
-                            <Input
-                                style={styles.input}
-                                placeholder={'Фамилия'}
-                            />
-                        </View>
-                        <View style={{flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            height: 50,
-                            alignItems: 'center',
-                            marginRight: 10,
-                            marginLeft: 10,
-                        }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Отчество</Text>
-                            <Input
-                                style={styles.input}
-                                placeholder={'Отчество'}
-                            />
-                        </View>
-                        <View style={{flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            height: 50,
-                            alignItems: 'center',
-                            marginRight: 10,
-                            marginLeft: 10,
-                        }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Почта</Text>
-                            <Input
-                                style={styles.input}
-                                placeholder={'Почта'}
-                            />
-                        </View>
-                        <View style={{flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            height: 50,
-                            alignItems: 'center',
-                            marginRight: 10,
-                            marginLeft: 10,
-                        }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Рабочий телефон</Text>
-                            <Input
-                                style={styles.input}
-                                placeholder={'Рабочий телефон'}
-                            />
-                        </View>
-                        <View style={{flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            height: 50,
-                            alignItems: 'center',
-                            marginRight: 10,
-                            marginLeft: 10,
-                        }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Мобильный телефон</Text>
-                            <Input
-                                style={styles.input}
-                                placeholder={'Мобильный телефон'}
-                            />
-                        </View>
-                        <View style={{flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            height: 50,
-                            alignItems: 'center',
-                            marginRight: 10,
-                            marginLeft: 10,
-                        }}>
-                            <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Номер кабинета</Text>
-                            <Input
-                                style={styles.input}
-                                placeholder={'Номер кабинета'}
-                            />
-                        </View>
+                        :
                         <View>
-                            <Button
-                            style={{
-                                marginVertical: 10,
-                                backgroundColor: '#42976f'
-                            }} title={'Сохранить'} onPress={() => alert('test')}/>
+                            <View style={{flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                height: 50,
+                                alignItems: 'center',
+                                marginRight: 10,
+                                marginLeft: 10,
+                            }}>
+                                <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Имя</Text>
+                                <Input
+                                    style={styles.input}
+                                    placeholder={'Имя'}
+                                    value={this.state.list.personName}
+                                />
+                            </View>
+                            <View style={{flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                height: 50,
+                                alignItems: 'center',
+                                marginRight: 10,
+                                marginLeft: 10,
+                            }}>
+                                <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Фамилия</Text>
+                                <Input
+                                    style={styles.input}
+                                    placeholder={'Фамилия'}
+                                />
+                            </View>
+                            <View style={{flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                height: 50,
+                                alignItems: 'center',
+                                marginRight: 10,
+                                marginLeft: 10,
+                            }}>
+                                <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Отчество</Text>
+                                <Input
+                                    style={styles.input}
+                                    placeholder={'Отчество'}
+                                />
+                            </View>
+                            <View style={{flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                height: 50,
+                                alignItems: 'center',
+                                marginRight: 10,
+                                marginLeft: 10,
+                            }}>
+                                <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Почта</Text>
+                                <Input
+                                    style={styles.input}
+                                    placeholder={'Почта'}
+                                />
+                            </View>
+                            <View style={{flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                height: 50,
+                                alignItems: 'center',
+                                marginRight: 10,
+                                marginLeft: 10,
+                            }}>
+                                <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Рабочий телефон</Text>
+                                <Input
+                                    style={styles.input}
+                                    placeholder={'Рабочий телефон'}
+                                />
+                            </View>
+                            <View style={{flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                height: 50,
+                                alignItems: 'center',
+                                marginRight: 10,
+                                marginLeft: 10,
+                            }}>
+                                <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Мобильный телефон</Text>
+                                <Input
+                                    style={styles.input}
+                                    placeholder={'Мобильный телефон'}
+                                />
+                            </View>
+                            <View style={{flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                height: 50,
+                                alignItems: 'center',
+                                marginRight: 10,
+                                marginLeft: 10,
+                            }}>
+                                <Text style={{textAlign: 'left', marginLeft: 10, width: 80, color: '#898989'}}>Номер кабинета</Text>
+                                <Input
+                                    style={styles.input}
+                                    placeholder={'Номер кабинета'}
+                                />
+                            </View>
+                            <View>
+                                <Button
+                                    style={{
+                                        marginVertical: 10,
+                                        backgroundColor: '#42976f'
+                                    }} title={'Сохранить'} onPress={() => alert('test')}/>
+                            </View>
                         </View>
-                    </View>
                 }
             </View>
         );
@@ -303,134 +298,134 @@ class DiaryScreen extends React.Component
 
     _renderHeaderIOS  = (item) => {
         return (
-                    <View
-                        key={item.id}
-                        style={{
-                            borderWidth: 0.2,
-                            borderColor: '#898989',
-                            borderRadius: 10,
-                            flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            height: 50,
-                            alignItems: 'center',
-                            shadowColor: '#898989',
-                            shadowOffset: {
-                                width: 0,
-                                height: 2
-                            },
-                            shadowRadius: 2,
-                            shadowOpacity: 0.5,
-                            marginBottom: 10,
-                            backgroundColor: 'white',
-                        }}>
-                        <View style={{width: 60, }}>
-                            {item.id == '0' ?
+            <View
+                key={item.id}
+                style={{
+                    borderWidth: 0.2,
+                    borderColor: '#898989',
+                    borderRadius: 10,
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    height: 50,
+                    alignItems: 'center',
+                    shadowColor: '#898989',
+                    shadowOffset: {
+                        width: 0,
+                        height: 2
+                    },
+                    shadowRadius: 2,
+                    shadowOpacity: 0.5,
+                    marginBottom: 10,
+                    backgroundColor: 'white',
+                }}>
+                <View style={{width: 60, }}>
+                    {item.id == '0' ?
+                        <MaterialIcons
+                            name="contacts"
+                            size={18}
+                            style={{
+                                color: '#898989',
+                                paddingLeft: 20,
+                            }}/>
+                        :
+                        item.id == '1' ?
+                            <Ionicons name="ios-settings"
+                                      size={18}
+                                      style={{
+                                          color: '#898989',
+                                          paddingLeft: 20,
+                                      }}/>
+                            :
                             <MaterialIcons
-                                name="contacts"
+                                name="airport-shuttle"
                                 size={18}
                                 style={{
                                     color: '#898989',
                                     paddingLeft: 20,
-                                }}/>
-                                :
-                                item.id == '1' ?
-                                <Ionicons name="ios-settings"
-                                          size={18}
-                                          style={{
-                                              color: '#898989',
-                                              paddingLeft: 20,
-                                          }}/>
-                                :
-                                    <MaterialIcons
-                                            name="airport-shuttle"
-                                            size={18}
-                                            style={{
-                                                color: '#898989',
-                                                paddingLeft: 20,
-                                            }} />
-                            }
-                        </View>
-                        <Body style={{paddingLeft: -40, width: 400, alignItems: 'left', justifyContent: 'flex-start'}}>
-                            <Text style={{color: '#898989', textAlign: 'left', fontSize: 14, justifyContent: 'flex-start', alignContent: 'flex-start'}}>
-                                {item.title}
-                            </Text>
-                        </Body>
-                        <Right>
-                            <AntDesign
-                                name="down"
-                                size={12}
-                                color='#898989'
-                                style={{marginRight: 10}}
-                            />
-                        </Right>
-                    </View>
+                                }} />
+                    }
+                </View>
+                <Body style={{paddingLeft: -40, width: 400, alignItems: 'left', justifyContent: 'flex-start'}}>
+                    <Text style={{color: '#898989', textAlign: 'left', fontSize: 14, justifyContent: 'flex-start', alignContent: 'flex-start'}}>
+                        {item.title}
+                    </Text>
+                </Body>
+                <Right>
+                    <AntDesign
+                        name="down"
+                        size={12}
+                        color='#898989'
+                        style={{marginRight: 10}}
+                    />
+                </Right>
+            </View>
         );
     }
 
     _renderHeaderAndroid  = (item) => {
         return (
-                    <View
-                        key={item.id}
-                        style={{
-                            borderWidth: 0.2,
-                            borderColor: '#898989',
-                            borderRadius: 10,
-                            flex: 1,
-                            flexDirection: 'row',
-                            justifyContent: 'space-between',
-                            height: 50,
-                            alignItems: 'center',
-                            shadowColor: '#898989',
-                            shadowOffset: {
-                                width: 0,
-                                height: 2
-                            },
-                            shadowRadius: 2,
-                            shadowOpacity: 0.5,
-                            marginBottom: 10,
-                            backgroundColor: 'white',
-                        }}>
-                        <View style={{width: 60, }}>
-                            {item.id == '0' ?
+            <View
+                key={item.id}
+                style={{
+                    borderWidth: 0.2,
+                    borderColor: '#898989',
+                    borderRadius: 10,
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    height: 50,
+                    alignItems: 'center',
+                    shadowColor: '#898989',
+                    shadowOffset: {
+                        width: 0,
+                        height: 2
+                    },
+                    shadowRadius: 2,
+                    shadowOpacity: 0.5,
+                    marginBottom: 10,
+                    backgroundColor: 'white',
+                }}>
+                <View style={{width: 60, }}>
+                    {item.id == '0' ?
+                        <MaterialIcons
+                            name="contacts"
+                            size={18}
+                            style={{
+                                color: '#898989',
+                                paddingLeft: 20,
+                            }}/>
+                        :
+                        item.id == '1' ?
+                            <Ionicons name="ios-settings"
+                                      size={18}
+                                      style={{
+                                          color: '#898989',
+                                          paddingLeft: 20,
+                                      }}/>
+                            :
                             <MaterialIcons
-                                name="contacts"
+                                name="airport-shuttle"
                                 size={18}
                                 style={{
                                     color: '#898989',
                                     paddingLeft: 20,
-                                }}/>
-                                :
-                                item.id == '1' ?
-                                <Ionicons name="ios-settings"
-                                          size={18}
-                                          style={{
-                                              color: '#898989',
-                                              paddingLeft: 20,
-                                          }}/>
-                                :
-                                    <MaterialIcons
-                                            name="airport-shuttle"
-                                            size={18}
-                                            style={{
-                                                color: '#898989',
-                                                paddingLeft: 20,
-                                            }} />
-                            }
-                        </View>
-                            <Text style={{
-                                            color: '#898989',
-                                            textAlign: 'left', fontSize: 14, justifyContent: 'flex-start', alignContent: 'flex-start'
-                                        }}>
-                                {item.title}
-                            </Text>
-                            <AntDesign
-                                name="down"
-                                size={12}
-                                color='#898989'
-                                style={{marginRight: 10}}
-                            />
-                    </View>
+                                }} />
+                    }
+                </View>
+                <Text style={{
+                    color: '#898989',
+                    textAlign: 'left', fontSize: 14, justifyContent: 'flex-start', alignContent: 'flex-start'
+                }}>
+                    {item.title}
+                </Text>
+                <AntDesign
+                    name="down"
+                    size={12}
+                    color='#898989'
+                    style={{marginRight: 10}}
+                />
+            </View>
         );
     }
 
@@ -501,6 +496,7 @@ class DiaryScreen extends React.Component
                     <Content padder>
                         {Platform.OS === 'ios' ?
                             <Accordion
+                                expanded={[4]}
                                 style={{backgroundColor: 'white', shadowColor: 'red'}}
                                 dataArray={dataArray}
                                 renderContent={this._renderContent}
@@ -508,6 +504,7 @@ class DiaryScreen extends React.Component
                             />
                             :
                             <Accordion
+                                expanded={[4]}
                                 style={{backgroundColor: 'white', shadowColor: 'red'}}
                                 dataArray={dataArray}
                                 renderContent={this._renderContent}

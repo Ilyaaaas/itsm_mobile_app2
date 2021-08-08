@@ -92,28 +92,26 @@ export default function OfferScreen({ navigation }) {
             return
         }
 
+        // var fileInfo = sendFile(file)
+
         await fetch('http://api.smart24.kz/service-requests/v1/request',
             {
                 method:'POST',
                 headers: {"x-api-key": token,
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
-                    },
+                },
                 body: '{"product_id": "'+selectedService+'", "descr": "'+offerDescr+'"}'}
         )
             .then(response => response.json())
             .then(function(data){
-                console.log('data');
-                setReqId(data);
-                console.log(data);
-                console.log(token);
-                console.log('data');
+                // setReqId(data);
                 sendFileId(data.id, sendedFileId, sendedFileName);
             })
             .catch(error => console.error(error))
             .finally()
-            alert('Заявка успешно отправлена!');
-            navigation.goBack();
+        alert('Заявка успешно отправлена!');
+        navigation.goBack();
     }
 
     const getCatalogs = async (tokenParam) =>
@@ -128,8 +126,8 @@ export default function OfferScreen({ navigation }) {
                 headers: {
                     "Content-type": "application/json",
                     "Accept": "application/json"},
-                }
-            )
+            }
+        )
             .then(response => response.json())
             .then(function(data){
                 setCatalogs(data.items);
@@ -177,7 +175,7 @@ export default function OfferScreen({ navigation }) {
                 })}
             </Picker>
         }
-            else
+        else
         {
             return <Text>Test</Text>
         }
@@ -188,45 +186,54 @@ export default function OfferScreen({ navigation }) {
         console.log('chooseFiles');
         let result = await DocumentPicker.getDocumentAsync({
             type: "*/*",
-            //type: "image/*",
-            // type: "audio/*",
-            // type: "application/*",
-            // type: "application/pdf",
-            // type: "application/msword",
-            // type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            // type: "vnd.ms-excel",
-            // type: "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            // type: "text/csv",
         })
         const Mydata = new FormData();
         Mydata.append('file', result);
-        setFile(Mydata);
-        setSendFileState(true)
-        // this.sendFile(Mydata)
-        // const dirInfo = FileSystem.getInfoAsync();
-        // console.log('Mydata');
-        // console.log(Mydata);
-        // sendFile();
+        console.log('tststs')
+        // setFile(Mydata);
+        // setSendFileState(true)
+        var name = Mydata['_parts'][0][1].name;
+        var size = Mydata['_parts'][0][1].size;
+        var uri = Mydata['_parts'][0][1].uri;
+        console.log('tststs')
+        let body = new FormData();
+        body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
+        console.log('body '+uri+' '+name+' '+size);
+        fetch(
+            'http://api.smart24.kz/storage/v1/file/upload',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Accept': '*/*',
+                    'x-api-key': token,
+                },
+                body,
+            })
+            .then(response => {
+                console.log('fetch');
+                return response.json()
+            })
+            .then(responseJson => {
+                setSendedFileId(responseJson.id)
+                setSendedFileName(responseJson.name)
+                console.log('responseJson2');
+                console.log(responseJson);
+            })
+            .catch(error => console.error(error));
     }
 
     useEffect(() => {
-        console.log('useEffect');
-        console.log('file');
-        console.log(file);
-        console.log('sendFileState '+sendFileState);
-        console.log('file '+file);
         if(sendFileState == true)
         {
             if(file != undefined)
             {
                 console.log('sendFile все условия сработали')
                 // sendFileByAxios(file)
-                sendFile(file)
+                // sendFile(file)
                 setSendFileState(false)
             }
         }
-        console.log('sendedFileId '+sendedFileId)
-        console.log('sendedFileName '+sendedFileName)
     });
 
     async function sendFileByAxios(fileArg) {
@@ -261,28 +268,13 @@ export default function OfferScreen({ navigation }) {
 
     async function sendFile(fileArg)
     {
-        // if(fileArg == undefined)
-        // {
-        //     chooseFiles();
-        // }
         console.log('sendFile');
-        console.log(fileArg);
-        console.log('sendFile');
-        // console.log('response');
-        console.log(fileArg['_parts'][0][1].name);
-        console.log(fileArg['_parts'][0][1].size);
-        console.log(fileArg['_parts'][0][1].uri);
-        console.log('_parts');
         var name = fileArg['_parts'][0][1].name;
         var size = fileArg['_parts'][0][1].size;
         var uri = fileArg['_parts'][0][1].uri;
-        // var name = fileArg['_parts'][0][1]['_W']['name'];
-        // var size = fileArg['_parts'][0][1]['_W']['size'];
-        // var uri = fileArg['_parts'][0][1]['_W']['uri'];
         let body = new FormData();
         body.append('file', { uri: uri, name: name, size: size, type: 'JPG' });
-        console.log('222 '+uri+' '+name+' '+size);
-        // body.append('', '\\')
+        console.log('body '+uri+' '+name+' '+size);
         fetch(
             'http://api.smart24.kz/storage/v1/file/upload',
             {
@@ -297,23 +289,23 @@ export default function OfferScreen({ navigation }) {
             .then(response => {
                 console.log('fetch');
                 return response.json()
-                    .then(responseJson => {
-                        setSendedFileId(responseJson.id)
-                        setSendedFileName(responseJson.name)
-                        console.log('responseJson');
-                        console.log(responseJson);
-                    });
-                })
-            // .then(responce => console.log('test'))
+            })
+            .then(responseJson => {
+                setSendedFileId(responseJson.id)
+                setSendedFileName(responseJson.name)
+                console.log('responseJson2');
+                console.log(responseJson);
+            })
             .catch(error => console.error(error));
         console.log('finish');
     }
 
     async function sendFileId(reqId, sendedFileId, sendedFileName)
     {
+        console.log(reqId);
         console.log('{"fileId": '+sendedFileId+', "typeId": 2, "descr": "'+sendedFileName+'"}');
         fetch("http://api.smart24.kz/service-requests/v1/request/"+reqId+"/add-attachments", {
-            body: '{"fileId": '+sendedFileId+', "typeId": 2, "descr": "'+sendedFileName+'"}',
+            body: '{"fileId": '+sendedFileId+', "descr": "'+sendedFileName+'"}',
             headers: {
                 "Content-Type": "application/json",
                 "X-Api-Key": token
@@ -376,7 +368,7 @@ export default function OfferScreen({ navigation }) {
                                                 items={services.map(item=> ({label: item.subject, value: item.id}))}
                                                 onChangeItem={item => setSelectedService(item.value)}
                                                 dropDownStyle={{backgroundColor: '#F2F2F2'}}
-                                                // zIndex={1000}
+                                    // zIndex={1000}
                                                 placeholder={'Не выбрано'}
                                 />
                                 :

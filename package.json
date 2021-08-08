@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^10.0.0",
+    "@freakycoder/react-native-text-area": "^0.1.4",
     "@react-native-community/async-storage": "~1.12.0",
     "@react-native-community/datetimepicker": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
@@ -38,6 +39,7 @@
     "react-native-calendar-strip": "^1.4.2",
     "react-native-datepicker": "^1.7.2",
     "react-native-device-info": "^6.0.4",
+    "react-native-document-picker": "^5.2.0",
     "react-native-dropdown-picker": "^3.7.1",
     "react-native-easy-grid": "^0.2.0",
     "react-native-fs": "^2.16.6",
@@ -50,6 +52,7 @@
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",
     "react-native-star-rating": "^1.1.0",
+    "react-native-textarea": "^1.0.4",
     "react-native-web": "~0.13.7",
     "react-native-webview": "10.7.0",
     "react-navigation": "^3.11.0",
