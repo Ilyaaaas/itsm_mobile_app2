@@ -26,7 +26,6 @@ import { WebView } from 'react-native-webview';
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
 
-
 import { API, getToken } from '../constants';
 import {StackActions} from "@react-navigation/native";
 
@@ -34,36 +33,36 @@ function About({ navigation, route }) {
 
     const [data, setData] = useState(null);
 
-    useEffect(() => {
-        (async () => {
-            getToken().then(token => {
-                if(token == null){
-                    navigation.dispatch(StackActions.replace('Login'));
-                }
-                let API_URL = `${API}backend/about`
-                axios.get(API_URL, {
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'token': token,
-                    }
-                }).then(res => {
-                    setData(res.data)
-                }).catch(err => console.log('About data getting error: ', err))
-            });
-        }
-        )();
-
-    }, [])
+    // useEffect(() => {
+    //     (async () => {
+    //         getToken().then(token => {
+    //             if(token == null){
+    //                 navigation.dispatch(StackActions.replace('Login'));
+    //             }
+    //             let API_URL = `${API}backend/about`
+    //             axios.get(API_URL, {
+    //                 headers: {
+    //                     Accept: 'application/json',
+    //                     'Content-Type': 'application/x-www-form-urlencoded',
+    //                     'token': token,
+    //                 }
+    //             }).then(res => {
+    //                 setData(res.data)
+    //             }).catch(err => console.log('About data getting error: ', err))
+    //         });
+    //     }
+    //     )();
+    //
+    // }, [])
 
     return (
         <Container>
             <Header style={styles.headerTop}>
                 <Left style={{ flex: 1 }}>
                     <Ionicons
-                        name="ios-menu"
+                        name="md-arrow-back"
                         style={{ color: '#a2a3b7', marginLeft: 10 }}
-                        onPress={() => navigation.openDrawer()}
+                        onPress={() => navigation.goBack()}
                         size={24}
                     />
                 </Left>

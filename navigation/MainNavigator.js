@@ -1,23 +1,16 @@
 import { Icon } from 'native-base';
 import React from 'react';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
+// import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
-import ResultsScreen from '../screens/Analise/ResultsScreen';
-import ResultsShow from '../screens/Analise/ResultsShow';
 import ContactsScreen from '../screens/ContactsScreen';
 import HomeScreen from '../screens/HomeScreen';
 import InfoDetails from '../screens/Info/InfoDetails';
 import InfoScreen from '../screens/Info/InfoScreen';
 import LoginScreen from '../screens/LoginScreen';
-import ChooseDoctor from '../screens/Priem/ChooseDoctor';
-import DoctorDetail from '../screens/Priem/DoctorDetail';
-import ChooseTime from '../screens/Priem/ChooseTime';
-import ChooseType from '../screens/Priem/ChooseType';
-import PriemScreen from '../screens/Priem/PriemScreen';
 import CreateITSMRequest from '../screens/Request/CreateOffer';
+import Notifications from '../screens/Notifications';
 import { Registration } from '../screens/Registration/RegistrationForm';
-
-import Doctors from '../screens/Doctors/Doctors';
 
 import MenuCnt from './MenuCnt';
 
@@ -28,45 +21,11 @@ const stackConfig = {
   },
 };
 
-const DoctorListStack = {
-  DoctorList_1: {
-    screen: Doctors
-  }
-}
-
 const CreateITSMRequestStack = {
   CreateITSMRequest: {
     screen: CreateITSMRequest,
   }
 }
-
-const PriemStack = {
-  Priem: {
-    screen: PriemScreen,
-  },
-  ChooseType: {
-    screen: ChooseType,
-  },
-  ChooseDoctor: {
-    screen: ChooseDoctor,
-  },
-  ChooseTime: {
-    screen: ChooseTime,
-  },
-  DoctorDetail: {
-    screen: DoctorDetail
-  }
-
-};
-
-const ResultsStack = {
-  Results: {
-    screen: ResultsScreen,
-  },
-  ResultsShow: {
-    screen: ResultsShow,
-  },
-};
 
 const InfoStack = {
   InfoScreen: {
@@ -101,19 +60,6 @@ const DrawerRoutes = {
       ),
     }),
   },
-  PriemStack: {
-    name: 'PriemStack',
-    screen: createStackNavigator(PriemStack, {
-      initialRouteName: 'Priem',
-      ...stackConfig,
-    }),
-    navigationOptions: () => ({
-      title: `Мои записи`,
-      drawerIcon: ({ tintColor }) => (
-        <Icon name="calendar" style={{ color: tintColor }} />
-      ),
-    }),
-  },
   CreateRequest: {
     name: 'CreateRequest',
     screen: createStackNavigator(CreateRequest, {
@@ -127,19 +73,7 @@ const DrawerRoutes = {
       ),
     }),
   },
-  ResultsStack: {
-    name: 'ResultsStack',
-    screen: createStackNavigator(ResultsStack, {
-      initialRouteName: 'Results',
-      ...stackConfig,
-    }),
-    navigationOptions: () => ({
-      title: `Мои анализы`,
-      drawerIcon: ({ tintColor }) => (
-        <Icon name="medkit" style={{ color: tintColor }} />
-      ),
-    }),
-  },
+
   InfoScreenStack: {
     name: 'InfoScreenStack',
     screen: createStackNavigator(InfoStack, {

@@ -1,12 +1,8 @@
 import {AsyncStorage} from "react-native";
 import moment from "moment";
 
-//export const API = 'https://bmc-api.bmcudp.kz/'; //Production
-export const API = 'http://api.smart24.kz/service-requests/v1/'; //Test
-
-//export const WsAPI = 'wss://rtc-chat.bmcudp.kz:443';
-export const WsAPI = 'wss://rtc-chat-dev.bmcudp.kz:443';
-export const WsAPILocal = 'ws://10.10.70.61:8081';
+//export const API = 'http://api.smart24.kz/'; //Production
+export const API = 'http://api.smart24.kz/'; //Test
 
 export const DOCTOR = 'type:doctor';
 export const SPEC_TYPE = 'type:spec-type';
@@ -54,15 +50,13 @@ export async function provToken(){
 }
 
 export async function getToken() {
-  try {
-    const value = await AsyncStorage.getItem('token');
-    if (value !== null) {
-      timer.timeStart = moment();
-      timer.timeEnd = moment().add(timeInterval, 'minutes');
-      return value.replace(/['"«»]/g, '');
-    }
-  } catch (error) {
-    return null;
-  }
+  console.log('getToken constant');
+    await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+        // .then(json => console.log('accessToken2 '+json[0].accessToken))
+        .then(json => {
+          return json[0].accessToken;
+        })
+        .catch(error => console.log(error));
+    console.log('getToken constant');
   return null;
 }

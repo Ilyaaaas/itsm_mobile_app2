@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "ITSM smart24",
+    "name": "Smart24",
     "description": "Мобильное приложение ITSM qazcloud",
-    "slug": "smart24",
-    "version": "2.0.1",
+    "slug": "Smart24",
+    "version": "7.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo/logo-512.png",
     "platforms": [
@@ -28,14 +28,14 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "kz.qazcloud.smart24",
+      "bundleIdentifier": "kz.sk.smart",
       "supportsTablet": true
     },
     "android": {
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
-      "package": "kz.qazcloud.smart24",
-      "versionCode": 5,
+      "package": "kz.sk.smart",
+      "versionCode": 7,
       "permissions": []
     }
   }

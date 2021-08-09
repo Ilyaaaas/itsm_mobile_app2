@@ -1,8 +1,34 @@
 import React from "react";
-import {RefreshControl, StyleSheet, Text, View} from "react-native";
-import {Body, Container, Header, Left, Tab, TabHeading, Tabs, Title, Toast, Content, List, ListItem} from "native-base";
+import {
+    AsyncStorage,
+    Modal,
+    RefreshControl,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from "react-native";
+import {
+    Body,
+    Container,
+    Header,
+    Left,
+    Tab,
+    TabHeading,
+    Tabs,
+    Title,
+    Toast,
+    Content,
+    List,
+    ListItem,
+    Root, Button
+} from "native-base";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {API, getToken} from './constants';
+import { WebView } from 'react-native-webview';
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default class Notifications extends React.Component{
     constructor(props) {
@@ -14,6 +40,8 @@ export default class Notifications extends React.Component{
             list_old: [],
             activeTab: 0,
             refreshing: false,
+            reqModal: false,
+            currentNotifId: 0,
         }
 
         this.isFocused = this.props.navigation.isFocused();
@@ -21,36 +49,30 @@ export default class Notifications extends React.Component{
     }
 
     _getToken = async () => {
-        await getToken().then(itoken => {
-            this.setState({token: itoken});
-        })
+        await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
+            .then(json => this.setState({token: json[0].accessToken}))
+            .catch(error => console.log(error))
     }
 
     _getUrl = async (url) => {
-        const API_URL = `${API}backend/${url}`
+        const API_URL = `${API}${url}`;
+        console.log('API_URL');
+        console.log(API_URL);
 
         try {
             const response = await fetch(API_URL, {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
-                    //'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                     'token': this.state.token,
                 },
-            });
+            })
 
-            const responseJson = await response.json();
-            if (responseJson !== null) {
-                if(responseJson.success == false){
-                    Toast.show({
-                        text: responseJson.message,
-                        type: 'danger',
-                        duration: 3000
-                    });
-                    return null;
-                }
-                return responseJson.result;
-            }
+            const responseJson = await response;
+            // console.log('_getUrl');
+            // console.log(responseJson.json());
+            return responseJson.json();
         } catch (error) {
             console.log('Error when call API: ' + error.message);
         }
@@ -58,12 +80,21 @@ export default class Notifications extends React.Component{
     }
 
     _list = async () => {
-        await this._getUrl('notifications').then(list => {
+        var readedNotif = [];
+        var unreadedNotif = [];
+        await this._getUrl('portal/v1/notification?access-token='+this.state.token+'&_format=json').then(list => {
             if(list !== null) {
-                this.setState({list_new: list.new, list_old: list.old});
+                list.items.map((reqItem, results) => {
+                    if (reqItem.isRead === 0) {
+                        this.setState({list_new: [...this.state.list_new, reqItem]})
+                    } else if (reqItem.isRead === 1) {
+                        this.setState({list_old: [...this.state.list_old, reqItem]})
+                    }
+                })
             }
         })
     }
+
     _refreshPage = async () => {
         await this._getToken();
         await this._list();
@@ -81,19 +112,16 @@ export default class Notifications extends React.Component{
         });
     }
 
+    openNotif = (id) => {
+        this.setState({reqModal: true, currentNotifId: id});
+    }
+
     render() {
         return (
             <Container>
                 <Header style={styles.headerTop}>
-                    <Left style={{ flex: 1}}>
-                        <Ionicons name="ios-menu"
-                              style={{ color: '#a2a3b7', marginLeft: 10 }}
-                              onPress={() => this.props.navigation.openDrawer()}
-                              size={24}
-                        />
-                    </Left>
                     <Body style={{ flex: 3 }}>
-                        <Title style={{ color: '#a2a3b7' }}>Уведомления</Title>
+                        <Title style={{ color: '#1a192a' }}>Уведомления</Title>
                     </Body>
                 </Header>
                 <Content
@@ -118,16 +146,14 @@ export default class Notifications extends React.Component{
                                 <NotNotification />
                             ) : (
                                 <List>
-                                {this.state.list_new.map((value_new, num) => (
-                                    <ListItem key={num} onPress={() => {
-                                        this._setRead(value_new.id)
-                                    }}>
-                                        <View style={{ flexDirection: "column" }}>
-                                            <Text style={{ fontSize: 16 }}>{ value_new.n_text }</Text>
-                                            <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_new.n_datetime }</Text>
-                                        </View>
-                                    </ListItem>
-                                ))}
+                                    {this.state.list_new.map((value_new, nums) => (
+                                        <ListItem onPress={() => this.openNotif(value_new.id)} key={value_new.id}>
+                                                <View style={{ flexDirection: "column" }}>
+                                                    <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
+                                                    <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
+                                                </View>
+                                        </ListItem>
+                                    ))}
                                 </List>
                             )}
                         </Tab>
@@ -141,12 +167,12 @@ export default class Notifications extends React.Component{
                                 <NotNotification />
                             ) : (
                                 <List>
-                                    {this.state.list_old.map((value_old, nums) => (
-                                        <ListItem key={nums}>
-                                            <View style={{ flexDirection: "column" }}>
-                                                <Text style={{ fontSize: 16 }}>{ value_old.n_text }</Text>
-                                                <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>{ value_old.n_datetime }</Text>
-                                            </View>
+                                    {this.state.list_old.map((value_new, nums) => (
+                                        <ListItem onPress={() => this.openNotif(value_new.id)} key={value_new.id}>
+                                                <View style={{ flexDirection: "column" }}>
+                                                    <Text style={{ fontSize: 16 }}>{ value_new.name }</Text>
+                                                    <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}></Text>
+                                                </View>
                                         </ListItem>
                                     ))}
                                 </List>
@@ -154,6 +180,46 @@ export default class Notifications extends React.Component{
                         </Tab>
                     </Tabs>
                 </Content>
+                <Modal
+                    animationType={"slide"}
+                    visible={this.state.reqModal}
+                >
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                    }}>
+                        <View>
+                            <Text>{this.state.currentNotifId}</Text>
+                        </View>
+                    </View>
+                    <View style={{ borderTopWidth: 1,}}>
+                        <List>
+                            <ListItem>
+                                <Left>
+                                    <Button
+                                        success={true}
+                                        style={{ width: '90%', borderRadius: 10 }}
+                                        onPress={() => {
+                                            this.setState({reqModal: false});
+                                        }}
+                                    >
+                                        <Text style={{ width: '100%', textAlign: "center"}}>Закрыть</Text>
+                                    </Button>
+                                </Left>
+                                <Body>
+                                    <Button
+                                        block
+                                        onPress={() => this.acceptRequest(this.state.listGrade.id)}
+                                        style={{backgroundColor: 'green'}}
+                                    >
+                                        <Text>Начать исполнение</Text>
+                                    </Button>
+                                </Body>
+                            </ListItem>
+                        </List>
+                    </View>
+                </Modal>
             </Container>
         );
     }
@@ -178,7 +244,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     headerTop: {
-        backgroundColor: '#1a192a',
+        backgroundColor: '#fff',
     },
 
     tab_heading: {

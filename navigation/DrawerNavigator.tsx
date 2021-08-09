@@ -9,17 +9,9 @@ import {Toast} from "native-base";
 import {getToken, provToken} from '../screens/constants';
 
 import ContactsScreen from '../screens/ContactsScreen';
-import { HealthyLifestyleScreen } from '../screens/HealthyLifestyle/HealthyLifestyleScreen';
 import HomeScreen from '../screens/HomeScreen';
 import { CustomDrawerContent } from './CustomDrawerContent';
-import { InfoScreenStack } from './InfoScreenStack';
-import { PriemStack } from './PriemStack';
-import { ResultsStack } from './ResultsStack';
-import { DoctorListStack } from './DoctorListStack';
 import { AboutStack } from './AboutStack';
-import { DiaryStack } from './DiaryStack';
-import { PassportStack } from './PassportStack';
-import ReceptsList from '../screens/Recepts/ReceptsList';
 import Notifications from '../screens/Notifications'
 
 const Drawer = createDrawerNavigator();
@@ -73,84 +65,6 @@ export const DrawerNavigator = (props) => {
           ),
         }}
       />
-      {/*<Drawer.Screen*/}
-      {/*  name="DoctorListStack"*/}
-      {/*  component={DoctorListStack}*/}
-      {/*  options={{*/}
-      {/*    drawerLabel: 'Наши врачи',*/}
-      {/*    drawerIcon: ({ color, size }) => (*/}
-      {/*      <FontAwesome name="user-md" color={color} size={size} />*/}
-      {/*    ),*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*<Drawer.Screen*/}
-      {/*  name="PriemStack"*/}
-      {/*  component={PriemStack}*/}
-      {/*  options={{*/}
-      {/*    drawerLabel: 'Мои записи',*/}
-      {/*    drawerIcon: ({ color, size }) => (*/}
-      {/*      <FontAwesome name="calendar" color={color} size={size} />*/}
-      {/*    ),*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*<Drawer.Screen*/}
-      {/*  name="ResultsStack"*/}
-      {/*  component={ResultsStack}*/}
-      {/*  options={{*/}
-      {/*    drawerLabel: 'Мои анализы',*/}
-      {/*    drawerIcon: ({ color, size }) => (*/}
-      {/*      <FontAwesome name="medkit" color={color} size={size} />*/}
-      {/*    ),*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*<Drawer.Screen*/}
-      {/*    name="DiaryStack"*/}
-      {/*    component={DiaryStack}*/}
-      {/*    options={{*/}
-      {/*        drawerLabel: 'Дневник пациента',*/}
-      {/*        drawerIcon: ({ color, size }) => (<Entypo name="open-book" color={color} size={size} />),*/}
-      {/*    }}*/}
-      {/*/>*/}
-
-      {/*<Drawer.Screen*/}
-      {/*    name="PassportStack"*/}
-      {/*    component={PassportStack}*/}
-      {/*    options={{*/}
-      {/*        drawerLabel: 'E-паспорт здоровья',*/}
-      {/*        drawerIcon: ({ color, size }) => (<FontAwesome5 name="passport" color={color} size={size} />),*/}
-      {/*    }}*/}
-      {/*/>*/}
-
-      {/*<Drawer.Screen*/}
-      {/*  name="InfoScreenStack"*/}
-      {/*  component={InfoScreenStack}*/}
-      {/*  options={{*/}
-      {/*    drawerLabel: 'Рекомендации',*/}
-      {/*    drawerIcon: ({ color, size }) => (*/}
-      {/*      <FontAwesome name="list-alt" color={color} size={size} />*/}
-      {/*    ),*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*<Drawer.Screen*/}
-      {/*  name="HealthyLifestyle"*/}
-      {/*  component={HealthyLifestyleScreen}*/}
-      {/*  options={{*/}
-      {/*    drawerLabel: 'Здоровый образ жизни',*/}
-      {/*    drawerIcon: ({ color, size }) => (*/}
-      {/*      <FontAwesome name="heart" color={color} size={size} />*/}
-      {/*    ),*/}
-      {/*  }}*/}
-      {/*/>*/}
-      {/*<Drawer.Screen*/}
-      {/*    name="ReceptsList"*/}
-      {/*    component={ReceptsList}*/}
-      {/*    options={{*/}
-      {/*        drawerLabel: 'Рецепты',*/}
-      {/*        drawerIcon: ({ color, size }) => (*/}
-      {/*            <FontAwesome5 name="notes-medical" color={color} size={size} />*/}
-      {/*        ),*/}
-      {/*    }}*/}
-      {/*/>*/}
 
       <Drawer.Screen
           name="Notifications"
@@ -186,3 +100,4 @@ export const DrawerNavigator = (props) => {
     </Drawer.Navigator>
   );
 };
+

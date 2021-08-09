@@ -69,9 +69,8 @@ export const LoginScreen = () => {
               }
               else
               {
-                alert('success')
                 setAccessTokenFunc('@accessToken', json.accessToken, json.userId);
-                navigation.dispatch(StackActions.replace('DiaryStack'));
+                navigation.dispatch(StackActions.replace('MainITSMScreen'));
               }
             }
         )
@@ -79,16 +78,15 @@ export const LoginScreen = () => {
   };
 
   const setAccessTokenFunc = async (key, value, userId) => {
-    AsyncStorage.clear();
+    // AsyncStorage.clear();
     try {
-      await AsyncStorage.setItem(key, value);
+      // await AsyncStorage.setItem(key, value);
       const items = [{"accessToken": value}, {"userId": userId}];
-      console.log(items);
-      AsyncStorage.setItem("accessToken", JSON.stringify(items));
+      await AsyncStorage.setItem("accessToken", JSON.stringify(items));
     } catch(e) {
       console.log('error');
     }
-    console.log('Done.')
+    // console.log('Done')
   }
 
   const AlertShow = async () => {
