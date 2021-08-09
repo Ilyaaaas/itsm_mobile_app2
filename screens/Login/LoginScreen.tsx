@@ -31,8 +31,8 @@ export const LoginScreen = () => {
   const [passView, setpassView] = useState(true);
   const [showIINS, setShowIINS] = useState(false);
   const [listLogins, setListLogins] = useState([]);
-  const [login, setLogin] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [login, setLogin] = useState<string>('i.akhmetov@digital.sk.kz');
+  const [password, setPassword] = useState<string>('Astana2021!');
   const [passwordRecoveryIsVisible, setPasswordRecoveryIsVisible] = useState<boolean>(false);
 
   const handleSubmit = async (onSaveLogin = false) => {
@@ -41,10 +41,10 @@ export const LoginScreen = () => {
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
-        // username: login,
-        // password: password,
-        username: 'i.akhmetov@digital.sk.kz',
-        password: 'Astana2021!',
+        username: login,
+        password: password,
+        // username: 'i.akhmetov@digital.sk.kz',
+        // password: 'Astana2021!',
         // username: 'a.iskaliyev@skbs.kz',
         // password: 'U7cXPraHSU',
         // username: 'b.rysbek@skbs.kz',

@@ -1,4 +1,4 @@
-import {AntDesign, Ionicons, MaterialIcons} from '@expo/vector-icons';
+import {AntDesign, Ionicons, MaterialIcons, FontAwesome} from '@expo/vector-icons';
 import {
   Container,
   Content,
@@ -86,8 +86,9 @@ class HomeScreen extends React.Component{
 
   _getUrl = async (url) => {
     const API_URL = API+url;
-    //console.log(API_URL);
-    //console.log(this.state.token);
+    console.log(API);
+    console.log(url);
+    console.log(this.state.token);
 
     try {
       const response = await fetch(API_URL, {
@@ -181,9 +182,6 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    //console.log('this.state.currentPage');
-    //console.log(this.state.currentPageLink);
-    //console.log('this.state.currentPage');
     var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id';
     if(this.state.currentPageLink != '0')
     {
@@ -204,9 +202,6 @@ class HomeScreen extends React.Component{
                                 totalReqCount: value._meta.totalCount,
                                 reqCountInOnePage: value._meta.perPage,
                         });
-          //console.log('value._meta');
-          //console.log(value._meta.totalCount);
-          //console.log(value._links);
         }
       }
     )
@@ -337,16 +332,19 @@ class HomeScreen extends React.Component{
   }
 
   onInfoButtonClicked = async (docid) => {
-    await this._getUrl('service-requests/v1/request/'+docid).then(value => {
-      //console.log('onInfoButtonClicked');
-      //console.log(value);
-      //console.log('onInfoButtonClicked');
+    console.log(docid);
+    await this._getUrl('service-requests/v1/request/'+docid+'?access-token='+this.state.token)
+    .then(value => {
+      // console.log('service-requests/v1/request/'+docid);
+      // console.log('onInfoButtonClicked');
+      // console.log(value);
+      // console.log('onInfoButtonClicked');
       this.setState({
         listGrade: value,
         activeDoc: docid,
         modal: true,
       });
-      this._getAuthor(value.createdBy);
+      // this._getAuthor(value.createdBy);
     })
   }
 
@@ -368,8 +366,8 @@ class HomeScreen extends React.Component{
   }
 
   render() {
-    //{console.log('this.state.list')}
-    //{console.log(this.state.list)}
+    // {console.log('this.state.list')}
+    // {console.log(this.state.list)}
     return (
         <Container>
           <Root>
@@ -435,29 +433,44 @@ class HomeScreen extends React.Component{
                                     <Text style={styles.time}>{this.state.authorName}</Text>
                                   </View>
                                 </View>
-                                <View style={{flexDirection: 'column', alignContent: 'center'}}>
+                                <View style={{
+                                  flexDirection: 'column',
+                                  alignContent: 'center',
+                                  alignItems: 'center',
+                                  width: 60,
+                                  justifyContent: 'center',
+                                  }}>
                                   <AntDesign
                                       name="warning"
                                       size={24}
-                                      style={{marginRight: 10, color: '#17a2b8'}}
+                                      style={{justifyContent: 'center', color: '#17a2b8', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
                                   />
-                                  <Text style={styles.textSpecialtyDanger}>{doc.status.name}</Text>
+                                  <Text
+                                      style={{
+                                        fontSize: 10,
+                                        color: '#5e6064',
+                                        alignItems: 'center', alignContent: 'center', alignSelf: 'center',
+                                        justifyContent: 'center',
+                                      }}>{doc.status.name}</Text>
                                 </View>
                               </View>
                             </TouchableOpacity>
                             {this.state.isDocReviewSelected == i &&
-                            <View style={{ marginBottom: 10, marginTop: 10 }}>
-                              <Text style={styles.textSpecialty}>Дата обновления: { doc.product.updated_at || "" }</Text>
-                              <Text style={styles.textSpecialty}>Дедлайн: { doc.product.deadline_at || "" }</Text>
-                              <Text style={styles.textSpecialty}>Название продукта: {doc.product.subject}</Text>
-                              <Text style={styles.textSpecialty}>Описание: {doc.descr}</Text>
+                            <View style={{ marginBottom: 10, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', }}>
+                              <View>
+                                <Text style={styles.textSpecialty}>Дата обновления: { doc.product.updated_at || "" }</Text>
+                                <Text style={styles.textSpecialty}>Дедлайн: { doc.product.deadline_at || "" }</Text>
+                                <Text style={styles.textSpecialty}>Название продукта: {doc.product.subject}</Text>
+                                <Text style={styles.textSpecialty}>Описание: {doc.descr}</Text>
+                              </View>
                               <View style={styles.buttonsContainer}>
                                 <TouchableOpacity
                                     activeOpacity={0.7}
                                     style={[styles.button, styles.btn]}
                                     onPress={() => this.onInfoButtonClicked(doc.id)}
                                 >
-                                  <Text style={{ color: '#fff' }}>Сменить статус</Text>
+                                  <MaterialIcons name="more-vert" size={24} color='#1a192a' />
+                                  <Text style={{ color: '#1a192a' }}>Подробнее</Text>
                                 </TouchableOpacity>
                               </View>
                             </View>
@@ -731,15 +744,6 @@ const styles = StyleSheet.create({
     color: '#5e6064',
     fontWeight: '300'
   },
-  textSpecialtyDanger: {
-    fontSize: 10,
-    color: '#5e6064',
-    fontWeight: '300',
-    backgroundColor: '#fd397a',
-    borderRadius: 10,
-    paddingRight: 4,
-    paddingLeft: 4,
-  },
   starContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -754,24 +758,23 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
     paddingTop: 10,
+    justifyContent: 'flex-end',
   },
   button: {
     borderRadius: 10,
     margin: 3,
-    borderColor: '#54bb87'
+    // borderColor: '#1a192a',
+    alignItems: "center",
   },
   btn: {
-    backgroundColor: '#54bb87',
-    borderWidth: 0,
+    // backgroundColor: '#1a192a',
     paddingVertical: 5,
     paddingHorizontal: 10
   },
   textStyle: {
     paddingVertical: 5
   },
-
   centeredView: {
     flex: 1,
     justifyContent: 'flex-end',
@@ -835,8 +838,6 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     textTransform: 'uppercase',
   },
-
-
   row: {
     flexDirection: 'row',
     alignItems: 'center',
