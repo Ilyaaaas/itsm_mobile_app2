@@ -1,4 +1,4 @@
-import {AntDesign, Ionicons, MaterialIcons, FontAwesome} from '@expo/vector-icons';
+import {AntDesign, Ionicons, MaterialIcons, FontAwesome, Entypo} from '@expo/vector-icons';
 import {
   Container,
   Content,
@@ -414,11 +414,15 @@ class HomeScreen extends React.Component{
               ) : (
                   <List>
                     {this.state.list.map((doc, i) => (
-                        <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
+                        <ListItem key={i} style={{
+                            paddingBottom: 0,
+                            paddingTop: 0,
+                            marginLeft: 0,
+                            marginRight: -16,
+                        }}>
                           <Body>
                             <TouchableOpacity
                                 activeOpacity={0.7}
-                                // style={[styles.button, styles.btn]}
                                 onPress={() => this._onReviewButtonClicked(i)}
                             >
                               <View style={styles.row}>
@@ -437,7 +441,7 @@ class HomeScreen extends React.Component{
                                   flexDirection: 'column',
                                   alignContent: 'center',
                                   alignItems: 'center',
-                                  width: 60,
+                                  width: 120,
                                   justifyContent: 'center',
                                   }}>
                                   <AntDesign
@@ -456,12 +460,22 @@ class HomeScreen extends React.Component{
                               </View>
                             </TouchableOpacity>
                             {this.state.isDocReviewSelected == i &&
-                            <View style={{ marginBottom: 10, marginTop: 10, flexDirection: 'row', justifyContent: 'space-between', }}>
-                              <View>
-                                <Text style={styles.textSpecialty}>Дата обновления: { doc.product.updated_at || "" }</Text>
-                                <Text style={styles.textSpecialty}>Дедлайн: { doc.product.deadline_at || "" }</Text>
-                                <Text style={styles.textSpecialty}>Название продукта: {doc.product.subject}</Text>
-                                <Text style={styles.textSpecialty}>Описание: {doc.descr}</Text>
+                            <View style={{
+                                          flexDirection: 'row',
+                                          justifyContent: 'space-between',
+                                          flex: 1,
+                                          backgroundColor: '#f5f5f5',
+                                          zIndex: -10,
+                                        }}>
+                              <View style={{width: 280, padding: 20}}>
+                                <Text style={styles.textSmallTitle}>Дата обновления:</Text>
+                                <Text style={styles.textSmallValue}>{ doc.product.updated_at || "" }</Text>
+                                <Text style={styles.textSmallTitle}>Дедлайн: { doc.product.deadline_at || "" }</Text>
+                                <Text style={styles.textSmallValue}>{ doc.product.deadline_at || "" }</Text>
+                                <Text style={styles.textSmallTitle}>Название продукта: </Text>
+                                <Text style={styles.textSmallValue}>{doc.product.subject}</Text>
+                                <Text style={styles.textSmallTitle}>Описание: </Text>
+                                <Text style={styles.textSmallValue}>{doc.descr}</Text>
                               </View>
                               <View style={styles.buttonsContainer}>
                                 <TouchableOpacity
@@ -469,7 +483,8 @@ class HomeScreen extends React.Component{
                                     style={[styles.button, styles.btn]}
                                     onPress={() => this.onInfoButtonClicked(doc.id)}
                                 >
-                                  <MaterialIcons name="more-vert" size={24} color='#1a192a' />
+                                  <Entypo name="triangle-right" size={24} color="#1a192a" />
+                                  {/*<MaterialIcons name="more-vert" size={24} color='#1a192a' />*/}
                                   <Text style={{ color: '#1a192a' }}>Подробнее</Text>
                                 </TouchableOpacity>
                               </View>
@@ -739,9 +754,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     paddingBottom: 5,
   },
-  textSpecialty: {
+  textSmallTitle: {
     fontSize: 10,
-    color: '#5e6064',
+    color: '#1a192a',
+    fontWeight: "bold",
+  },
+  textSmallValue: {
+    fontSize: 10,
+    color: '#1a192a',
     fontWeight: '300'
   },
   starContainer: {
@@ -756,10 +776,11 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   buttonsContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingTop: 10,
-    justifyContent: 'flex-end',
+    flexDirection: 'column',
+    alignContent: 'center',
+    alignItems: 'center',
+    width: 120,
+    justifyContent: 'center',
   },
   button: {
     borderRadius: 10,
@@ -841,8 +862,14 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
     justifyContent: 'space-between',
+    padding: 20,
+    backgroundColor: '#fff',
+    shadowColor: '#1a192a',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity:  0.4,
+    shadowRadius: 3,
+    elevation: 5,
   },
   nameContainer: {
     flexDirection: 'row',
