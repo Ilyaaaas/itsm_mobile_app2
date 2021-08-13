@@ -62,7 +62,7 @@ export default function OfferScreen({ navigation }) {
                 .then(json =>
                 {
                     setToken(json[0].accessToken);
-                    getServices(json[0].accessToken);
+                    getServices(json[0].accessToken, 0);
                     getCatalogs(json[0].accessToken);
                 })
                 .catch(error => console.log(error))
@@ -137,7 +137,7 @@ export default function OfferScreen({ navigation }) {
             .finally()
     }
 
-    const getServices = async (tokenParam) =>
+    const getServices = async (tokenParam, catalogId) =>
     {
         var usingToken = token;
         if(token == '')
@@ -179,6 +179,12 @@ export default function OfferScreen({ navigation }) {
         {
             return <Text>Test</Text>
         }
+    }
+
+    function changeSelectedCatalog(selectedCatalogId)
+    {
+        setSelectedCatalog(selectedCatalogId);
+        getServices(token, selectedCatalogId);
     }
 
     async function chooseFiles()
@@ -352,7 +358,8 @@ export default function OfferScreen({ navigation }) {
                                 <DropDownPicker
                                     style={{backgroundColor: '#F2F2F2', borderRadius: 10,}}
                                     items={catalogs.map(item=> ({label: item.name, value: item.id}))}
-                                    onChangeItem={item => setSelectedCatalog(item.value)}
+                                    // onChangeItem={item => setSelectedCatalog(item.value)}
+                                    onChangeItem={item => changeSelectedCatalog(item.value)}
                                     dropDownStyle={{backgroundColor: '#F2F2F2'}}
                                     zIndex={1000}
                                     placeholder={'Не выбрано'}
@@ -367,6 +374,7 @@ export default function OfferScreen({ navigation }) {
                                 <DropDownPicker style={{backgroundColor: '#F2F2F2', borderRadius: 10}}
                                                 items={services.map(item=> ({label: item.subject, value: item.id}))}
                                                 onChangeItem={item => setSelectedService(item.value)}
+                                                // onChangeItem={item => changeSelectedService(item.value)}
                                                 dropDownStyle={{backgroundColor: '#F2F2F2'}}
                                     // zIndex={1000}
                                                 placeholder={'Не выбрано'}
@@ -382,11 +390,11 @@ export default function OfferScreen({ navigation }) {
                                 numberOfLines={4}
                                 onChangeText={setOfferDescr}
                                 value={offerDescr}
-                                style={{height: 100, backgroundColor: '#F2F2F2', borderRadius: 10}}
+                                style={{height: 100, backgroundColor: '#F2F2F2', borderRadius: 10, padding: 10}}
                             />
                         </View>
                         <View style={{marginTop: 20}}>
-                            <Text>{sendedFileName}</Text>
+                            <Text>{sendedFileName || "Файл не выбран"}</Text>
                             <Button full primary
                                     onPress={() => chooseFiles()}
                                     style={{backgroundColor: '#F2F2F2', justifyContent: 'space-between', borderRadius: 10,}}

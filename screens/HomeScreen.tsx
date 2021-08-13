@@ -28,7 +28,8 @@ import {
   Modal,
   ScrollView,
   TextInput,
-  Dimensions, AppState
+  Dimensions,
+  AppState
 } from 'react-native';
 import {API, getToken} from './constants';
 import DropDownPicker from "react-native-dropdown-picker";
@@ -80,7 +81,7 @@ class HomeScreen extends React.Component{
       totalReqCount: 0,
       reqCountInOnePage: 0,
       currentPageLink: '0',
-      authorName: '',
+      authorName: [],
     }
   }
 
@@ -229,13 +230,16 @@ class HomeScreen extends React.Component{
   }
 
   _getAuthor = async (authorId) => {
-    //console.log('_getAuthor');
-    //console.log(authorId);
-    //console.log('_getAuthor');
-    await this._getUrl('portal/v1/person/'+authorId+'?access-token='+this.state.token+'&_format=json').then(value => {
-      this.setState({
-        authorName: value,
-      });
+    console.log('_getAuthor');
+    console.log(authorId);
+    console.log('_getAuthor');
+    console.log(API+'portal/v1/person/'+authorId+'?access-token='+this.state.token+'&_format=json');
+    await this._getUrl('portal/v1/person/'+authorId+'?access-token='+this.state.token+'&_format=json')
+    .then(value => {
+      console.log(value);
+      // this.setState({
+      //   authorName: value,
+      // });
     })
   }
 
@@ -336,14 +340,16 @@ class HomeScreen extends React.Component{
     await this._getUrl('service-requests/v1/request/'+docid+'?access-token='+this.state.token)
     .then(value => {
       // console.log('service-requests/v1/request/'+docid);
-      // console.log('onInfoButtonClicked');
-      // console.log(value);
-      // console.log('onInfoButtonClicked');
+      console.log('onInfoButtonClicked');
+      console.log(value);
+      console.log('onInfoButtonClicked');
       this.setState({
         listGrade: value,
         activeDoc: docid,
         modal: true,
       });
+      console.log('value.createdBy');
+      console.log(value.createdBy);
       // this._getAuthor(value.createdBy);
     })
   }
@@ -393,6 +399,62 @@ class HomeScreen extends React.Component{
                     onPress={() => this.showFilter()}
                 />
               </Right>
+            </Header>
+            <Header style={styles.headerTop}>
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                flex: 1,
+                backgroundColor: 'rgba(52, 52, 52, 0.05)',
+                borderColor: 'white',
+                borderWidth: 10,
+                borderRadius: 30,
+                overflow: 'hidden',
+                shadowColor: '#cdcdcd',
+                shadowRadius: 2,
+                shadowOpacity: 20,
+                shadowOffset: { width: 0, height: 2 },
+              }}>
+                <Button style={{
+                  backgroundColor: '#FCFCFC',
+                  margin: 10,
+                  height: 30,
+                  borderRadius: 15,
+                  width: 80,
+                  alignContent: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Text style={{textAlign: 'center'}}>
+                    Все
+                  </Text>
+                </Button>
+                <Button style={{
+                  backgroundColor: '#FCFCFC',
+                  margin: 10,
+                  height: 30,
+                  borderRadius: 15,
+                  width: 80,
+                  alignContent: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Text>
+                    Мои
+                  </Text>
+                </Button>
+                <Button style={{
+                  backgroundColor: '#FCFCFC',
+                  margin: 10,
+                  height: 30,
+                  borderRadius: 15,
+                  width: 80,
+                  alignContent: 'center',
+                  justifyContent: 'center',
+                }}>
+                  <Text>
+                    Архив
+                  </Text>
+                </Button>
+              </View>
             </Header>
             <Content
                 refreshControl={
@@ -483,8 +545,8 @@ class HomeScreen extends React.Component{
                                     style={[styles.button, styles.btn]}
                                     onPress={() => this.onInfoButtonClicked(doc.id)}
                                 >
-                                  <Entypo name="triangle-right" size={24} color="#1a192a" />
-                                  {/*<MaterialIcons name="more-vert" size={24} color='#1a192a' />*/}
+                                  {/*<Entypo name="triangle-right" size={24} color="#1a192a" />*/}
+                                  <MaterialIcons name="more-vert" size={30} color='#1a192a' />
                                   <Text style={{ color: '#1a192a' }}>Подробнее</Text>
                                 </TouchableOpacity>
                               </View>
@@ -565,44 +627,48 @@ class HomeScreen extends React.Component{
                           <Text>Инфо</Text>
                         </TabHeading>
                       }>
-                        <List>
-                          <ListItem key={1}>
-                            <View>
-                              <Text style={styles.textName}>Заголовок: </Text>
-                              <Text>{this.state.listGrade.title}</Text>
+                        <View style={{padding: 10}}>
+                            <View style={{
+                              alignItems: 'left',
+                              flexDirection: 'row',
+                              flexWrap: 'wrap',
+                              }}>
+                              <Text>{this.state.listGrade.subject}</Text>
                             </View>
-                            <View>
+                            <View style={{
+                              justifyContent: 'left',
+                              alignItems: 'left',
+                              flexDirection: 'row',
+                            }}>
                               <Text style={styles.textName}>Описание: </Text>
                               <Text>{this.state.listGrade.descr}</Text>
                             </View>
-                            <View>
-                              <Text style={styles.textName}>Дата создания: </Text>
+                            <View style={{
+                              justifyContent: 'left',
+                              alignItems: 'left',
+                              flexDirection: 'row',
+                            }}>
+                              <Text style={styles.textName}>Время обращения: </Text>
                               <Text>{this.state.listGrade.createdAt}</Text>
                             </View>
-                          </ListItem>
-                        </List>
+                        </View>
                       </Tab>
                       <Tab  style={{backgroundColor: '#fff'}} heading={
                         <TabHeading style={{backgroundColor: '#fff'}}>
                           <Text>Журнал</Text>
                         </TabHeading>
                       }>
-                        <List>
-                          <ListItem key={2}>
                             <View style={{ flexDirection: "column" }}>
                               <Text style={{ fontSize: 16 }}>Test</Text>
                               <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>date</Text>
                             </View>
-                          </ListItem>
-                        </List>
                       </Tab>
                       <Tab heading={
                         <TabHeading style={{backgroundColor: '#fff'}}>
                           <Text style={{backgroundColor: '#fff'}}>Комментарии</Text>
                         </TabHeading>
                       }>
-                        <List>
-                          <ListItem noBorder>
+                        <View>
                             <TextInput
                                 style={styles.textArea}
                                 underlineColorAndroid="transparent"
@@ -612,8 +678,6 @@ class HomeScreen extends React.Component{
                                 multiline={true}
                                 onChangeText={text => this.setState({ otziv: text})}
                             />
-                          </ListItem>
-                          <ListItem noBorder style={{ marginTop: -20 }}>
                             <TextInput
                                 style={styles.contactInput}
                                 underlineColorAndroid="transparent"
@@ -621,8 +685,7 @@ class HomeScreen extends React.Component{
                                 placeholderTextColor="grey"
                                 onChangeText={text => this.setState({callPhone: text})}
                             />
-                          </ListItem>
-                        </List>
+                        </View>
                       </Tab>
                     </Tabs>
                   </View>
@@ -723,6 +786,18 @@ class HomeScreen extends React.Component{
 }
 
 const styles = StyleSheet.create({
+  description:{
+    fontSize:15,
+    color: "#646464",
+  },
+  eventTime:{
+    fontSize:18,
+    color:"#151515",
+  },
+  userName:{
+    fontSize:16,
+    color:"#151515",
+  },
   mainContent: {
     marginRight: 60
   },

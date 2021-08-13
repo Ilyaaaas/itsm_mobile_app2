@@ -32,7 +32,7 @@ export const LoginScreen = () => {
   const [showIINS, setShowIINS] = useState(false);
   const [listLogins, setListLogins] = useState([]);
   const [login, setLogin] = useState<string>('i.akhmetov@digital.sk.kz');
-  const [password, setPassword] = useState<string>('Astana2021!');
+  const [password, setPassword] = useState<string>('Astana2022!');
   const [passwordRecoveryIsVisible, setPasswordRecoveryIsVisible] = useState<boolean>(false);
 
   const handleSubmit = async (onSaveLogin = false) => {
@@ -44,7 +44,7 @@ export const LoginScreen = () => {
         username: login,
         password: password,
         // username: 'i.akhmetov@digital.sk.kz',
-        // password: 'Astana2021!',
+        // password: 'Astana2022!',
         // username: 'a.iskaliyev@skbs.kz',
         // password: 'U7cXPraHSU',
         // username: 'b.rysbek@skbs.kz',
