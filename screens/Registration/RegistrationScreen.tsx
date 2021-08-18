@@ -80,7 +80,7 @@ export const RegistrationScreen = () => {
                   onPress={() => {
                     Linking.openURL('tel:87172708090');
                   }}>
-                Телефон технической поддержки: {'\n'}8-(7172)-70-80-90
+                Телефон технической поддержки:{'\n'}8-(7172)-70-80-90
               </Text>
               <Text
                   style={authScreenStyles.textPhone}

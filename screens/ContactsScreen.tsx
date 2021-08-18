@@ -139,7 +139,7 @@ class ContactsScreen extends React.Component {
               }}>
                 <View>
                   <Body style={{ paddingLeft: 25 }}>
-                    <Text style={{ fontSize: 12 }} note>Наши социальные сети</Text>
+                    <Text style={{ fontSize: 12 }} note> Наши социальные сети</Text>
                   </Body>
                 </View>
                 <View style={{ flexDirection: 'row'}}>
