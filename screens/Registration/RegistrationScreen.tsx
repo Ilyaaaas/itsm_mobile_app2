@@ -36,7 +36,7 @@ enum Mode {
 export const RegistrationScreen = () => {
   const [mode, setMode] = useState(Mode.REGISTRATION);
   const registrationPhone = useTypedSelector(
-    (state) => state.auth.registration.phone
+      (state) => state.auth.registration.phone
   );
   const confirmCode = useTypedSelector((state) => state.auth.confirmCode);
 
@@ -48,51 +48,51 @@ export const RegistrationScreen = () => {
 
   useEffect(() => {
     if (confirmCode) {
-        setMode(Mode.PASSWORD);
+      setMode(Mode.PASSWORD);
     }
   }, [confirmCode]);
 
 
   return (
-    <ImageBackground
-      source={require('../../assets/design/home/back.png')}
-      style={authScreenStyles.image}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-            paddingHorizontal: 20,
-          }}>
-          <View></View>
-          <View style={{ marginTop: 150 }}>
-            <H2 style={styles.header}>Регистрация</H2>
-            {mode === Mode.REGISTRATION && <RegistrationForm />}
-            {mode === Mode.CONFIRM_CODE && (
-              <ConfirmCodeForm phone={registrationPhone} />
-            )}
-            {mode === Mode.PASSWORD && <PasswordForm />}
-          </View>
-          <View>
-            <Text
-              style={authScreenStyles.textPhone}
-              onPress={() => {
-                Linking.openURL('tel:87777777777');
+      <ImageBackground
+          source={require('../../assets/design/home/back.png')}
+          style={authScreenStyles.image}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                paddingHorizontal: 20,
               }}>
-              Телефон технической поддержки:{'\n'}8-(777)-777-77-77
-            </Text>
-            <Text
-              style={authScreenStyles.textPhone}
-              onPress={() => {
-                Linking.openURL('mailto:support@smart24.kz');
-              }}>
-              {'\n'}
-              support@smart24.kz
-            </Text>
+            <View></View>
+            <View style={{ marginTop: 150 }}>
+              <H2 style={styles.header}>Регистрация</H2>
+              {mode === Mode.REGISTRATION && <RegistrationForm />}
+              {mode === Mode.CONFIRM_CODE && (
+                  <ConfirmCodeForm phone={registrationPhone} />
+              )}
+              {mode === Mode.PASSWORD && <PasswordForm />}
+            </View>
+            <View>
+              <Text
+                  style={authScreenStyles.textPhone}
+                  onPress={() => {
+                    Linking.openURL('tel:87172708090');
+                  }}>
+                Телефон технической поддержки: {'\n'}8-(7172)-70-80-90
+              </Text>
+              <Text
+                  style={authScreenStyles.textPhone}
+                  onPress={() => {
+                    Linking.openURL('mailto:support@smart24.kz');
+                  }}>
+                {'\n'}
+                support@smart24.kz
+              </Text>
+            </View>
           </View>
-        </View>
-      </ScrollView>
-    </ImageBackground>
+        </ScrollView>
+      </ImageBackground>
   );
 };
