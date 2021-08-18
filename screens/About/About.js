@@ -80,7 +80,7 @@ function About({ navigation, route }) {
                        style = {{ width: '100%', height: '100%' }}
                 />
                 <Text style={styles.text}>
-                    Version 1.0.0
+                    Version 1.0.1
                 </Text>
             </Content>
         </Container>

@@ -51,7 +51,7 @@ export const AuthScreenWrapper = ({
                   onPress={() => {
                     Linking.openURL('tel:8 7172708090');
                   }}>
-                Телефон технической поддержки: {'\n'}8-(7172)-70-80-90
+                Телефон технической поддержки: {'\n'} 8-(7172)-70-80-90
               </Text>
               <Text
                   style={authScreenStyles.textPhone}

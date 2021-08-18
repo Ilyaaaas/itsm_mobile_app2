@@ -298,7 +298,7 @@ class HomeScreen extends React.Component{
                 />
               </View>
               {this.state.refreshing ? (
-                  <Text style={{ textAlign:"center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
+                  <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
               ) : (
                   <List>
                     {this.state.list?.map((doc, i) => (

@@ -101,7 +101,7 @@ export const ConfirmPrivacyPolicy = (props: ConfirmPrivacyPolicyProps) => {
                   </Text>
                 </ScrollView>
               </View>
-              <View style={{ flex: 2 }}>
+              <View style={{ flex : 2 }}>
                 <Checkbox.Item
                     status={props.checked ? 'checked' : 'unchecked'}
                     color="#a2a3b7"
