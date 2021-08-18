@@ -24,46 +24,46 @@ export const authScreenStyles = StyleSheet.create({
 });
 
 export const AuthScreenWrapper = ({
-  children,
-}: React.PropsWithChildren<object>) => {
+                                    children,
+                                  }: React.PropsWithChildren<object>) => {
   return (
-    <Container>
-      <ImageBackground
-        source={require('../assets/design/home/back.png')}
-        style={authScreenStyles.image}>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-around',
-            paddingHorizontal: 20,
-          }}>
-          <View></View>
+      <Container>
+        <ImageBackground
+            source={require('../assets/design/home/back.png')}
+            style={authScreenStyles.image}>
           <View
-            style={{
-              marginTop: 80,
-            }}>
-            {children}
-          </View>
-          <View>
-            <Text
-              style={authScreenStyles.textPhone}
-              onPress={() => {
-                Linking.openURL('tel:87172708090');
+              style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                paddingHorizontal: 20,
               }}>
-              Телефон технической поддержки:{'\n'}8-(777)-777-77-77
-            </Text>
-            <Text
-              style={authScreenStyles.textPhone}
-              onPress={() => {
-                Linking.openURL('mailto:support@smart24.kz');
-              }}>
-              {'\n'}
-              support@smart24.kz
-            </Text>
+            <View></View>
+            <View
+                style={{
+                  marginTop: 80,
+                }}>
+              {children}
+            </View>
+            <View>
+              <Text
+                  style={authScreenStyles.textPhone}
+                  onPress={() => {
+                    Linking.openURL('tel:8 7172708090');
+                  }}>
+                Телефон технической поддержки: {'\n'} 8-(7172)-70-80-90
+              </Text>
+              <Text
+                  style={authScreenStyles.textPhone}
+                  onPress={() => {
+                    Linking.openURL('mailto:support@smart24.kz');
+                  }}>
+                {'\n'}
+                support@smart24.kz
+              </Text>
+            </View>
           </View>
-        </View>
-      </ImageBackground>
-    </Container>
+        </ImageBackground>
+      </Container>
   );
 };

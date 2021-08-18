@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, AsyncStorage, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+import {StyleSheet, AsyncStorage, View, Text, TouchableOpacity, Dimensions, Image} from 'react-native';
 import {
     Container,
     Header,
@@ -36,22 +36,22 @@ function About({ navigation, route }) {
 
     useEffect(() => {
         (async () => {
-            getToken().then(token => {
-                if(token == null){
-                    navigation.dispatch(StackActions.replace('Login'));
-                }
-                let API_URL = `${API}backend/about`
-                axios.get(API_URL, {
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'token': token,
+                getToken().then(token => {
+                    if(token == null){
+                        navigation.dispatch(StackActions.replace('Login'));
                     }
-                }).then(res => {
-                    setData(res.data)
-                }).catch(err => console.log('About data getting error: ', err))
-            });
-        }
+                    let API_URL = `${API}backend/about`
+                    axios.get(API_URL, {
+                        headers: {
+                            Accept: 'application/json',
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'token': token,
+                        }
+                    }).then(res => {
+                        setData(res.data)
+                    }).catch(err => console.log('About data getting error: ', err))
+                });
+            }
         )();
 
     }, [])
@@ -76,12 +76,15 @@ function About({ navigation, route }) {
             </Header>
 
             <Content>
-                <WebView
-                    source={{ uri: `${API}backend/about` }}
-                    style={{ width: ScreenWidth-10, height: ScreenHeight-100, marginLeft: 5 }}
+                <Image source={'../../assets/splash.png'}
+                       style = {{ width: '100%', height: '100%' }}
                 />
+                <Text style={styles.text}>
+                    Version 1.0.1
+                </Text>
             </Content>
         </Container>
+
     )
 };
 
