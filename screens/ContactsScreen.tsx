@@ -31,150 +31,150 @@ class ContactsScreen extends React.Component {
 
   render() {
     return (
-      <Container>
-        <Header style={styles.headerTop}>
-          <Left style={{ flex: 1 }}>
-            <Ionicons
-              name="ios-menu"
-              style={{ color: '#a2a3b7', marginTop: 10, marginLeft: 10 }}
-              onPress={() => this.props.navigation.openDrawer()}
-              size={24}
-            />
-          </Left>
-          <Body style={{ flex: 3 }}>
-            <Title style={{ color: '#a2a3b7', fontSize: 20 }}>Контакты</Title>
-          </Body>
-          <Right />
-        </Header>
-        <Content padder>
-          <ListItem>
-            <Ionicons
-              name="ios-pin"
-              color="#047B7F"
-              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
-            />
-            <Body style={{ paddingLeft: 10 }}>
-              <Text style={{ fontSize: 12 }} note>
-                Адрес
-              </Text>
-              <Text
-                style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickLink(false)}>
-                г.Нур-Султан, ул. Улица
-              </Text>
+        <Container>
+          <Header style={styles.headerTop}>
+            <Left style={{ flex: 1 }}>
+              <Ionicons
+                  name="ios-menu"
+                  style={{ color: '#a2a3b7', marginTop: 10, marginLeft: 10 }}
+                  onPress={() => this.props.navigation.openDrawer()}
+                  size={24}
+              />
+            </Left>
+            <Body style={{ flex: 3 }}>
+              <Title style={{ color: '#a2a3b7', fontSize: 20 }}>Контакты</Title>
             </Body>
-          </ListItem>
-          <ListItem>
-            <Ionicons
-              name="ios-call"
-              color="#047B7F"
-              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
-            />
-            <Body style={{ paddingLeft: 10 }}>
-              <Text style={{ fontSize: 12 }} note>
-                Call center
-              </Text>
-              <Text
-                style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
-                +7 (777) 777-77-77
-              </Text>
-              <Text style={{ fontSize: 12 }} note>
-                Отдел продаж
-              </Text>
-              <Text
-                style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
-                +7 (777) 777-77-77
-              </Text>
-              <Text style={{ fontSize: 12 }} note>
-                Техническая служба
-              </Text>
-              <Text
-                style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
-                +7 (777) 777-77-77
-              </Text>
-            </Body>
-          </ListItem>
-          <ListItem>
-            <Ionicons
-              name="ios-link"
-              color="#047B7F"
-              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
-            />
-            <Body style={{ paddingLeft: 10 }}>
-              <Text style={{ fontSize: 12 }} note>
-                Сайт
-              </Text>
-              <Text
-                style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={this._handleClickLink}>
-                smart24.kz
-              </Text>
-            </Body>
-          </ListItem>
-          <ListItem>
-            <Ionicons
-              name="ios-time"
-              style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
-            />
-            <Body style={{ paddingLeft: 10 }}>
-              <Text style={{ fontSize: 12 }} note>
-                Время работы
-              </Text>
-              <Text style={{ fontSize: 14, paddingVertical: 5 }}>
-                пн-сб 8:00 - 20:00
-              </Text>
-              <Text style={{ fontSize: 14, paddingVertical: 5 }}>
-                вс 9:00 - 18:00
-              </Text>
-            </Body>
-          </ListItem>
-
-          <ListItem>
-            <View style={{
-              flex: 1,
-              flexDirection: 'column',
-            }}>
-              <View>
-                <Body style={{ paddingLeft: 25 }}>
-                  <Text style={{ fontSize: 12 }} note>Наши социальные сети</Text>
-                </Body>
-              </View>
-              <View style={{ flexDirection: 'row'}}>
-                <Ionicons
-                    name="logo-facebook"
-                    style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
-                />
-                <Text
-                    style={{ fontSize: 14, paddingVertical: 5, marginLeft: 20 }}
-                    onPress={() => {Linking.openURL('https://www.facebook.com/')}}
-                >
-                  FaceBook
-                </Text>
-              </View>
-
-              <View  style={{ flexDirection: 'row'}}>
-                <Ionicons
-                  name="logo-instagram"
+            <Right />
+          </Header>
+          <Content padder>
+            <ListItem>
+              <Ionicons
+                  name="ios-pin"
+                  color="#047B7F"
                   style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
-                />
-                <Text
-                    style={{ fontSize: 14, paddingVertical: 5, marginLeft: 20 }}
-                    onPress={() => {Linking.openURL('http://www.instagram.com')}}
-                >
-                  Instagram
+              />
+              <Body style={{ paddingLeft: 10 }}>
+                <Text style={{ fontSize: 12 }} note>
+                  Адрес
                 </Text>
-              </View>
-            </View>
+                <Text
+                    style={{ fontSize: 14, paddingVertical: 5 }}
+                    onPress={() => this._handleClickLink(false)}>
+                  г.Нур-Султан, ул. Динмухамеда Кунаева 12/1
+                </Text>
+              </Body>
+            </ListItem>
+            <ListItem>
+              <Ionicons
+                  name="ios-call"
+                  color="#047B7F"
+                  style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
+              />
+              <Body style={{ paddingLeft: 10 }}>
+                <Text style={{ fontSize: 12 }} note>
+                  Call center
+                </Text>
+                <Text
+                    style={{ fontSize: 14, paddingVertical: 5 }}
+                    onPress={() => this._handleClickPhone('+7 (7172) 57 30 68')}>
+                  +7 (7172) 57 30 68
+                </Text>
+                <Text style={{ fontSize: 12 }} note>
+                  Отдел продаж
+                </Text>
+                <Text
+                    style={{ fontSize: 14, paddingVertical: 5 }}
+                    onPress={() => this._handleClickPhone('+7 (7172) 24 85 69')}>
+                  +7 (7172) 24 85 69
+                </Text>
+                <Text style={{ fontSize: 12 }} note>
+                  Техническая служба
+                </Text>
+                <Text
+                    style={{ fontSize: 14, paddingVertical: 5 }}
+                    onPress={() => this._handleClickPhone('+7 (7172) 79 95 99')}>
+                  +7 (7172) 79 95 99
+                </Text>
+              </Body>
+            </ListItem>
+            <ListItem>
+              <Ionicons
+                  name="ios-link"
+                  color="#047B7F"
+                  style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
+              />
+              <Body style={{ paddingLeft: 10 }}>
+                <Text style={{ fontSize: 12 }} note>
+                  Сайт
+                </Text>
+                <Text
+                    style={{ fontSize: 14, paddingVertical: 5 }}
+                    onPress={this._handleClickLink}>
+                  smart24.kz
+                </Text>
+              </Body>
+            </ListItem>
+            <ListItem>
+              <Ionicons
+                  name="ios-time"
+                  style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
+              />
+              <Body style={{ paddingLeft: 10 }}>
+                <Text style={{ fontSize: 12 }} note>
+                  Время работы
+                </Text>
+                <Text style={{ fontSize: 14, paddingVertical: 5 }}>
+                  пн-сб 8:00 - 20:00
+                </Text>
+                <Text style={{ fontSize: 14, paddingVertical: 5 }}>
+                  вс 9:00 - 18:00
+                </Text>
+              </Body>
+            </ListItem>
 
-          </ListItem>
-        </Content>
-        <Footer style={{ backgroundColor: '#1a192a', height: 30 }}>
-          <FooterTab style={{ backgroundColor: '#1a192a' }} />
-        </Footer>
-      </Container>
+            <ListItem>
+              <View style={{
+                flex: 1,
+                flexDirection: 'column',
+              }}>
+                <View>
+                  <Body style={{ paddingLeft: 25 }}>
+                    <Text style={{ fontSize: 12 }} note>Наши социальные сети</Text>
+                  </Body>
+                </View>
+                <View style={{ flexDirection: 'row'}}>
+                  <Ionicons
+                      name="logo-facebook"
+                      style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
+                  />
+                  <Text
+                      style={{ fontSize: 14, paddingVertical: 5, marginLeft: 20 }}
+                      onPress={() => {Linking.openURL('https://www.facebook.com/qsamruk.kz/')}}
+                  >
+                    FaceBook
+                  </Text>
+                </View>
+
+                <View  style={{ flexDirection: 'row'}}>
+                  <Ionicons
+                      name="logo-instagram"
+                      style={{ fontSize: 20, color: '#1a192a', paddingVertical: 5 }}
+                  />
+                  <Text
+                      style={{ fontSize: 14, paddingVertical: 5, marginLeft: 20 }}
+                      onPress={() => {Linking.openURL('https://www.instagram.com/qsamruk.kz/')}}
+                  >
+                    Instagram
+                  </Text>
+                </View>
+              </View>
+
+            </ListItem>
+          </Content>
+          <Footer style={{ backgroundColor: '#1a192a', height: 30 }}>
+            <FooterTab style={{ backgroundColor: '#1a192a' }} />
+          </Footer>
+        </Container>
     );
   }
 

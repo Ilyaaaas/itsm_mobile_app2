@@ -121,7 +121,7 @@ class HomeScreen extends React.Component{
         .catch(error => console.error(error))
         .then()
         .finally()
-      this.setState({ modal: false});
+    this.setState({ modal: false});
   }
 
   closeRequest = async (docId) => {
@@ -301,7 +301,7 @@ class HomeScreen extends React.Component{
                   <Text style={{ textAlign: "center", fontSize: 14, flex: 1, marginTop: 20, width: '100%' }}>Подождите идет загрузка данных</Text>
               ) : (
                   <List>
-                    {this.state.list.map((doc, i) => (
+                    {this.state.list?.map((doc, i) => (
                         <ListItem key={i} style={{ paddingBottom: 5, paddingTop: 15 }}>
                           <Body>
                             <Text style={styles.textName}>{doc.descr}</Text>
