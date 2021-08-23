@@ -5,7 +5,7 @@ import HomeScreen from "./HomeScreen";
 import InfoScreen from "./Info/InfoScreen";
 import Notifications from "./Notifications";
 import OfferScreen from "../screens/Offer/OfferScreen";
-// import PushNotificationTest from "./Test/PushNotificationTest";
+import PushNotificationTest from "./Test/PushNotificationTest";
 import {Root} from "native-base";
 import {Ionicons, Feather, AntDesign} from '@expo/vector-icons';
 
@@ -41,11 +41,11 @@ class MainITSMScreen extends React.Component{
                                           />,
                                       }}
                     />
-                    {/*<BottomTab.Screen name="PushNotificationTest" component={PushNotificationTest}*/}
-                    {/*                  options={{*/}
-                    {/*                      tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,*/}
-                    {/*                  }}*/}
-                    {/*/>*/}
+                    <BottomTab.Screen name="PushNotificationTest" component={PushNotificationTest}
+                                      options={{
+                                          tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,
+                                      }}
+                    />
                     <BottomTab.Screen name="Профиль" component={DiaryScreen}
                         options={{
                             tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,
