@@ -13,7 +13,7 @@ import {
   List,
   ListItem,
   ActionSheet,
-  Toast, Root, Button, Tab, TabHeading, Tabs, ActivityIndicator,
+  Toast, Root, Button, Tab, TabHeading, Tabs,
 } from 'native-base';
 import React, {useEffect} from 'react';
 import {
@@ -51,6 +51,7 @@ class HomeScreen extends React.Component{
     this.state = {
       token: '',
       refreshing: false,
+      listWithoutFilter: [],
       list: [],
       isReview: null,
       docInfo: null,
@@ -82,6 +83,8 @@ class HomeScreen extends React.Component{
       reqCountInOnePage: 0,
       currentPageLink: '0',
       authorName: [],
+      topCategoryCheckedId: 1,
+      userId: 0,
     }
   }
 
@@ -164,17 +167,37 @@ class HomeScreen extends React.Component{
       x = this.state.totalPageCount;
     }
     for (let i = z; i < x; i++) {
-      backColor = 'white';
+      backColor = 'rgba(52, 52, 52, 0.05)';
       textColor = '#5e6064';
       if(i == currentPageNum)
       {
-        backColor = '#5e6064';
-        textColor = 'white';
+        backColor = 'rgba(125, 125, 125, 0.6)';
+        textColor = '#ffff';
       }
       content.push(
           <TouchableOpacity key={i} onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)}
-                            style={{backgroundColor: `${backColor}`,
-                                    borderRadius: 20, padding: 12, borderColor: 'black', margin: 5}}>
+                            style={{
+                                    backgroundColor: `${backColor}`,
+                                    // borderRadius: 20,
+                                    padding: 6,
+                                    margin: 10,
+                                    justifyContent: 'center',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                    // borderColor: 'black',
+                                    // margin: 5,
+                                    width: 2,
+                                    flex: 1,
+                                    // backgroundColor: 'rgba(52, 52, 52, 0.05)',
+                                    borderColor: 'white',
+                                    borderWidth: 3,
+                                    borderRadius: 30,
+                                    overflow: 'hidden',
+                                    shadowColor: '#cdcdcd',
+                                    shadowRadius: 2,
+                                    shadowOpacity: 20,
+                                    shadowOffset: { width: 0, height: 2 },
+                            }}>
             <Text style={{color: `${textColor}`}}>{i}</Text>
           </TouchableOpacity>
       );
@@ -191,8 +214,11 @@ class HomeScreen extends React.Component{
     await this._getUrlWithFullURL(url)
       .then(value => {
         if(value !== null){
+          console.log('value.items');
+          console.log(value);
           this.setState({
                                 list: value.items,
+                                listWithoutFilter: value.items,
                                 currentPageLink: value._links.self.href,
                                 // prevPage: value._links.prev.href,
                                 nextPage: value._links.next.href,
@@ -222,9 +248,9 @@ class HomeScreen extends React.Component{
 
   _getToken = async () => {
     await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-        .then(json => this.setState({token: json[0].accessToken}))
+        .then(json => this.setState({token: json[0].accessToken, userId: json[1].userId}))
         // .then(json => {
-        //   return json[0].accessToken;
+        //   console.log(json)
         // })
         .catch(error => console.log(error))
   }
@@ -336,13 +362,8 @@ class HomeScreen extends React.Component{
   }
 
   onInfoButtonClicked = async (docid) => {
-    console.log(docid);
     await this._getUrl('service-requests/v1/request/'+docid+'?access-token='+this.state.token)
     .then(value => {
-      // console.log('service-requests/v1/request/'+docid);
-      console.log('onInfoButtonClicked');
-      console.log(value);
-      console.log('onInfoButtonClicked');
       this.setState({
         listGrade: value,
         activeDoc: docid,
@@ -369,6 +390,35 @@ class HomeScreen extends React.Component{
 
   showFilter = () => {
     this.setState({ filterModal: true});
+  }
+
+  changeCategory = (topCategoryId) => {
+    this.setState({topCategoryCheckedId: topCategoryId});
+    if (topCategoryId == 3) {
+      this.filterCategoryArchive()
+    } else if (topCategoryId == 2) {
+      this.filterCategoryMine()
+    } else {
+      this.setState({list: this.state.listWithoutFilter});
+    }
+  }
+
+  filterCategoryArchive = (categoryId) =>
+  {
+    let data = this.state.listWithoutFilter;
+
+    data = data.filter(
+        (item) => item.statusId == 5 || item.statusId == 9 || item.statusId == 12 || item.statusId == 8 || item.statusId == 1
+    ).map(item => item);
+    this.setState({ list: data});
+  }
+
+  filterCategoryMine = () =>
+  {
+    let data = this.state.listWithoutFilter;
+
+    data = data.filter((item) => item.createdBy == this.state.userId).map(item => item);
+    this.setState({ list: data});
   }
 
   render() {
@@ -401,59 +451,46 @@ class HomeScreen extends React.Component{
               </Right>
             </Header>
             <Header style={styles.headerTop}>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                flex: 1,
-                backgroundColor: 'rgba(52, 52, 52, 0.05)',
-                borderColor: 'white',
-                borderWidth: 10,
-                borderRadius: 30,
-                overflow: 'hidden',
-                shadowColor: '#cdcdcd',
-                shadowRadius: 2,
-                shadowOpacity: 20,
-                shadowOffset: { width: 0, height: 2 },
-              }}>
-                <Button style={{
-                  backgroundColor: '#FCFCFC',
-                  margin: 10,
-                  height: 30,
-                  borderRadius: 15,
-                  width: 80,
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Text style={{textAlign: 'center'}}>
-                    Все
-                  </Text>
-                </Button>
-                <Button style={{
-                  backgroundColor: '#FCFCFC',
-                  margin: 10,
-                  height: 30,
-                  borderRadius: 15,
-                  width: 80,
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Text>
-                    Мои
-                  </Text>
-                </Button>
-                <Button style={{
-                  backgroundColor: '#FCFCFC',
-                  margin: 10,
-                  height: 30,
-                  borderRadius: 15,
-                  width: 80,
-                  alignContent: 'center',
-                  justifyContent: 'center',
-                }}>
-                  <Text>
-                    Архив
-                  </Text>
-                </Button>
+              <View style={styles.topButtonView}>
+                { this.state.topCategoryCheckedId == 1 ?
+                      <Button style={styles.topButton} onPress={() => this.changeCategory(1)}>
+                        <Text style={{textAlign: 'center', color: "#535353",}}>
+                          Все
+                        </Text>
+                      </Button>
+                      :
+                    <Button style={styles.topButtonNonActive} onPress={() => this.changeCategory(1)}>
+                      <Text style={{textAlign: 'center', color: "#646464",}}>
+                        Все
+                      </Text>
+                    </Button>
+                }
+                { this.state.topCategoryCheckedId == 2 ?
+                    <Button style={styles.topButton} onPress={() => this.changeCategory(2)}>
+                      <Text style={{textAlign: 'center', color: "#535353",}}>
+                        Мои
+                      </Text>
+                    </Button>
+                    :
+                    <Button style={styles.topButtonNonActive} onPress={() => this.changeCategory(2)}>
+                      <Text style={{textAlign: 'center', color: "#646464",}}>
+                        Мои
+                      </Text>
+                    </Button>
+                }
+                { this.state.topCategoryCheckedId == 3 ?
+                    <Button style={styles.topButton} onPress={() => this.changeCategory(3)}>
+                      <Text style={{textAlign: 'center', color: "#535353",}}>
+                        Архив
+                      </Text>
+                    </Button>
+                    :
+                    <Button style={styles.topButtonNonActive} onPress={() => this.changeCategory(3)}>
+                      <Text style={{textAlign: 'center', color: "#646464",}}>
+                        Архив
+                      </Text>
+                    </Button>
+                }
               </View>
             </Header>
             <Content
@@ -668,7 +705,7 @@ class HomeScreen extends React.Component{
                           <Text style={{backgroundColor: '#fff'}}>Комментарии</Text>
                         </TabHeading>
                       }>
-                        <View>
+                        <View style={{padding: 20, marginLeft: 10, marginRight: 10}}>
                             <TextInput
                                 style={styles.textArea}
                                 underlineColorAndroid="transparent"
@@ -690,37 +727,37 @@ class HomeScreen extends React.Component{
                     </Tabs>
                   </View>
                 </ScrollView>
-                <View style={{ borderTopWidth: 1,}}>
+                <View style={{ borderTopWidth: 1, backgroundColor: '#1e1e2d'}}>
                   <List>
                     <ListItem>
-                      <Left>
+                      <Left style={{margin: 10}}>
                         <Button
                             success={true}
-                            style={{ width: '90%', borderRadius: 10 }}
+                            style={{ width: '100%', borderRadius: 10, backgroundColor: '#5578eb', padding: 10}}
                             onPress={() => {
                               this.setState({modal: false});
                             }}
                         >
-                          <Text style={{ width: '100%', textAlign: "center"}}>Закрыть</Text>
+                          <Text style={{ width: '100%', textAlign: "center", color: 'white'}}>Закрыть</Text>
                         </Button>
                       </Left>
-                      <Body>
+                      <Body style={{margin: 10}}>
                         {this.state.listGrade.statusId == 13 ?
                             <Button
                                 block
                                 onPress={() => this.acceptRequest(this.state.listGrade.id)}
-                                style={{backgroundColor: 'green'}}
+                                style={{ width: '100%', borderRadius: 10, backgroundColor: '#0abb87', padding: 10}}
                             >
-                              <Text>Начать исполнение</Text>
+                              <Text style={{ width: '100%', textAlign: "center", color: 'white'}}>Начать исполнение</Text>
                             </Button>
                             : null }
                         {this.state.listGrade.statusId == 2 ?
                             <Button
                                 block
                                 onPress={() => this.closeRequest(this.state.listGrade.id)}
-                                style={{backgroundColor: 'red'}}
+                                style={{ width: '100%', borderRadius: 10, backgroundColor: '#0abb87', padding: 10}}
                             >
-                              <Text>Завершить исполнение</Text>
+                              <Text style={{ width: '100%', textAlign: "center", color: 'white'}}>Завершить исполнение</Text>
                             </Button>
                             : null }
                       </Body>
@@ -786,6 +823,42 @@ class HomeScreen extends React.Component{
 }
 
 const styles = StyleSheet.create({
+  topButtonView:
+  {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flex: 1,
+    backgroundColor: 'rgba(52, 52, 52, 0.05)',
+    borderColor: 'white',
+    borderWidth: 10,
+    borderRadius: 30,
+    overflow: 'hidden',
+    shadowColor: '#cdcdcd',
+    shadowRadius: 2,
+    shadowOpacity: 20,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  topButton:
+  {
+    backgroundColor: '#FCFCFC',
+    margin: 10,
+    height: 30,
+    borderRadius: 15,
+    width: 80,
+    alignContent: 'center',
+    justifyContent: 'center',
+  },
+  topButtonNonActive:
+  {
+    backgroundColor: "#F2F2F2",
+    margin: 10,
+    height: 30,
+    borderRadius: 15,
+    width: 80,
+    alignContent: 'center',
+    justifyContent: 'center',
+    color: "#646464",
+  },
   description:{
     fontSize:15,
     color: "#646464",
@@ -908,7 +981,10 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlignVertical: "top",
     justifyContent: "flex-start",
-    borderWidth: 1
+    borderRadius: 20,
+    backgroundColor: '#F2F2F2',
+    margin: 20,
+
   },
   contactInput: {
     borderWidth: 1,

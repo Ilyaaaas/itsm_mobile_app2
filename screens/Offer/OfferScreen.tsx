@@ -17,7 +17,7 @@ import {
     Right,
     Body,
     Footer,
-    Icon,
+    Icon, Toast,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -51,6 +51,8 @@ export default function OfferScreen({ navigation }) {
     const [selectedService, setSelectedService] = useState();
     const [selectedCatalog, setSelectedCatalog] = useState();
     const [token, setToken] = useState('');
+    const [userId, setUserId] = useState(0);
+    const [personId, setPersonId] = useState(0);
     const form = useSelector((state) => state.form);
     const { date = [], time = '', times = [], shedId = '' } = form;
     const dispatch = useDispatch();
@@ -62,11 +64,12 @@ export default function OfferScreen({ navigation }) {
                 .then(json =>
                 {
                     setToken(json[0].accessToken);
+                    setUserId(json[1].userId)
                     getServices(json[0].accessToken, 0);
                     getCatalogs(json[0].accessToken);
+                    _getPersonInfo(json[0].accessToken, json[1].userId);
                 })
                 .catch(error => console.log(error))
-
         }
         fetchMyAPI()
 
@@ -101,17 +104,22 @@ export default function OfferScreen({ navigation }) {
                     'Accept':       'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: '{"product_id": "'+selectedService+'", "descr": "'+offerDescr+'"}'}
+                body: '{"product_id": "'+selectedService+'", "descr": "'+offerDescr+'", "client_person_id": "'+personId+'"}'}
         )
             .then(response => response.json())
             .then(function(data){
                 // setReqId(data);
                 sendFileId(data.id, sendedFileId, sendedFileName);
+                Toast.show({
+                    text: 'Заявка успешно отправлена!',
+                    type: "success",
+                    duration: 3000
+                });
+                // alert('Заявка успешно отправлена!');
+                navigation.goBack();
             })
             .catch(error => console.error(error))
             .finally()
-        alert('Заявка успешно отправлена!');
-        navigation.goBack();
     }
 
     const getCatalogs = async (tokenParam) =>
@@ -306,8 +314,27 @@ export default function OfferScreen({ navigation }) {
         console.log('finish');
     }
 
+    function _getPersonInfo(tokenParam, userIdParam)
+    {
+        fetch("http://api.smart24.kz/portal/v1/user/"+userIdParam+"?ccess-token="+tokenParam, {
+            headers: {
+                "Content-Type": "application/json",
+                "X-Api-Key": tokenParam
+            },
+            method: "GET"
+        })
+            .then(response => response.json())
+            .then(function(data){
+                console.log('userIdParam');
+                console.log(data.personId);
+                setPersonId(data.personId);
+            })
+            .catch(error => console.error(error))
+    }
+
     async function sendFileId(reqId, sendedFileId, sendedFileName)
     {
+        console.log('reqId');
         console.log(reqId);
         console.log('{"fileId": '+sendedFileId+', "typeId": 2, "descr": "'+sendedFileName+'"}');
         fetch("http://api.smart24.kz/service-requests/v1/request/"+reqId+"/add-attachments", {

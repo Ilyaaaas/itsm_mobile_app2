@@ -79,6 +79,7 @@ export const LoginScreen = () => {
 
   const setAccessTokenFunc = async (key, value, userId) => {
     // AsyncStorage.clear();
+
     try {
       // await AsyncStorage.setItem(key, value);
       const items = [{"accessToken": value}, {"userId": userId}];
