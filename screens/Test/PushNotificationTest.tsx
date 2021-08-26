@@ -11,14 +11,6 @@ Notifications.setNotificationHandler({
     }),
 });
 
-async function getPushToken()
-{
-    let pushtoken = '';
-    const expoPushTokenResponse = await Notifications.getExpoPushTokenAsync();
-    alert(expoPushTokenResponse);
-    // pushtoken = expoPushTokenResponse.data;
-}
-
 export default function PushNotificationTest() {
     // getPushToken();
     const [expoPushToken, setExpoPushToken] = useState('');

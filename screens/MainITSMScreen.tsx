@@ -41,11 +41,11 @@ class MainITSMScreen extends React.Component{
                                           />,
                                       }}
                     />
-                    <BottomTab.Screen name="PushNotificationTest" component={PushNotificationTest}
-                                      options={{
-                                          tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,
-                                      }}
-                    />
+                    {/*<BottomTab.Screen name="PushNotificationTest" component={PushNotificationTest}*/}
+                    {/*                  options={{*/}
+                    {/*                      tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,*/}
+                    {/*                  }}*/}
+                    {/*/>*/}
                     <BottomTab.Screen name="Профиль" component={DiaryScreen}
                         options={{
                             tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,

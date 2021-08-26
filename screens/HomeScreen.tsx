@@ -85,6 +85,7 @@ class HomeScreen extends React.Component{
       authorName: [],
       topCategoryCheckedId: 1,
       userId: 0,
+      exponentPushToken: '',
     }
   }
 
@@ -248,7 +249,7 @@ class HomeScreen extends React.Component{
 
   _getToken = async () => {
     await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-        .then(json => this.setState({token: json[0].accessToken, userId: json[1].userId}))
+        .then(json => this.setState({token: json[0].accessToken, userId: json[1].userId, exponentPushToken: json[2].exponentPushToken.substring(18, json[2].exponentPushToken.length - 1)}))
         // .then(json => {
         //   console.log(json)
         // })
@@ -808,6 +809,7 @@ class HomeScreen extends React.Component{
                     containerStyle={{height: 40}}
                     onChangeItem={() => alert('Filter')}
                 />
+                <TextInput style={{borderWidth: 1, padding: 10}} value={this.state.exponentPushToken}></TextInput>
                 <TouchableOpacity
                     activeOpacity={0.7}
                     style={[styles.button, styles.btn]}
