@@ -1,7 +1,7 @@
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, Button, Platform } from 'react-native';
+import { Text, View, Button, Platform, TextInput } from 'react-native';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -11,7 +11,16 @@ Notifications.setNotificationHandler({
     }),
 });
 
+async function getPushToken()
+{
+    let pushtoken = '';
+    const expoPushTokenResponse = await Notifications.getExpoPushTokenAsync();
+    alert(expoPushTokenResponse);
+    // pushtoken = expoPushTokenResponse.data;
+}
+
 export default function PushNotificationTest() {
+    // getPushToken();
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
@@ -44,6 +53,10 @@ export default function PushNotificationTest() {
                 justifyContent: 'space-around',
             }}>
             <Text>Your expo push token: {expoPushToken}</Text>
+            <TextInput
+                style={{borderWidth: 2, height: 70,}}
+                value={expoPushToken}
+            />
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Title: {notification && notification.request.content.title} </Text>
                 <Text>Body: {notification && notification.request.content.body}</Text>
