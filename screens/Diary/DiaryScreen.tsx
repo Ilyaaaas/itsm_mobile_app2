@@ -288,7 +288,7 @@ class DiaryScreen extends React.Component
                                     style={{
                                         marginVertical: 10,
                                         backgroundColor: '#42976f'
-                                    }} title={'Сохранить'} onPress={() => alert('test')}/>
+                                    }} title={'Сохранить'} onPress={() => alert('Сохранено')}/>
                             </View>
                         </View>
                 }

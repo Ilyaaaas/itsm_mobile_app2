@@ -249,7 +249,13 @@ class HomeScreen extends React.Component{
 
   _getToken = async () => {
     await AsyncStorage.getItem('accessToken').then(req => JSON.parse(req))
-        .then(json => this.setState({token: json[0].accessToken, userId: json[1].userId, exponentPushToken: json[2].exponentPushToken.substring(18, json[2].exponentPushToken.length - 1)}))
+        .then(
+            json => this.setState({
+              token: json[0].accessToken,
+              userId: json[1].userId,
+              exponentPushToken: json[2].exponentPushToken.substring(18, json[2].exponentPushToken.length - 1)
+            })
+        )
         // .then(json => {
         //   console.log(json)
         // })
@@ -697,8 +703,8 @@ class HomeScreen extends React.Component{
                         </TabHeading>
                       }>
                             <View style={{ flexDirection: "column" }}>
-                              <Text style={{ fontSize: 16 }}>Test</Text>
-                              <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>date</Text>
+                              <Text style={{ fontSize: 16 }}>Журнал</Text>
+                              <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>дата</Text>
                             </View>
                       </Tab>
                       <Tab heading={

@@ -71,7 +71,6 @@ export class Login extends React.Component {
     if (username && password) {
       try {
         this.setState({ loading: true });
-        //let API_URL = `https://big-holding.kz/test/redirect.php?url=login&login=${username}&password=${password}`;
         const API_URL = `${API}backend/login`;
 
         const response = await fetch(API_URL, {

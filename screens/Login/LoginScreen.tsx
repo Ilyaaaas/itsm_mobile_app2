@@ -138,6 +138,7 @@ export const LoginScreen = () => {
               }
               else
               {
+                console.log(json);
                 setAccessTokenFunc('@accessToken', json.accessToken, json.userId, expoPushToken);
                 navigation.dispatch(StackActions.replace('MainITSMScreen'));
               }
@@ -146,7 +147,7 @@ export const LoginScreen = () => {
   };
 
   const setAccessTokenFunc = async (key, value, userId, expoPushToken) => {
-    // AsyncStorage.clear();
+    AsyncStorage.clear();
 
     try {
       // await AsyncStorage.setItem(key, value);
@@ -155,7 +156,7 @@ export const LoginScreen = () => {
     } catch(e) {
       console.log('error');
     }
-    // console.log('Done')
+    console.log('Done')
   }
 
   const AlertShow = async () => {

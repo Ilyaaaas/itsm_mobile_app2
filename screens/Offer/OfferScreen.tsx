@@ -185,7 +185,7 @@ export default function OfferScreen({ navigation }) {
         }
         else
         {
-            return <Text>Test</Text>
+            return <Text>Ошибка, обратитесь к администратору</Text>
         }
     }
 
