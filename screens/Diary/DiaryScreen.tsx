@@ -54,6 +54,7 @@ class DiaryScreen extends React.Component
             emailNotif: true,
             shuttle: true,
             userId: 0,
+            personInfo: [],
         }
     }
 
@@ -63,11 +64,39 @@ class DiaryScreen extends React.Component
             .catch(error => console.log(error))
     }
 
+    getPersonId = async (personId) =>
+    {
+        console.log('this.state.personId');
+        console.log(personId);
+        // const API_URL = `http://api.smart24.kz/portal/v1/user/`+this.state.userId+`?access-token=`+this.state.token;
+        const API_URL = `http://api.smart24.kz/portal/v1/person/`+personId+`?access-token=`+this.state.token;
+        try {
+            const response = await fetch(API_URL, {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'token': this.state.token,
+                },
+            });
+
+            const responseJson = await response.json();
+
+            if (responseJson !== null) {
+                this.setState({ personInfo: responseJson });
+            }
+        } catch (error) {
+            console.log('Error when call API: ' + error.message);
+        }
+    }
+
     _getUserData = () => {
         AsyncStorage.getItem('user_data').then((value) => {
             if (value) {
                 const obj = JSON.parse(value);
                 this.setState({ user: obj });
+                console.log('obj');
+                console.log(obj);
             }
         });
     }
@@ -86,6 +115,8 @@ class DiaryScreen extends React.Component
 
             const responseJson = await response.json();
 
+            console.log(responseJson);
+            this.getPersonId(responseJson.personId);
             if (responseJson !== null) {
                 this.setState({ list: responseJson });
             }
@@ -196,7 +227,7 @@ class DiaryScreen extends React.Component
                                 <Input
                                     style={styles.input}
                                     placeholder={'Имя'}
-                                    value={this.state.list.personName}
+                                    value={this.state.personInfo.firstName}
                                 />
                             </View>
                             <View style={{flex: 1,
@@ -211,6 +242,7 @@ class DiaryScreen extends React.Component
                                 <Input
                                     style={styles.input}
                                     placeholder={'Фамилия'}
+                                    value={this.state.personInfo.lastName}
                                 />
                             </View>
                             <View style={{flex: 1,
@@ -225,6 +257,7 @@ class DiaryScreen extends React.Component
                                 <Input
                                     style={styles.input}
                                     placeholder={'Отчество'}
+                                    value={this.state.personInfo.middleName}
                                 />
                             </View>
                             <View style={{flex: 1,
@@ -239,6 +272,7 @@ class DiaryScreen extends React.Component
                                 <Input
                                     style={styles.input}
                                     placeholder={'Почта'}
+                                    value={this.state.personInfo.username}
                                 />
                             </View>
                             <View style={{flex: 1,
@@ -253,6 +287,7 @@ class DiaryScreen extends React.Component
                                 <Input
                                     style={styles.input}
                                     placeholder={'Рабочий телефон'}
+                                    value=''
                                 />
                             </View>
                             <View style={{flex: 1,
@@ -448,7 +483,7 @@ class DiaryScreen extends React.Component
         const dataArray = [
             { id: 0, title: "Контакты", content: 'username' },
             { id: 1, title: "Настройки", content: "Нет доступных настроек" },
-            { id: 2, title: "Развозка", content: "Нет уведомлений" }
+            // { id: 2, title: "Развозка", content: "Нет уведомлений" }
         ];
         return (
             <Container>

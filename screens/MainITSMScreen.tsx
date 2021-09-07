@@ -5,7 +5,6 @@ import HomeScreen from "./HomeScreen";
 import InfoScreen from "./Info/InfoScreen";
 import Notifications from "./Notifications";
 import OfferScreen from "../screens/Offer/OfferScreen";
-import PushNotificationTest from "./Test/PushNotificationTest";
 import {Root} from "native-base";
 import {Ionicons, Feather, AntDesign} from '@expo/vector-icons';
 

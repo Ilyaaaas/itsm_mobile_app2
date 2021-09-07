@@ -215,8 +215,8 @@ class HomeScreen extends React.Component{
     await this._getUrlWithFullURL(url)
       .then(value => {
         if(value !== null){
-          console.log('value.items');
-          console.log(value);
+          // console.log('value.items');
+          // console.log(value);
           this.setState({
                                 list: value.items,
                                 listWithoutFilter: value.items,
@@ -253,7 +253,7 @@ class HomeScreen extends React.Component{
             json => this.setState({
               token: json[0].accessToken,
               userId: json[1].userId,
-              exponentPushToken: json[2].exponentPushToken.substring(18, json[2].exponentPushToken.length - 1)
+              // exponentPushToken: json[2].exponentPushToken.substring(18, json[2].exponentPushToken.length - 1)
             })
         )
         // .then(json => {
@@ -263,13 +263,13 @@ class HomeScreen extends React.Component{
   }
 
   _getAuthor = async (authorId) => {
-    console.log('_getAuthor');
-    console.log(authorId);
-    console.log('_getAuthor');
+    // console.log('_getAuthor');
+    // console.log(authorId);
+    // console.log('_getAuthor');
     console.log(API+'portal/v1/person/'+authorId+'?access-token='+this.state.token+'&_format=json');
     await this._getUrl('portal/v1/person/'+authorId+'?access-token='+this.state.token+'&_format=json')
     .then(value => {
-      console.log(value);
+      // console.log(value);
       // this.setState({
       //   authorName: value,
       // });
@@ -291,7 +291,7 @@ class HomeScreen extends React.Component{
     this.setState({refreshing: true});
     await this._getToken();
     await this._getDoctorList();
-    this.setState({refreshing: false});
+    this.setState({refreshing: false, topCategoryCheckedId: 1});
   }
 
   UNSAFE_componentWillMount() {
@@ -534,10 +534,19 @@ class HomeScreen extends React.Component{
                               <View style={styles.row}>
                                 <View>
                                   <View style={styles.nameContainer}>
-                                    <Text style={styles.nameTxt}>{doc.descr}</Text>
+                                    <Text style={styles.nameTxt}>Заявка №{doc.id}</Text>
+                                  </View>
+                                  <View style={styles.nameContainer}>
+                                    <Text style={styles.nameTxt}>Услуга {doc.createdAt}</Text>
                                   </View>
                                   <View style={styles.end}>
-                                    <Text style={styles.time}>{doc.createdAt}</Text>
+                                    <Text style={styles.time}>{doc.descr}</Text>
+                                  </View>
+                                  <View style={styles.nameContainer}>
+                                    <Text style={styles.nameTxt}>Инициатор: {doc.authorName}</Text>
+                                  </View>
+                                  <View style={styles.nameContainer}>
+                                    <Text style={styles.nameTxt}>Исполнитель: {doc.authorName}</Text>
                                   </View>
                                   <View style={styles.end}>
                                     <Text style={styles.time}>{this.state.authorName}</Text>
@@ -574,14 +583,18 @@ class HomeScreen extends React.Component{
                                           zIndex: -10,
                                         }}>
                               <View style={{width: 280, padding: 20}}>
-                                <Text style={styles.textSmallTitle}>Дата обновления:</Text>
+                                <Text style={styles.textSmallTitle}>Услуга:</Text>
                                 <Text style={styles.textSmallValue}>{ doc.product.updated_at || "" }</Text>
-                                <Text style={styles.textSmallTitle}>Дедлайн: { doc.product.deadline_at || "" }</Text>
+                                <Text style={styles.textSmallTitle}>Шаблон обработки заявок: </Text>
                                 <Text style={styles.textSmallValue}>{ doc.product.deadline_at || "" }</Text>
-                                <Text style={styles.textSmallTitle}>Название продукта: </Text>
+                                <Text style={styles.textSmallTitle}>Приложение: </Text>
+                                <Text style={styles.textSmallValue}>{doc.type.name}</Text>
+                                <Text style={styles.textSmallTitle}>Вид заявки на обслуживание: </Text>
                                 <Text style={styles.textSmallValue}>{doc.product.subject}</Text>
-                                <Text style={styles.textSmallTitle}>Описание: </Text>
-                                <Text style={styles.textSmallValue}>{doc.descr}</Text>
+                                <Text style={styles.textSmallTitle}>Время обращения: </Text>
+                                <Text style={styles.textSmallValue}>{doc.createdAt}</Text>
+                                <Text style={styles.textSmallTitle}>Срок исполнение: </Text>
+                                <Text style={styles.textSmallValue}>{doc.deadlineAt}</Text>
                               </View>
                               <View style={styles.buttonsContainer}>
                                 <TouchableOpacity

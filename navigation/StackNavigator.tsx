@@ -12,7 +12,6 @@ import OfferScreen from '../screens/Offer/OfferScreen';
 import MainITSMScreen from "../screens/MainITSMScreen";
 import { AboutStack } from './AboutStack';
 import ContactsScreen from "../screens/ContactsScreen";
-import PushNotificationTest from "../screens/Test/PushNotificationTest";
 
 const Stack = createStackNavigator();
 export const StackNavigator = () => {
@@ -29,7 +28,6 @@ export const StackNavigator = () => {
         <Stack.Screen name="OfferScreen" component={OfferScreen} />
         <Stack.Screen name="AboutStack" component={AboutStack} />
         <Stack.Screen name="ContactsScreen" component={ContactsScreen} />
-        <Stack.Screen name="PushNotificationTest" component={PushNotificationTest} />
       </Stack.Navigator>
     </NavigationContainer>
   );

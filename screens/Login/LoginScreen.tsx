@@ -42,8 +42,8 @@ export const LoginScreen = () => {
   const [passView, setpassView] = useState(true);
   const [showIINS, setShowIINS] = useState(false);
   const [listLogins, setListLogins] = useState([]);
-  const [login, setLogin] = useState<string>('i.akhmetov@digital.sk.kz');
-  const [password, setPassword] = useState<string>('Astana2022!');
+  const [login, setLogin] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [passwordRecoveryIsVisible, setPasswordRecoveryIsVisible] = useState<boolean>(false);
 
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -109,14 +109,14 @@ export const LoginScreen = () => {
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
-        username: login,
-        password: password,
+        // username: login,
+        // password: password,
         // username: 'i.akhmetov@digital.sk.kz',
         // password: 'Astana2022!',
         // username: 'a.iskaliyev@skbs.kz',
         // password: 'U7cXPraHSU',
-        // username: 'b.rysbek@skbs.kz',
-        // password: 'ec682c6',
+        username: 'b.rysbek@skbs.kz',
+        password: 'ec682c6',
       }),
       headers: {
         'Accept':       'application/json',
@@ -147,7 +147,7 @@ export const LoginScreen = () => {
   };
 
   const setAccessTokenFunc = async (key, value, userId, expoPushToken) => {
-    AsyncStorage.clear();
+    // AsyncStorage.clear();
 
     try {
       // await AsyncStorage.setItem(key, value);
@@ -156,7 +156,7 @@ export const LoginScreen = () => {
     } catch(e) {
       console.log('error');
     }
-    console.log('Done')
+    // console.log('Done')
   }
 
   const AlertShow = async () => {
@@ -294,12 +294,12 @@ export const LoginScreen = () => {
       >
         <Text style={{ color: '#ffff', textAlign: "center" }}>ВОЙТИ</Text>
       </TouchableOpacity>
-      <Button
-        transparent
-        block
-        onPress={() => navigation.navigate('Registration')}>
-        <Text style={styles.secondaryButton}>Регистрация</Text>
-      </Button>
+      {/*<Button*/}
+      {/*  transparent*/}
+      {/*  block*/}
+      {/*  onPress={() => navigation.navigate('Registration')}>*/}
+      {/*  <Text style={styles.secondaryButton}>Регистрация</Text>*/}
+      {/*</Button>*/}
     </AuthScreenWrapper>
   );
 };

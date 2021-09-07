@@ -76,7 +76,7 @@ function About({ navigation, route }) {
 
             <Content>
                 <WebView
-                    source={{ uri: `${API}backend/about` }}
+                    source={{ uri: `http://www.qazcloud.kz/?page_id=185` }}
                     style={{ width: ScreenWidth-10, height: ScreenHeight-100, marginLeft: 5 }}
                 />
             </Content>

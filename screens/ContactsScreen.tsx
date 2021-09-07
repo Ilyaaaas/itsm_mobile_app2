@@ -60,7 +60,7 @@ class ContactsScreen extends React.Component {
               <Text
                 style={{ fontSize: 14, paddingVertical: 5 }}
                 onPress={() => this._handleClickLink(false)}>
-                г.Нур-Султан, ул. Улица
+                ул. Кунаева 12/1 БЦ "На Водно-зеленом Бульваре"
               </Text>
             </Body>
           </ListItem>
@@ -72,28 +72,20 @@ class ContactsScreen extends React.Component {
             />
             <Body style={{ paddingLeft: 10 }}>
               <Text style={{ fontSize: 12 }} note>
+                E-mail
+              </Text>
+              <Text
+                style={{ fontSize: 14, paddingVertical: 5 }}
+                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
+                info@qazcloud.kz
+              </Text>
+              <Text style={{ fontSize: 12 }} note>
                 Call center
               </Text>
               <Text
                 style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
-                +7 (777) 777-77-77
-              </Text>
-              <Text style={{ fontSize: 12 }} note>
-                Отдел продаж
-              </Text>
-              <Text
-                style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
-                +7 (777) 777-77-77
-              </Text>
-              <Text style={{ fontSize: 12 }} note>
-                Техническая служба
-              </Text>
-              <Text
-                style={{ fontSize: 14, paddingVertical: 5 }}
-                onPress={() => this._handleClickPhone('+7 (777) 777-77-77')}>
-                +7 (777) 777-77-77
+                onPress={() => this._handleClickPhone('+7 (7172) 573 068')}>
+                +7 (7172) 573 068
               </Text>
             </Body>
           </ListItem>
