@@ -106,8 +106,8 @@ class HomeScreen extends React.Component{
       });
 
       const responseJson = await response.json();
-      //console.log('responseJson');
-      //console.log(responseJson);
+      console.log('responseJson');
+      console.log(responseJson);
       return responseJson;
       // if (responseJson !== null) {
       //   if(responseJson.success == false){
@@ -176,7 +176,7 @@ class HomeScreen extends React.Component{
         textColor = '#ffff';
       }
       content.push(
-          <TouchableOpacity key={i} onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id&page='+i)}
+          <TouchableOpacity key={i} onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=currentPerformerUser,clientUser,status,product,type&sort=-id&page='+i)}
                             style={{
                                     backgroundColor: `${backColor}`,
                                     // borderRadius: 20,
@@ -207,7 +207,7 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=status,product,type&sort=-id';
+    var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=currentPerformerUser,clientUser,status,product,type&sort=-id';
     if(this.state.currentPageLink != '0')
     {
         url = this.state.currentPageLink;
@@ -215,8 +215,8 @@ class HomeScreen extends React.Component{
     await this._getUrlWithFullURL(url)
       .then(value => {
         if(value !== null){
-          // console.log('value.items');
-          // console.log(value);
+          console.log('value.items');
+          console.log(value);
           this.setState({
                                 list: value.items,
                                 listWithoutFilter: value.items,
@@ -431,6 +431,7 @@ class HomeScreen extends React.Component{
   render() {
     // {console.log('this.state.list')}
     // {console.log(this.state.list)}
+    var color = '#0abb87';
     return (
         <Container>
           <Root>
@@ -532,21 +533,25 @@ class HomeScreen extends React.Component{
                                 onPress={() => this._onReviewButtonClicked(i)}
                             >
                               <View style={styles.row}>
-                                <View>
+                                <View style={{width: 300,}}>
                                   <View style={styles.nameContainer}>
                                     <Text style={styles.nameTxt}>Заявка №{doc.id}</Text>
                                   </View>
                                   <View style={styles.nameContainer}>
-                                    <Text style={styles.nameTxt}>Услуга {doc.createdAt}</Text>
+                                    <Text style={styles.nameTxt}>Услуга: {doc.product.subject}</Text>
                                   </View>
                                   <View style={styles.end}>
                                     <Text style={styles.time}>{doc.descr}</Text>
                                   </View>
                                   <View style={styles.nameContainer}>
-                                    <Text style={styles.nameTxt}>Инициатор: {doc.authorName}</Text>
+                                    {doc.clientUser.person_name != '' ?
+                                        <Text style={styles.nameTxt}>Инициатор: {doc.clientUser.person_name}</Text>
+                                        : null }
                                   </View>
                                   <View style={styles.nameContainer}>
-                                    <Text style={styles.nameTxt}>Исполнитель: {doc.authorName}</Text>
+                                    {doc.currentPerformerUser != null ?
+                                        <Text style={styles.nameTxt}>Исполнитель: {doc.currentPerformerUser.person_name}</Text>
+                                        : null }
                                   </View>
                                   <View style={styles.end}>
                                     <Text style={styles.time}>{this.state.authorName}</Text>
@@ -556,21 +561,96 @@ class HomeScreen extends React.Component{
                                   flexDirection: 'column',
                                   alignContent: 'center',
                                   alignItems: 'center',
-                                  width: 120,
+                                  width: 80,
                                   justifyContent: 'center',
                                   }}>
-                                  <AntDesign
-                                      name="warning"
-                                      size={24}
-                                      style={{justifyContent: 'center', color: '#17a2b8', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
-                                  />
-                                  <Text
-                                      style={{
-                                        fontSize: 10,
-                                        color: '#5e6064',
-                                        alignItems: 'center', alignContent: 'center', alignSelf: 'center',
-                                        justifyContent: 'center',
-                                      }}>{doc.status.name}</Text>
+                                  {doc.status.name == 'Назначена' ?
+                                    <View>
+                                      <AntDesign
+                                        name="arrowright"
+                                        size={24}
+                                        style={{justifyContent: 'center', color: '#ffb822', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                        />
+                                        <Text
+                                            style={{
+                                            fontSize: 10,
+                                            color: '#ffb822',
+                                            alignItems: 'center', alignContent: 'center', alignSelf: 'center',
+                                            justifyContent: 'center',
+                                          }}>{doc.status.name}
+                                        </Text>
+                                    </View>
+                                      :
+                                  doc.status.name == 'Закрыта' ?
+                                      <View>
+                                        <AntDesign
+                                            name="checkcircle"
+                                            size={24}
+                                            style={{justifyContent: 'center', color: '#0abb87', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                        />
+                                        <Text
+                                            style={{
+                                              fontSize: 10,
+                                              color: '#0abb87',
+                                              alignItems: 'center', alignContent: 'center', alignSelf: 'center',
+                                              justifyContent: 'center',
+                                            }}>{doc.status.name}
+                                        </Text>
+                                      </View>
+                                      :
+                                      doc.status.name == 'На исполнении' ?
+                                          <View>
+                                            <AntDesign
+                                                name="sync"
+                                                size={24}
+                                                style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                            />
+                                            <Text
+                                                style={{
+                                                  fontSize: 10,
+                                                  color: '#5867dd',
+                                                  alignItems: 'center', alignContent: 'center', alignSelf: 'center',
+                                                  justifyContent: 'center',
+                                                }}>{doc.status.name}
+                                            </Text>
+                                          </View>
+                                          :
+                                          doc.status.name == 'Исполнена' ?
+                                              <View>
+                                                <AntDesign
+                                                    name="checkcircleo"
+                                                    size={24}
+                                                    style={{justifyContent: 'center', color: '#0abb87', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                                />
+                                                <Text
+                                                    style={{
+                                                      fontSize: 10,
+                                                      color: '#0abb87',
+                                                      alignItems: 'center', alignContent: 'center', alignSelf: 'center',
+                                                      justifyContent: 'center',
+                                                    }}>{doc.status.name}
+                                                </Text>
+                                              </View>
+                                              :
+                                              doc.status.name == 'Новая' ?
+                                                  <View>
+                                                    <AntDesign
+                                                        name="warning"
+                                                        size={24}
+                                                        style={{justifyContent: 'center', color: '#fd397a', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                                    />
+                                                    <Text
+                                                        style={{
+                                                          fontSize: 10,
+                                                          color: '#fd397a',
+                                                          alignItems: 'center', alignContent: 'center', alignSelf: 'center',
+                                                          justifyContent: 'center',
+                                                        }}>{doc.status.name}
+                                                    </Text>
+                                                  </View>
+                                                  :
+                                      null
+                                  }
                                 </View>
                               </View>
                             </TouchableOpacity>
@@ -588,7 +668,7 @@ class HomeScreen extends React.Component{
                                 <Text style={styles.textSmallTitle}>Шаблон обработки заявок: </Text>
                                 <Text style={styles.textSmallValue}>{ doc.product.deadline_at || "" }</Text>
                                 <Text style={styles.textSmallTitle}>Приложение: </Text>
-                                <Text style={styles.textSmallValue}>{doc.type.name}</Text>
+                                <Text style={styles.textSmallValue}>{ doc.type.name || "" }</Text>
                                 <Text style={styles.textSmallTitle}>Вид заявки на обслуживание: </Text>
                                 <Text style={styles.textSmallValue}>{doc.product.subject}</Text>
                                 <Text style={styles.textSmallTitle}>Время обращения: </Text>
@@ -1060,13 +1140,14 @@ const styles = StyleSheet.create({
   },
   end: {
     flexDirection: 'row',
-    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   time: {
     fontWeight: '400',
     color: '#666',
     fontSize: 12,
-
+    justifyContent: 'center',
   },
   icon:{
     height: 28,
@@ -1075,3 +1156,4 @@ const styles = StyleSheet.create({
 })
 
 export default HomeScreen;
+
