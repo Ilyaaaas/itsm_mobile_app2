@@ -533,24 +533,30 @@ class HomeScreen extends React.Component{
                                 onPress={() => this._onReviewButtonClicked(i)}
                             >
                               <View style={styles.row}>
-                                <View style={{width: 300,}}>
+                                <View style={{width: 280,}}>
                                   <View style={styles.nameContainer}>
-                                    <Text style={styles.nameTxt}>Заявка №{doc.id}</Text>
+                                    <Text style={styles.label}>Заявка </Text>
+                                    <Text style={styles.nameTxt}>№{doc.id}</Text>
                                   </View>
                                   <View style={styles.nameContainer}>
-                                    <Text style={styles.nameTxt}>Услуга: {doc.product.subject}</Text>
+                                    <Text style={styles.label}>Услуга: </Text>
+                                  </View>
+                                  <View style={styles.nameContainer}>
+                                    <Text style={styles.nameTxt}>{doc.product.subject}</Text>
                                   </View>
                                   <View style={styles.end}>
-                                    <Text style={styles.time}>{doc.descr}</Text>
+                                    <Text style={styles.time}>{doc.descr.substring(0, 140)+'....'}</Text>
                                   </View>
                                   <View style={styles.nameContainer}>
-                                    {doc.clientUser.person_name != '' ?
-                                        <Text style={styles.nameTxt}>Инициатор: {doc.clientUser.person_name}</Text>
-                                        : null }
+                                    <Text style={styles.label}>Инициатор:</Text>
+                                    {/*{doc.clientUser.person_name != '' ?*/}
+                                    {/*      <Text style={styles.nameTxt}>{doc.clientUser.person_name}</Text>*/}
+                                    {/*    : null }*/}
                                   </View>
                                   <View style={styles.nameContainer}>
+                                    <Text style={styles.label}>Исполнитель:</Text>
                                     {doc.currentPerformerUser != null ?
-                                        <Text style={styles.nameTxt}>Исполнитель: {doc.currentPerformerUser.person_name}</Text>
+                                        <Text style={styles.nameTxt}>{doc.currentPerformerUser.person_name}</Text>
                                         : null }
                                   </View>
                                   <View style={styles.end}>
@@ -668,7 +674,7 @@ class HomeScreen extends React.Component{
                                 <Text style={styles.textSmallTitle}>Шаблон обработки заявок: </Text>
                                 <Text style={styles.textSmallValue}>{ doc.product.deadline_at || "" }</Text>
                                 <Text style={styles.textSmallTitle}>Приложение: </Text>
-                                <Text style={styles.textSmallValue}>{ doc.type.name || "" }</Text>
+                                {/*<Text style={styles.textSmallValue}>{ doc.type.name || "" }</Text>*/}
                                 <Text style={styles.textSmallTitle}>Вид заявки на обслуживание: </Text>
                                 <Text style={styles.textSmallValue}>{doc.product.subject}</Text>
                                 <Text style={styles.textSmallTitle}>Время обращения: </Text>
@@ -764,29 +770,25 @@ class HomeScreen extends React.Component{
                           <Text>Инфо</Text>
                         </TabHeading>
                       }>
+                        http://api.smart24.kz/service-requests/v1/request/16695?access-token=9RmxX5wPiNbC7ftSbzZet-arZ7fOunEt&expand=status%2Cproduct&fields=id%2Csubject%2Cdescr%2CproductId%2CstatusId%2Cproduct.name%2Cstatus.name&_format=json
                         <View style={{padding: 10}}>
-                            <View style={{
-                              alignItems: 'left',
-                              flexDirection: 'row',
-                              flexWrap: 'wrap',
-                              }}>
-                              <Text>{this.state.listGrade.subject}</Text>
+                            <View>
+                              <Text style={styles.tabsContentLabel}>Услуга: </Text>
                             </View>
-                            <View style={{
-                              justifyContent: 'left',
-                              alignItems: 'left',
-                              flexDirection: 'row',
-                            }}>
-                              <Text style={styles.textName}>Описание: </Text>
-                              <Text>{this.state.listGrade.descr}</Text>
+                            <View>
+                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
                             </View>
-                            <View style={{
-                              justifyContent: 'left',
-                              alignItems: 'left',
-                              flexDirection: 'row',
-                            }}>
-                              <Text style={styles.textName}>Время обращения: </Text>
-                              <Text>{this.state.listGrade.createdAt}</Text>
+                            <View>
+                              <Text style={styles.tabsContentLabel}>Описание: </Text>
+                            </View>
+                            <View>
+                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
+                            </View>
+                            <View>
+                              <Text style={styles.tabsContentLabel}>Время обращения: </Text>
+                            </View>
+                            <View>
+                              <Text style={styles.tabsContentText}>{this.state.listGrade.createdAt}</Text>
                             </View>
                         </View>
                       </Tab>
@@ -896,19 +898,22 @@ class HomeScreen extends React.Component{
                 </Text>
                 <DropDownPicker
                     items={[
-                      {label: 'Новые заявки', value: 0},
-                      {label: 'Требуют исполнения', value: 1},
-                      {label: 'Назначенные мне', value: 2},
-                      {label: 'Созданные мной', value: 3},
-                      {label: 'Назначенные на группу', value: 4},
-                      {label: 'Требуют внимания', value: 5},
-                      {label: 'Акуатльные инценденты', value: 6},
-                      {label: 'Инценденты', value: 7},
+                      {label: 'Соглавсование', value: 0},
+                      {label: 'Новая', value: 1},
+                      {label: 'Назначена', value: 2},
+                      {label: 'Ждет ответа', value: 3},
+                      {label: 'На исполнении', value: 4},
+                      {label: 'Исполнена', value: 5},
+                      {label: 'Закрыта', value: 6},
+                      {label: 'Не согласована', value: 7},
+                      {label: 'Отклонена', value: 7},
                     ]}
+                    placeholder={'Не выбрано'}
                     containerStyle={{height: 40}}
                     onChangeItem={() => alert('Filter')}
+                    style={styles.filterModalInput}
                 />
-                <TextInput style={{borderWidth: 1, padding: 10}} value={this.state.exponentPushToken}></TextInput>
+                {/*<TextInput style={{borderWidth: 1, padding: 10}} value={this.state.exponentPushToken}></TextInput>*/}
                 <TouchableOpacity
                     activeOpacity={0.7}
                     style={[styles.button, styles.btn]}
@@ -1002,6 +1007,16 @@ const styles = StyleSheet.create({
     color: '#5e6064',
     fontWeight: '700',
     paddingBottom: 5,
+  },
+  tabsContentLabel: {
+    fontWeight: '600',
+    color: '#000000',
+    fontSize: 12,
+  },
+  tabsContentText: {
+    fontWeight: '600',
+    color: '#5e6064',
+    fontSize: 12,
   },
   textSmallTitle: {
     fontSize: 10,
@@ -1125,13 +1140,17 @@ const styles = StyleSheet.create({
   },
   nameContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     width: 270,
+  },
+  label: {
+    fontWeight: '600',
+    color: '#777',
+    fontSize: 12,
   },
   nameTxt: {
     fontWeight: '600',
     color: '#222',
-    fontSize: 15,
+    fontSize: 14,
   },
   mblTxt: {
     fontWeight: '200',
@@ -1152,6 +1171,12 @@ const styles = StyleSheet.create({
   icon:{
     height: 28,
     width: 28,
+  },
+  filterModalInput:
+  {
+    padding: 20,
+    marginLeft: 20,
+    marginRight: 20,
   }
 })
 
