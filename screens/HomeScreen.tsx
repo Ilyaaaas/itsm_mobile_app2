@@ -176,7 +176,7 @@ class HomeScreen extends React.Component{
         textColor = '#ffff';
       }
       content.push(
-          <TouchableOpacity key={i} onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=currentPerformerUser,clientUser,status,product,type&sort=-id&page='+i)}
+          <TouchableOpacity key={i} onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id&page='+i)}
                             style={{
                                     backgroundColor: `${backColor}`,
                                     // borderRadius: 20,
@@ -207,7 +207,7 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=currentPerformerUser,clientUser,status,product,type&sort=-id';
+    var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id';
     if(this.state.currentPageLink != '0')
     {
         url = this.state.currentPageLink;
@@ -534,29 +534,36 @@ class HomeScreen extends React.Component{
                             >
                               <View style={styles.row}>
                                 <View style={{width: 280,}}>
-                                  <View style={styles.nameContainer}>
+                                  <View style={{
+                                                  flexDirection: 'row',
+                                                  width: 270,
+                                                }}>
                                     <Text style={styles.label}>Заявка </Text>
                                     <Text style={styles.nameTxt}>№{doc.id}</Text>
                                   </View>
                                   <View style={styles.nameContainer}>
                                     <Text style={styles.label}>Услуга: </Text>
-                                  </View>
-                                  <View style={styles.nameContainer}>
                                     <Text style={styles.nameTxt}>{doc.product.subject}</Text>
                                   </View>
                                   <View style={styles.end}>
                                     <Text style={styles.time}>{doc.descr.substring(0, 140)+'....'}</Text>
                                   </View>
-                                  <View style={styles.nameContainer}>
-                                    <Text style={styles.label}>Инициатор:</Text>
-                                    {/*{doc.clientUser.person_name != '' ?*/}
-                                    {/*      <Text style={styles.nameTxt}>{doc.clientUser.person_name}</Text>*/}
-                                    {/*    : null }*/}
+                                  <View style={styles.nameContainer2}>
+                                    <Image style={styles.ava_img_small} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
+                                    {doc.clientUser != null ?
+                                            <View>
+                                                <Text style={styles.label}>Инициатор:</Text>
+                                                <Text style={styles.nameTxt}>{doc.clientUser.person_name}</Text>
+                                            </View>
+                                        : null }
                                   </View>
-                                  <View style={styles.nameContainer}>
-                                    <Text style={styles.label}>Исполнитель:</Text>
-                                    {doc.currentPerformerUser != null ?
-                                        <Text style={styles.nameTxt}>{doc.currentPerformerUser.person_name}</Text>
+                                  <View style={styles.nameContainer2}>
+                                      <Image style={styles.ava_img_small} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
+                                      {doc.currentPerformerUser != null ?
+                                        <View>
+                                            <Text style={styles.label}>Исполнитель:</Text>
+                                            <Text style={styles.nameTxt}>{doc.currentPerformerUser.person_name}</Text>
+                                        </View>
                                         : null }
                                   </View>
                                   <View style={styles.end}>
@@ -572,8 +579,8 @@ class HomeScreen extends React.Component{
                                   }}>
                                   {doc.status.name == 'Назначена' ?
                                     <View>
-                                      <AntDesign
-                                        name="arrowright"
+                                      <FontAwesome
+                                        name="arrow-right"
                                         size={24}
                                         style={{justifyContent: 'center', color: '#ffb822', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
                                         />
@@ -581,6 +588,7 @@ class HomeScreen extends React.Component{
                                             style={{
                                             fontSize: 10,
                                             color: '#ffb822',
+                                            fontWeight: "bold",
                                             alignItems: 'center', alignContent: 'center', alignSelf: 'center',
                                             justifyContent: 'center',
                                           }}>{doc.status.name}
@@ -598,6 +606,7 @@ class HomeScreen extends React.Component{
                                             style={{
                                               fontSize: 10,
                                               color: '#0abb87',
+                                              fontWeight: "bold",
                                               alignItems: 'center', alignContent: 'center', alignSelf: 'center',
                                               justifyContent: 'center',
                                             }}>{doc.status.name}
@@ -606,8 +615,8 @@ class HomeScreen extends React.Component{
                                       :
                                       doc.status.name == 'На исполнении' ?
                                           <View>
-                                            <AntDesign
-                                                name="sync"
+                                            <FontAwesome
+                                                name="refresh"
                                                 size={24}
                                                 style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
                                             />
@@ -615,6 +624,7 @@ class HomeScreen extends React.Component{
                                                 style={{
                                                   fontSize: 10,
                                                   color: '#5867dd',
+                                                  fontWeight: "bold",
                                                   alignItems: 'center', alignContent: 'center', alignSelf: 'center',
                                                   justifyContent: 'center',
                                                 }}>{doc.status.name}
@@ -623,8 +633,8 @@ class HomeScreen extends React.Component{
                                           :
                                           doc.status.name == 'Исполнена' ?
                                               <View>
-                                                <AntDesign
-                                                    name="checkcircleo"
+                                                <FontAwesome
+                                                    name="check-circle-o"
                                                     size={24}
                                                     style={{justifyContent: 'center', color: '#0abb87', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
                                                 />
@@ -632,29 +642,49 @@ class HomeScreen extends React.Component{
                                                     style={{
                                                       fontSize: 10,
                                                       color: '#0abb87',
+                                                      fontWeight: "bold",
                                                       alignItems: 'center', alignContent: 'center', alignSelf: 'center',
                                                       justifyContent: 'center',
                                                     }}>{doc.status.name}
                                                 </Text>
                                               </View>
                                               :
-                                              doc.status.name == 'Новая' ?
+                                              doc.status.name == 'Ждет ответа' ?
                                                   <View>
-                                                    <AntDesign
-                                                        name="warning"
+                                                    <FontAwesome
+                                                        name="history"
                                                         size={24}
-                                                        style={{justifyContent: 'center', color: '#fd397a', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                                        style={{justifyContent: 'center', color: '#007bff', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
                                                     />
                                                     <Text
                                                         style={{
                                                           fontSize: 10,
-                                                          color: '#fd397a',
+                                                          color: '#007bff',
+                                                          fontWeight: "bold",
                                                           alignItems: 'center', alignContent: 'center', alignSelf: 'center',
                                                           justifyContent: 'center',
                                                         }}>{doc.status.name}
                                                     </Text>
                                                   </View>
                                                   :
+                                                  doc.status.name == 'Новая' ?
+                                                      <View>
+                                                          <AntDesign
+                                                              name="warning"
+                                                              size={24}
+                                                              style={{justifyContent: 'center', color: '#fd397a', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                                          />
+                                                          <Text
+                                                              style={{
+                                                                  fontSize: 10,
+                                                                  color: '#fd397a',
+                                                                  fontWeight: "bold",
+                                                                  alignItems: 'center', alignContent: 'center', alignSelf: 'center',
+                                                                  justifyContent: 'center',
+                                                              }}>{doc.status.name}
+                                                          </Text>
+                                                      </View>
+                                                      :
                                       null
                                   }
                                 </View>
@@ -665,22 +695,23 @@ class HomeScreen extends React.Component{
                                           flexDirection: 'row',
                                           justifyContent: 'space-between',
                                           flex: 1,
-                                          backgroundColor: '#f5f5f5',
+                                          backgroundColor: '#fafbfc',
                                           zIndex: -10,
                                         }}>
                               <View style={{width: 280, padding: 20}}>
-                                <Text style={styles.textSmallTitle}>Услуга:</Text>
-                                <Text style={styles.textSmallValue}>{ doc.product.updated_at || "" }</Text>
-                                <Text style={styles.textSmallTitle}>Шаблон обработки заявок: </Text>
-                                <Text style={styles.textSmallValue}>{ doc.product.deadline_at || "" }</Text>
-                                <Text style={styles.textSmallTitle}>Приложение: </Text>
-                                {/*<Text style={styles.textSmallValue}>{ doc.type.name || "" }</Text>*/}
-                                <Text style={styles.textSmallTitle}>Вид заявки на обслуживание: </Text>
-                                <Text style={styles.textSmallValue}>{doc.product.subject}</Text>
-                                <Text style={styles.textSmallTitle}>Время обращения: </Text>
-                                <Text style={styles.textSmallValue}>{doc.createdAt}</Text>
-                                <Text style={styles.textSmallTitle}>Срок исполнение: </Text>
-                                <Text style={styles.textSmallValue}>{doc.deadlineAt}</Text>
+                                <Text style={styles.textSmallValue}>Шаблон обработки заявок: </Text>
+                                {doc.solution != null ?
+                                <Text style={styles.textSmallTitle}>{doc.solution.name || ""}</Text>
+                                        : null }
+                                {doc.appId != null ?
+                                <Text style={styles.textSmallValue}>Приложение: </Text>
+                                        : null }
+                                <Text style={styles.textSmallValue}>Вид заявки на обслуживание: </Text>
+                                <Text style={styles.textSmallTitle}>{doc.product.subject}</Text>
+                                <Text style={styles.textSmallValue}>Время обращения: </Text>
+                                <Text style={styles.textSmallTitle}>{doc.createdAt}</Text>
+                                <Text style={styles.textSmallValue}>Срок исполнение: </Text>
+                                <Text style={styles.textSmallTitle}>{doc.deadlineAt}</Text>
                               </View>
                               <View style={styles.buttonsContainer}>
                                 <TouchableOpacity
@@ -755,9 +786,9 @@ class HomeScreen extends React.Component{
                       <Text style={{ fontSize: 20, paddingVertical: 5 }}>
                         {this.state.author_name}
                       </Text>
-                      <Text style={{ fontSize: 12 }}>
-                        {this.state.company_name}
-                      </Text>
+                      {/*<Text style={{ fontSize: 12 }}>*/}
+                      {/*  {this.state.company_name}*/}
+                      {/*</Text>*/}
                       <Text style={{ fontSize: 12 }}>
                         {this.state.created_at}
                       </Text>
@@ -765,12 +796,9 @@ class HomeScreen extends React.Component{
                   </ListItem>
                   <View style={{backgroundColor: '#fff'}}>
                     <Tabs style={{backgroundColor: '#fff'}}>
-                      <Tab style={{backgroundColor: '#fff'}} heading={
-                        <TabHeading style={{backgroundColor: '#fff'}}>
-                          <Text>Инфо</Text>
-                        </TabHeading>
-                      }>
-                        http://api.smart24.kz/service-requests/v1/request/16695?access-token=9RmxX5wPiNbC7ftSbzZet-arZ7fOunEt&expand=status%2Cproduct&fields=id%2Csubject%2Cdescr%2CproductId%2CstatusId%2Cproduct.name%2Cstatus.name&_format=json
+                      <Tab style={{backgroundColor: '#fff'}} heading={<TabHeading style={{backgroundColor: '#fff'}}>
+                                                                          <Text>Инфо</Text>
+                                                                        </TabHeading>}>
                         <View style={{padding: 10}}>
                             <View>
                               <Text style={styles.tabsContentLabel}>Услуга: </Text>
@@ -807,65 +835,116 @@ class HomeScreen extends React.Component{
                           <Text style={{backgroundColor: '#fff'}}>Комментарии</Text>
                         </TabHeading>
                       }>
-                        <View style={{padding: 20, marginLeft: 10, marginRight: 10}}>
+                        <View style={{marginLeft: 10, marginRight: 10, padding: 20, }}>
                             <TextInput
                                 style={styles.textArea}
                                 underlineColorAndroid="transparent"
                                 placeholder="Комментарий"
                                 placeholderTextColor="grey"
-                                numberOfLines={2}
+                                numberOfLines={4}
                                 multiline={true}
                                 onChangeText={text => this.setState({ otziv: text})}
                             />
                             <TextInput
-                                style={styles.contactInput}
+                                style={styles.textArea2}
                                 underlineColorAndroid="transparent"
                                 placeholder="Ваши контакты"
                                 placeholderTextColor="grey"
                                 onChangeText={text => this.setState({callPhone: text})}
                             />
+                            <Button
+                                success={true}
+                                style={{
+                                    backgroundColor: '#0abb87',
+                                    margin: 25,
+                                    height: 40,
+                                    borderRadius: 15,
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Text style={{ width: '100%', textAlign: "center", color: '#535353', fontSize: 12}}>Отправить</Text>
+                            </Button>
                         </View>
                       </Tab>
                     </Tabs>
                   </View>
                 </ScrollView>
-                <View style={{ borderTopWidth: 1, backgroundColor: '#1e1e2d'}}>
-                  <List>
-                    <ListItem>
-                      <Left style={{margin: 10}}>
-                        <Button
-                            success={true}
-                            style={{ width: '100%', borderRadius: 10, backgroundColor: '#5578eb', padding: 10}}
-                            onPress={() => {
-                              this.setState({modal: false});
-                            }}
-                        >
-                          <Text style={{ width: '100%', textAlign: "center", color: 'white'}}>Закрыть</Text>
-                        </Button>
-                      </Left>
-                      <Body style={{margin: 10}}>
-                        {this.state.listGrade.statusId == 13 ?
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        borderColor: 'white',
+                        overflow: 'hidden',
+                        shadowColor: '#cdcdcd',
+                        height: 100,
+                        }}>
+                            <Button
+                                success={true}
+                                style={{
+                                    backgroundColor: '#FCFCFC',
+                                    margin: 25,
+                                    height: 40,
+                                    borderRadius: 15,
+                                    width: '40%',
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                }}
+                                onPress={() => {
+                                    this.setState({modal: false});
+                                }}
+                            >
+                                <Text style={{ width: '100%', textAlign: "center", color: '#535353', fontSize: 12}}>Закрыть</Text>
+                            </Button>
                             <Button
                                 block
                                 onPress={() => this.acceptRequest(this.state.listGrade.id)}
-                                style={{ width: '100%', borderRadius: 10, backgroundColor: '#0abb87', padding: 10}}
+                                style={{
+                                    backgroundColor: '#0abb87',
+                                    margin: 25,
+                                    height: 40,
+                                    borderRadius: 15,
+                                    width: '40%',
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
+                                }}
                             >
-                              <Text style={{ width: '100%', textAlign: "center", color: 'white'}}>Начать исполнение</Text>
+                                <Text style={{ width: '100%', textAlign: "center", color: 'white', fontSize: 12}}>Начать исполнение</Text>
                             </Button>
-                            : null }
-                        {this.state.listGrade.statusId == 2 ?
-                            <Button
-                                block
-                                onPress={() => this.closeRequest(this.state.listGrade.id)}
-                                style={{ width: '100%', borderRadius: 10, backgroundColor: '#0abb87', padding: 10}}
-                            >
-                              <Text style={{ width: '100%', textAlign: "center", color: 'white'}}>Завершить исполнение</Text>
-                            </Button>
-                            : null }
-                      </Body>
-                    </ListItem>
-                  </List>
-                </View>
+                            {this.state.listGrade.statusId == 13 ?
+                                <Button
+                                    block
+                                    onPress={() => this.acceptRequest(this.state.listGrade.id)}
+                                    style={{
+                                        backgroundColor: '#FCFCFC',
+                                        margin: 5,
+                                        height: 30,
+                                        borderRadius: 15,
+                                        width: '48%',
+                                        alignContent: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Text style={{ width: '100%', textAlign: "center", color: '#535353'}}>Начать исполнение</Text>
+                                </Button>
+                                : null }
+                            {this.state.listGrade.statusId == 2 ?
+                                <Button
+                                    block
+                                    onPress={() => this.closeRequest(this.state.listGrade.id)}
+                                    style={{
+                                        backgroundColor: '#FCFCFC',
+                                        margin: 5,
+                                        height: 30,
+                                        borderRadius: 15,
+                                        width: '48%',
+                                        alignContent: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Text style={{ width: '100%', textAlign: "center", color: '#535353'}}>Завершить исполнение</Text>
+                                </Button>
+                                : null }
+                    </View>
               </View>
             </Root>
           </Modal>
@@ -888,12 +967,13 @@ class HomeScreen extends React.Component{
                 height: 300,
                 borderRadius: 10,
               }}>
-                <Text onPress={()=>this.setState({ filterModal: false})} style={{alignSelf:'flex-end', fontSize: 20}}>
+                <Text
+                    onPress={()=>this.setState({ filterModal: false})}
+                    style={{alignSelf:'flex-end', fontSize: 20, padding: 4, margin: 4}}>
                   <MaterialIcons
                       name="close"
-                      size={34}
+                      size={28}
                       color="#1a192a"
-                      style={{ marginRight: 10 }}
                   />
                 </Text>
                 <DropDownPicker
@@ -906,12 +986,19 @@ class HomeScreen extends React.Component{
                       {label: 'Исполнена', value: 5},
                       {label: 'Закрыта', value: 6},
                       {label: 'Не согласована', value: 7},
-                      {label: 'Отклонена', value: 7},
+                      {label: 'Отклонена', value: 8},
                     ]}
                     placeholder={'Не выбрано'}
                     containerStyle={{height: 40}}
                     onChangeItem={() => alert('Filter')}
                     style={styles.filterModalInput}
+                    dropDownStyle=
+                                {{
+                                    backgroundColor: '#F2F2F2',
+                                    padding: 20,
+                                    marginLeft: 20,
+                                    marginRight: 20,
+                                }}
                 />
                 {/*<TextInput style={{borderWidth: 1, padding: 10}} value={this.state.exponentPushToken}></TextInput>*/}
                 <TouchableOpacity
@@ -1010,23 +1097,26 @@ const styles = StyleSheet.create({
   },
   tabsContentLabel: {
     fontWeight: '600',
-    color: '#000000',
+    color: '#434349',
     fontSize: 12,
   },
   tabsContentText: {
     fontWeight: '600',
     color: '#5e6064',
     fontSize: 12,
+      justifyContent: 'center',
+      alignItems: "center",
+      textAlign: 'justify',
   },
   textSmallTitle: {
-    fontSize: 10,
-    color: '#1a192a',
+    fontSize: 14,
+    color: '#434349',
     fontWeight: "bold",
   },
   textSmallValue: {
-    fontSize: 10,
+    fontSize: 12,
     color: '#1a192a',
-    fontWeight: '300'
+    fontWeight: '300',
   },
   starContainer: {
     flex: 1,
@@ -1099,8 +1189,17 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     borderRadius: 20,
     backgroundColor: '#F2F2F2',
-    margin: 20,
-
+    marginTop: 10,
+  },
+  textArea2: {
+    height: 30,
+    width: '100%',
+    padding: 5,
+    textAlignVertical: "top",
+    justifyContent: "flex-start",
+    borderRadius: 20,
+    backgroundColor: '#F2F2F2',
+    marginTop: 10,
   },
   contactInput: {
     borderWidth: 1,
@@ -1142,6 +1241,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: 270,
   },
+  nameContainer2: {
+    flexDirection: 'row',
+    width: 270,
+    marginTop: 3,
+    marginBottom: 3,
+    alignItems: 'center',
+  },
   label: {
     fontWeight: '600',
     color: '#777',
@@ -1177,7 +1283,19 @@ const styles = StyleSheet.create({
     padding: 20,
     marginLeft: 20,
     marginRight: 20,
-  }
+    backgroundColor: '#F2F2F2',
+  },
+  ava_img_small:
+    {
+        width: 25,
+        height: 25,
+        borderRadius: 120,
+        marginRight: 10,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+    },
 })
 
 export default HomeScreen;
