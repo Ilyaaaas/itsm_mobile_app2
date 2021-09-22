@@ -67,6 +67,7 @@ class HomeScreen extends React.Component{
       dataDocStatusId: 0,
       dataDocId: 0,
       author_name: '',
+      avaUrl: '',
       created_at: '',
       company_name: '',
       user: {
@@ -369,7 +370,7 @@ class HomeScreen extends React.Component{
   }
 
   onInfoButtonClicked = async (docid) => {
-    await this._getUrl('service-requests/v1/request/'+docid+'?access-token='+this.state.token)
+    await this._getUrl('service-requests/v1/request/'+docid+'?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type')
     .then(value => {
       this.setState({
         listGrade: value,
@@ -721,7 +722,7 @@ class HomeScreen extends React.Component{
                                 >
                                   {/*<Entypo name="triangle-right" size={24} color="#1a192a" />*/}
                                   <MaterialIcons name="more-vert" size={30} color='#1a192a' />
-                                  <Text style={{ color: '#1a192a' }}>Подробнее</Text>
+                                  <Text style={{ color: '#1e1e2d' }}>Подробнее</Text>
                                 </TouchableOpacity>
                               </View>
                             </View>
@@ -778,10 +779,11 @@ class HomeScreen extends React.Component{
               }}>
                 <ScrollView style={{ paddingTop: 40 }}>
                   <ListItem>
-                    <Ionicons
-                        name="ios-person"
-                        style={{ fontSize: 40, paddingVertical: 5 }}
-                    />
+                      {this.state.avaurl == null ?
+                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
+                          :
+                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
+                      }
                     <Body style={{ paddingLeft: 10 }}>
                       <Text style={{ fontSize: 20, paddingVertical: 5 }}>
                         {this.state.author_name}
@@ -1291,6 +1293,16 @@ const styles = StyleSheet.create({
         height: 25,
         borderRadius: 120,
         marginRight: 10,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+    },
+    message_img:
+    {
+        width: 40,
+        height: 40,
+        borderRadius: 120,
         justifyContent: 'center',
         alignContent: 'center',
         alignItems: 'center',
