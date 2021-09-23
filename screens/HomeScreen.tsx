@@ -378,7 +378,7 @@ class HomeScreen extends React.Component{
         modal: true,
       });
       console.log('value.createdBy');
-      console.log(value.createdBy);
+      console.log(value);
       // this._getAuthor(value.createdBy);
     })
   }
@@ -776,14 +776,54 @@ class HomeScreen extends React.Component{
                 flex: 1,
                 flexDirection: 'column',
                 justifyContent: 'space-between',
+                padding: 20,
               }}>
-                <ScrollView style={{ paddingTop: 40 }}>
-                  <ListItem>
+                <ScrollView style={{ paddingTop: 40, }}>
+                  <View>
+                    <View style={{flexDirection:'row', justifyContent:'space-between',
+                    }}>
+                      <View>
                       {this.state.avaurl == null ?
                           <Image style={styles.message_img} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
                           :
                           <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
                       }
+                      </View>
+                      <View style={{width: 140, paddingLeft: 10, //Centered horizontally
+                          alignItems: 'left', //Centered vertically
+                          flex:1}}>
+                          {this.state.listGrade.clientUser != null ?
+                              <Text style={{fontSize: 14, }}>
+                                  {this.state.listGrade.clientUser.person_name}
+                              </Text>
+                              :
+                              null
+                          }
+                          {this.state.listGrade.clientUser != null ?
+                              <Text style={{fontSize: 10, color: '#717171', paddingTop: 5, textAlign: 'left'}}>
+                                  {this.state.listGrade.clientUser.company_name}
+                              </Text>
+                              :
+                              null
+                          }
+                      </View>
+                      <View style={{ justifyContent: 'center', //Centered horizontally
+                          alignItems: 'center', //Centered vertically
+                          flex:1}}>
+                          <FontAwesome
+                              name="refresh"
+                              size={24}
+                              style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                          />
+                          {this.state.listGrade.status != null ?
+                              <Text style={{fontSize: 12, color: '#5867dd'}}>
+                                  {this.state.listGrade.status.name}
+                              </Text>
+                              :
+                              null
+                          }
+                      </View>
+                    </View>
                     <Body style={{ paddingLeft: 10 }}>
                       <Text style={{ fontSize: 20, paddingVertical: 5 }}>
                         {this.state.author_name}
@@ -795,7 +835,7 @@ class HomeScreen extends React.Component{
                         {this.state.created_at}
                       </Text>
                     </Body>
-                  </ListItem>
+                  </View>
                   <View style={{backgroundColor: '#fff'}}>
                     <Tabs style={{backgroundColor: '#fff'}}>
                       <Tab style={{backgroundColor: '#fff'}} heading={<TabHeading style={{backgroundColor: '#fff'}}>
@@ -883,7 +923,7 @@ class HomeScreen extends React.Component{
                             <Button
                                 success={true}
                                 style={{
-                                    backgroundColor: '#FCFCFC',
+                                    backgroundColor: '#989898',
                                     margin: 25,
                                     height: 40,
                                     borderRadius: 15,
@@ -895,7 +935,7 @@ class HomeScreen extends React.Component{
                                     this.setState({modal: false});
                                 }}
                             >
-                                <Text style={{ width: '100%', textAlign: "center", color: '#535353', fontSize: 12}}>Закрыть</Text>
+                                <Text style={{ width: '100%', textAlign: "center", color: '#ffffff', fontSize: 12}}>Закрыть</Text>
                             </Button>
                             <Button
                                 block
@@ -1300,8 +1340,8 @@ const styles = StyleSheet.create({
     },
     message_img:
     {
-        width: 40,
-        height: 40,
+        width: 80,
+        height: 80,
         borderRadius: 120,
         justifyContent: 'center',
         alignContent: 'center',
