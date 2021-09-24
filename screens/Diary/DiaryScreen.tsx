@@ -12,7 +12,8 @@ import {
     ListItem,
     Toast,
     Accordion,
-    Input
+    Input,
+    Button,
 } from 'native-base';
 import {
     Switch,
@@ -22,7 +23,6 @@ import {
     RefreshControl,
     View,
     Image,
-    Button,
     Platform,
     TouchableOpacityComponent
 } from 'react-native';
@@ -319,11 +319,18 @@ class DiaryScreen extends React.Component
                                 />
                             </View>
                             <View>
-                                <Button
-                                    style={{
-                                        marginVertical: 10,
-                                        backgroundColor: '#42976f'
-                                    }} title={'Сохранить'} onPress={() => alert('Сохранено')}/>
+                                <Button style={{
+                                        backgroundColor: '#0abb87',
+                                        borderRadius: 15,
+                                        shadowColor: '#989898',
+                                        height: 60,
+                                        padding: 20,
+                                        borderWidth: 10,
+                                        borderColor: '#E0E0E0',
+                                        width: '100%',
+                                    }}>
+                                    <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>Сохранить</Text>
+                                </Button>
                             </View>
                         </View>
                 }

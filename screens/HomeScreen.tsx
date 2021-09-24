@@ -558,15 +558,15 @@ class HomeScreen extends React.Component{
                                             </View>
                                         : null }
                                   </View>
+                                    {doc.currentPerformerUser != null ?
                                   <View style={styles.nameContainer2}>
                                       <Image style={styles.ava_img_small} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
-                                      {doc.currentPerformerUser != null ?
                                         <View>
                                             <Text style={styles.label}>Исполнитель:</Text>
                                             <Text style={styles.nameTxt}>{doc.currentPerformerUser.person_name}</Text>
                                         </View>
-                                        : null }
                                   </View>
+                                    : null }
                                   <View style={styles.end}>
                                     <Text style={styles.time}>{this.state.authorName}</Text>
                                   </View>
@@ -789,18 +789,20 @@ class HomeScreen extends React.Component{
                           <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
                       }
                       </View>
-                      <View style={{width: 140, paddingLeft: 10, //Centered horizontally
-                          alignItems: 'left', //Centered vertically
-                          flex:1}}>
+                        <View style={{ justifyContent: 'center',
+                            alignItems: 'left',
+                            paddingLeft: 10,
+                            flex: 1,
+                        }}>
                           {this.state.listGrade.clientUser != null ?
-                              <Text style={{fontSize: 14, }}>
+                              <Text style={{fontSize: 16, }}>
                                   {this.state.listGrade.clientUser.person_name}
                               </Text>
                               :
                               null
                           }
                           {this.state.listGrade.clientUser != null ?
-                              <Text style={{fontSize: 10, color: '#717171', paddingTop: 5, textAlign: 'left'}}>
+                              <Text style={{fontSize: 12, color: '#717171', paddingTop: 5, textAlign: 'left'}}>
                                   {this.state.listGrade.clientUser.company_name}
                               </Text>
                               :
@@ -868,8 +870,8 @@ class HomeScreen extends React.Component{
                         </TabHeading>
                       }>
                             <View style={{ flexDirection: "column" }}>
-                              <Text style={{ fontSize: 16 }}>Журнал</Text>
-                              <Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>дата</Text>
+                              {/*<Text style={{ fontSize: 16 }}>Журнал</Text>*/}
+                              {/*<Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>дата</Text>*/}
                             </View>
                       </Tab>
                       <Tab heading={
@@ -877,9 +879,9 @@ class HomeScreen extends React.Component{
                           <Text style={{backgroundColor: '#fff'}}>Комментарии</Text>
                         </TabHeading>
                       }>
-                        <View style={{marginLeft: 10, marginRight: 10, padding: 20, }}>
+                        <View>
                             <TextInput
-                                style={styles.textArea}
+                                style={styles.textArea3}
                                 underlineColorAndroid="transparent"
                                 placeholder="Комментарий"
                                 placeholderTextColor="grey"
@@ -888,7 +890,7 @@ class HomeScreen extends React.Component{
                                 onChangeText={text => this.setState({ otziv: text})}
                             />
                             <TextInput
-                                style={styles.textArea2}
+                                style={styles.textArea4}
                                 underlineColorAndroid="transparent"
                                 placeholder="Ваши контакты"
                                 placeholderTextColor="grey"
@@ -898,14 +900,15 @@ class HomeScreen extends React.Component{
                                 success={true}
                                 style={{
                                     backgroundColor: '#0abb87',
-                                    margin: 25,
-                                    height: 40,
                                     borderRadius: 15,
-                                    alignContent: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Text style={{ width: '100%', textAlign: "center", color: '#535353', fontSize: 12}}>Отправить</Text>
+                                    shadowColor: '#989898',
+                                    width: '100%',
+                                    height: 60,
+                                    padding: 20,
+                                    borderWidth: 10,
+                                    borderColor: '#fff',
+                            }}>
+                                <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>отправить</Text>
                             </Button>
                         </View>
                       </Tab>
@@ -915,58 +918,67 @@ class HomeScreen extends React.Component{
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        borderColor: 'white',
-                        overflow: 'hidden',
-                        shadowColor: '#cdcdcd',
-                        height: 100,
+                        // backgroundColor: '#898989',
                         }}>
+                        <Left>
                             <Button
                                 success={true}
                                 style={{
-                                    backgroundColor: '#989898',
+                                    backgroundColor: '#ffb822',
                                     margin: 25,
                                     height: 40,
                                     borderRadius: 15,
-                                    width: '40%',
-                                    alignContent: 'center',
-                                    justifyContent: 'center',
+                                    shadowColor: '#989898',
+                                    shadowOpacity: 2,
+                                    elevation: 1,
+                                    shadowRadius: 2,
+                                    shadowOffset : { width: 0, height: 5},
+                                    borderWidth:0,
                                 }}
                                 onPress={() => {
                                     this.setState({modal: false});
                                 }}
                             >
-                                <Text style={{ width: '100%', textAlign: "center", color: '#ffffff', fontSize: 12}}>Закрыть</Text>
+                                <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 14}}>закрыть</Text>
                             </Button>
-                            <Button
-                                block
-                                onPress={() => this.acceptRequest(this.state.listGrade.id)}
-                                style={{
-                                    backgroundColor: '#0abb87',
-                                    margin: 25,
-                                    height: 40,
-                                    borderRadius: 15,
-                                    width: '40%',
-                                    alignContent: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Text style={{ width: '100%', textAlign: "center", color: 'white', fontSize: 12}}>Начать исполнение</Text>
-                            </Button>
+                        </Left>
+                        <Right>
+                            {/*<Button*/}
+                            {/*    block*/}
+                            {/*    onPress={() => this.acceptRequest(this.state.listGrade.id)}*/}
+                            {/*    style={{*/}
+                            {/*        backgroundColor: '#0abb87',*/}
+                            {/*        margin: 25,*/}
+                            {/*        height: 40,*/}
+                            {/*        borderRadius: 15,*/}
+                            {/*        shadowColor: '#989898',*/}
+                            {/*        shadowOpacity: 2,*/}
+                            {/*        elevation: 1,*/}
+                            {/*        shadowRadius: 2,*/}
+                            {/*        shadowOffset : { width: 0, height: 5},*/}
+                            {/*        borderWidth:0,*/}
+                            {/*    }}*/}
+                            {/*>*/}
+                            {/*    <Text style={{ width: '100%', textAlign: "center", color: 'white', fontSize: 12}}>Начать исполнение</Text>*/}
+                            {/*</Button>*/}
                             {this.state.listGrade.statusId == 13 ?
                                 <Button
                                     block
                                     onPress={() => this.acceptRequest(this.state.listGrade.id)}
                                     style={{
                                         backgroundColor: '#FCFCFC',
-                                        margin: 5,
-                                        height: 30,
+                                        margin: 25,
+                                        height: 40,
                                         borderRadius: 15,
-                                        width: '48%',
-                                        alignContent: 'center',
-                                        justifyContent: 'center',
+                                        shadowColor: '#989898',
+                                        shadowOpacity: 2,
+                                        elevation: 1,
+                                        shadowRadius: 2,
+                                        shadowOffset : { width: 0, height: 5},
+                                        borderWidth:0,
                                     }}
                                 >
-                                    <Text style={{ width: '100%', textAlign: "center", color: '#535353'}}>Начать исполнение</Text>
+                                    <Text style={{ width: '100%', textAlign: "center", color: '#535353', fontSize: 14}}>начать исполнение</Text>
                                 </Button>
                                 : null }
                             {this.state.listGrade.statusId == 2 ?
@@ -974,18 +986,22 @@ class HomeScreen extends React.Component{
                                     block
                                     onPress={() => this.closeRequest(this.state.listGrade.id)}
                                     style={{
-                                        backgroundColor: '#FCFCFC',
-                                        margin: 5,
-                                        height: 30,
+                                        backgroundColor: '#5d78ff',
+                                        margin: 25,
+                                        height: 40,
                                         borderRadius: 15,
-                                        width: '48%',
-                                        alignContent: 'center',
-                                        justifyContent: 'center',
+                                        shadowColor: '#989898',
+                                        shadowOpacity: 2,
+                                        elevation: 1,
+                                        shadowRadius: 2,
+                                        shadowOffset : { width: 0, height: 5},
+                                        borderWidth:0,
                                     }}
                                 >
-                                    <Text style={{ width: '100%', textAlign: "center", color: '#535353'}}>Завершить исполнение</Text>
+                                    <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 14}}>завершить исполнение</Text>
                                 </Button>
                                 : null }
+                        </Right>
                     </View>
               </View>
             </Root>
@@ -1229,10 +1245,42 @@ const styles = StyleSheet.create({
     padding: 5,
     textAlignVertical: "top",
     justifyContent: "flex-start",
-    borderRadius: 20,
+    borderRadius: 15,
     backgroundColor: '#F2F2F2',
     marginTop: 10,
   },
+    textArea3:{
+        padding: 10,
+        height: 150,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flex: 1,
+        backgroundColor: 'rgba(52, 52, 52, 0.05)',
+        borderColor: 'white',
+        borderWidth: 10,
+        borderRadius: 15,
+        overflow: 'hidden',
+        shadowColor: '#cdcdcd',
+        shadowRadius: 2,
+        shadowOpacity: 20,
+        shadowOffset: { width: 0, height: 2 },
+    },
+    textArea4:{
+        padding: 10,
+        height: 65,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flex: 1,
+        backgroundColor: 'rgba(52, 52, 52, 0.05)',
+        borderColor: 'white',
+        borderWidth: 10,
+        borderRadius: 15,
+        overflow: 'hidden',
+        shadowColor: '#cdcdcd',
+        shadowRadius: 2,
+        shadowOpacity: 20,
+        shadowOffset: { width: 0, height: 2 },
+    },
   textArea2: {
     height: 30,
     width: '100%',
