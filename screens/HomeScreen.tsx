@@ -383,6 +383,10 @@ class HomeScreen extends React.Component{
     })
   }
 
+  renderStatus = () => {
+    <Text style={{backgroundColor: 'red'}}>test</Text>
+  }
+
   goToCreateReq = () => {
     this.props.navigation.navigate('OfferScreen');
   }
@@ -817,6 +821,7 @@ class HomeScreen extends React.Component{
                               size={24}
                               style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
                           />
+                          {this.renderStatus()}
                           {this.state.listGrade.status != null ?
                               <Text style={{fontSize: 12, color: '#5867dd'}}>
                                   {this.state.listGrade.status.name}
@@ -824,6 +829,86 @@ class HomeScreen extends React.Component{
                               :
                               null
                           }
+                          {/*{this.state.listGrade.status != null ?*/}
+                          {/*{this.state.listGrade.status.name == 'Назначена' ?*/}
+                          {/*    <View>*/}
+                          {/*        <FontAwesome*/}
+                          {/*            name="arrow-right"*/}
+                          {/*            size={24}*/}
+                          {/*            style={{*/}
+                          {/*                justifyContent: 'center',*/}
+                          {/*                color: '#ffb822',*/}
+                          {/*                alignItems: 'center',*/}
+                          {/*                alignContent: 'center',*/}
+                          {/*                alignSelf: 'center'*/}
+                          {/*            }}*/}
+                          {/*        />*/}
+                          {/*        <Text*/}
+                          {/*            style={{*/}
+                          {/*                fontSize: 10,*/}
+                          {/*                color: '#ffb822',*/}
+                          {/*                fontWeight: "bold",*/}
+                          {/*                alignItems: 'center', alignContent: 'center', alignSelf: 'center',*/}
+                          {/*                justifyContent: 'center',*/}
+                          {/*            }}>{this.state.listGrade.status.name}*/}
+                          {/*        </Text>*/}
+                          {/*    </View>*/}
+                          {/*    :*/}
+                          {/*    this.state.listGrade.status.name == 'Закрыта' ?*/}
+                          {/*        <View>*/}
+                          {/*            <AntDesign*/}
+                          {/*                name="checkcircle"*/}
+                          {/*                size={24}*/}
+                          {/*                style={{*/}
+                          {/*                    justifyContent: 'center',*/}
+                          {/*                    color: '#0abb87',*/}
+                          {/*                    alignItems: 'center',*/}
+                          {/*                    alignContent: 'center',*/}
+                          {/*                    alignSelf: 'center'*/}
+                          {/*                }}*/}
+                          {/*            />*/}
+                          {/*            <Text*/}
+                          {/*                style={{*/}
+                          {/*                    fontSize: 10,*/}
+                          {/*                    color: '#0abb87',*/}
+                          {/*                    fontWeight: "bold",*/}
+                          {/*                    alignItems: 'center', alignContent: 'center', alignSelf: 'center',*/}
+                          {/*                    justifyContent: 'center',*/}
+                          {/*                }}>{this.state.listGrade.status.name}*/}
+                          {/*            </Text>*/}
+                          {/*        </View>*/}
+                          {/*        :*/}
+                          {/*        this.state.listGrade.status.name == 'На исполнении' ?*/}
+                          {/*            <View>*/}
+                          {/*                <FontAwesome*/}
+                          {/*                    name="refresh"*/}
+                          {/*                    size={24}*/}
+                          {/*                    style={{*/}
+                          {/*                        justifyContent: 'center',*/}
+                          {/*                        color: '#5867dd',*/}
+                          {/*                        alignItems: 'center',*/}
+                          {/*                        alignContent: 'center',*/}
+                          {/*                        alignSelf: 'center'*/}
+                          {/*                    }}*/}
+                          {/*                />*/}
+                          {/*                <Text*/}
+                          {/*                    style={{*/}
+                          {/*                        fontSize: 10,*/}
+                          {/*                        color: '#5867dd',*/}
+                          {/*                        fontWeight: "bold",*/}
+                          {/*                        alignItems: 'center', alignContent: 'center', alignSelf: 'center',*/}
+                          {/*                        justifyContent: 'center',*/}
+                          {/*                    }}>{this.state.listGrade.status.name}*/}
+                          {/*                </Text>*/}
+                          {/*            </View>*/}
+                          {/*            :*/}
+                          {/*            {*/}
+                          {/*                this.state.listGrade.status.name == 'Новая' ?*/}
+
+                          {/*                    :*/}
+                          {/*                    null*/}
+                          {/*            }*/}
+                          {/*}*/}
                       </View>
                     </View>
                     <Body style={{ paddingLeft: 10 }}>
@@ -1058,6 +1143,20 @@ class HomeScreen extends React.Component{
                                     marginRight: 20,
                                 }}
                 />
+                  <Button
+                      success={true}
+                      style={{
+                          backgroundColor: '#0abb87',
+                          borderRadius: 15,
+                          shadowColor: '#989898',
+                          width: '100%',
+                          height: 60,
+                          padding: 20,
+                          borderWidth: 10,
+                          borderColor: '#fff',
+                      }}>
+                      <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>Применить</Text>
+                  </Button>
                 {/*<TextInput style={{borderWidth: 1, padding: 10}} value={this.state.exponentPushToken}></TextInput>*/}
                 <TouchableOpacity
                     activeOpacity={0.7}
