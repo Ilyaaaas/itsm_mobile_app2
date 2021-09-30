@@ -33,6 +33,7 @@ import {
 } from 'react-native';
 import {API, getToken} from './constants';
 import DropDownPicker from "react-native-dropdown-picker";
+import DatePicker from 'react-native-datepicker';
 
 let ScreenHeight = Dimensions.get("window").height;
 let ScreenWidth = Dimensions.get("window").width;
@@ -87,6 +88,7 @@ class HomeScreen extends React.Component{
       topCategoryCheckedId: 1,
       userId: 0,
       exponentPushToken: '',
+      date: new Date(Date.now()),
     }
   }
 
@@ -821,7 +823,7 @@ class HomeScreen extends React.Component{
                               size={24}
                               style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
                           />
-                          {this.renderStatus()}
+
                           {this.state.listGrade.status != null ?
                               <Text style={{fontSize: 12, color: '#5867dd'}}>
                                   {this.state.listGrade.status.name}
@@ -1051,7 +1053,7 @@ class HomeScreen extends React.Component{
                                     block
                                     onPress={() => this.acceptRequest(this.state.listGrade.id)}
                                     style={{
-                                        backgroundColor: '#FCFCFC',
+                                        backgroundColor: '#0abb87',
                                         margin: 25,
                                         height: 40,
                                         borderRadius: 15,
@@ -1107,7 +1109,7 @@ class HomeScreen extends React.Component{
               <View style={{
                 backgroundColor: 'white',
                 width: 350,
-                height: 300,
+                height: 600,
                 borderRadius: 10,
               }}>
                 <Text
@@ -1119,6 +1121,8 @@ class HomeScreen extends React.Component{
                       color="#1a192a"
                   />
                 </Text>
+                <View>
+                <Text style={{paddingRight: 20, paddingLeft: 20, paddingTop: 10, paddingBottom: 5}}>По статусам</Text>
                 <DropDownPicker
                     items={[
                       {label: 'Соглавсование', value: 0},
@@ -1143,6 +1147,64 @@ class HomeScreen extends React.Component{
                                     marginRight: 20,
                                 }}
                 />
+                </View>
+                <Text style={{paddingRight: 20, paddingLeft: 20, paddingTop: 10, paddingBottom: 5}}>
+                    По датам
+                </Text>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    flex: 1,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                }}>
+                  <DatePicker
+                      style={{width: '50%', height: 50}}
+                      date={this.state.dateFilterFrom}
+                      mode="date"
+                      placeholder="От"
+                      format="YYYY-MM-DD"
+                      minDate="2016-05-01"
+                      maxDate="2016-06-01"
+                      confirmBtnText="Confirm"
+                      cancelBtnText="Cancel"
+                      customStyles={{
+                          dateIcon: {
+                              position: 'absolute',
+                              left: 0,
+                              top: 4,
+                              marginLeft: 0
+                          },
+                          dateInput: {
+                              marginLeft: 36
+                          }
+                      }}
+                      onDateChange={(dateFilterFrom) => {this.setState({dateFilterFrom: dateFilterFrom})}}
+                  />
+                  <DatePicker
+                      style={{width: '50%', height: 50}}
+                      date={this.state.dateFilterTo}
+                      mode="date"
+                      placeholder="До"
+                      format="YYYY-MM-DD"
+                      minDate="2016-05-01"
+                      maxDate="2016-06-01"
+                      confirmBtnText="Confirm"
+                      cancelBtnText="Cancel"
+                      customStyles={{
+                          dateIcon: {
+                              position: 'absolute',
+                              left: 0,
+                              top: 4,
+                              marginLeft: 0
+                          },
+                          dateInput: {
+                              marginLeft: 36
+                          }
+                      }}
+                      onDateChange={(dateFilterTo) => {this.setState({dateFilterTo: dateFilterTo})}}
+                  />
+                </View>
                   <Button
                       success={true}
                       style={{

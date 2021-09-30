@@ -54,12 +54,14 @@
     "react-native-screens": "~2.10.1",
     "react-native-star-rating": "^1.1.0",
     "react-native-textarea": "^1.0.4",
+    "react-native-unimodules": "^0.14.8",
     "react-native-web": "~0.13.7",
     "react-native-webview": "10.7.0",
     "react-navigation": "^3.11.0",
     "react-navigation-drawer": "^2.6.0",
     "react-redux": "^7.2.2",
     "redux": "^4.0.4",
+    "unimodules-permissions-interface": "^6.1.0",
     "yarn": "^1.22.10"
   },
   "devDependencies": {

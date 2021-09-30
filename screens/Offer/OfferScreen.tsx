@@ -1,9 +1,9 @@
 import moment from 'moment';
 import React, { useState, useEffect } from 'react';
-import {View, StyleSheet, AsyncStorage, Picker, Platform, TextInput} from 'react-native';
+import {View, StyleSheet, AsyncStorage, Picker, Platform, TextInput, TouchableOpacity, Modal} from 'react-native';
 import 'moment/locale/ru';
 import CalendarStrip from 'react-native-calendar-strip';
-import {AntDesign, Ionicons, FontAwesome} from '@expo/vector-icons';
+import {AntDesign, Ionicons, FontAwesome, MaterialIcons} from '@expo/vector-icons';
 import HomeScreen from '../HomeScreen';
 import axios from 'axios';
 import {
@@ -17,7 +17,7 @@ import {
     Right,
     Body,
     Footer,
-    Icon, Toast,
+    Icon, Toast, Spinner,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -42,6 +42,7 @@ export default function OfferScreen({ navigation }) {
 
     const [openCheck, setOpenCheck] = useState(false);
     const [firstClick, setfirstClick] = useState(true);
+    const [spinnerState, setSpinnerState] = useState(false);
     const [typeUrl, setTypeURL] = useState(0);
     const [vidPriem, setVidPriem] = useState('');
     const [offerDescr, setOfferDescr] = useState('');
@@ -84,6 +85,7 @@ export default function OfferScreen({ navigation }) {
 
     const createOffer = async () =>
     {
+        setSpinnerState(true)
         if(selectedService == '')
         {
             alert('Выберите категорию');
@@ -119,7 +121,7 @@ export default function OfferScreen({ navigation }) {
                 navigation.goBack();
             })
             .catch(error => console.error(error))
-            .finally()
+            .finally(setSpinnerState(false))
     }
 
     const getCatalogs = async (tokenParam) =>
@@ -226,6 +228,7 @@ export default function OfferScreen({ navigation }) {
             })
             .then(response => {
                 console.log('fetch');
+                setSpinnerState(true);
                 return response.json()
             })
             .then(responseJson => {
@@ -234,6 +237,10 @@ export default function OfferScreen({ navigation }) {
                 console.log('responseJson2');
                 console.log(responseJson);
             })
+            .finally(responseJson2 => {
+                    setSpinnerState(false)
+                }
+            )
             .catch(error => console.error(error));
     }
 
@@ -450,6 +457,22 @@ export default function OfferScreen({ navigation }) {
             <Footer style={{ backgroundColor: '#1a192a', height: 30 }}>
                 {/*<FooterTab style={{ backgroundColor: '#1a192a' }}></FooterTab>*/}
             </Footer>
+            <Modal
+                style={{backgroundColor: "#fff"}}
+                animationType={"fade"}
+                transparent={true}
+                visible={spinnerState}
+                contentContainerStyle={styles.filterModal}>
+                <View style={{
+                    backgroundColor: 'rgba(245,245,245,0.8)',
+                    flex: 1,
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center'}}>
+                    <Spinner color="#1a192a" />
+                    <Text>Загрузка...</Text>
+                </View>
+            </Modal>
         </Container>
     );
 }
@@ -463,5 +486,11 @@ const styles = StyleSheet.create({
     },
     headerTop: {
         backgroundColor: '#fff',
+    },
+    filterModal: {
+        width: 10,
+        height: 10,
+        marginTop: 20,
+        marginBottom: 20,
     },
 });
