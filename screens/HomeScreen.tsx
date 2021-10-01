@@ -89,6 +89,7 @@ class HomeScreen extends React.Component{
       userId: 0,
       exponentPushToken: '',
       date: new Date(Date.now()),
+      selectedFilerStateId: 0,
     }
   }
 
@@ -150,6 +151,10 @@ class HomeScreen extends React.Component{
       }
       return null;
   }
+
+    // changeSelectedFilterState = (selectedFilerStateId) =>
+    //     this.setState({selectedFilerStateId: selectedFilerStateId});
+    // }
 
   pagePagin = (currentPageNum) => {
     let content = [];
@@ -435,11 +440,16 @@ class HomeScreen extends React.Component{
     this.setState({ list: data});
   }
 
+  completeFilter = () => {
+    alert('completeFilter');
+  }
+
   render() {
     // {console.log('this.state.list')}
     // {console.log(this.state.list)}
     var color = '#0abb87';
-    return (
+
+      return (
         <Container>
           <Root>
             <Header style={styles.headerTop}>
@@ -1121,11 +1131,11 @@ class HomeScreen extends React.Component{
                       color="#1a192a"
                   />
                 </Text>
-                <View>
-                <Text style={{paddingRight: 20, paddingLeft: 20, paddingTop: 10, paddingBottom: 5}}>По статусам</Text>
+                <View style={{padding: 20, }}>
+                <Text style={{paddingTop: 10, paddingBottom: 5}}>По статусам</Text>
                 <DropDownPicker
                     items={[
-                      {label: 'Соглавсование', value: 0},
+                      {label: 'Согласование', value: 0},
                       {label: 'Новая', value: 1},
                       {label: 'Назначена', value: 2},
                       {label: 'Ждет ответа', value: 3},
@@ -1137,18 +1147,15 @@ class HomeScreen extends React.Component{
                     ]}
                     placeholder={'Не выбрано'}
                     containerStyle={{height: 40}}
-                    onChangeItem={() => alert('Filter')}
+                    // onChangeItem={item => changeSelectedFilterState(item.value)}
                     style={styles.filterModalInput}
                     dropDownStyle=
                                 {{
                                     backgroundColor: '#F2F2F2',
-                                    padding: 20,
-                                    marginLeft: 20,
-                                    marginRight: 20,
                                 }}
                 />
                 </View>
-                <Text style={{paddingRight: 20, paddingLeft: 20, paddingTop: 10, paddingBottom: 5}}>
+                <Text style={{paddingRight: 20, paddingLeft: 20, paddingTop: 10, paddingBottom: 5, zIndex: -10,}}>
                     По датам
                 </Text>
                 <View style={{
@@ -1157,6 +1164,7 @@ class HomeScreen extends React.Component{
                     flex: 1,
                     paddingLeft: 20,
                     paddingRight: 20,
+                    zIndex: -10,
                 }}>
                   <DatePicker
                       style={{width: '50%', height: 50}}
@@ -1173,10 +1181,12 @@ class HomeScreen extends React.Component{
                               position: 'absolute',
                               left: 0,
                               top: 4,
-                              marginLeft: 0
+                              marginLeft: 0,
+                              zIndex: -10,
                           },
                           dateInput: {
-                              marginLeft: 36
+                              marginLeft: 36,
+                              zIndex: -10,
                           }
                       }}
                       onDateChange={(dateFilterFrom) => {this.setState({dateFilterFrom: dateFilterFrom})}}
@@ -1216,7 +1226,9 @@ class HomeScreen extends React.Component{
                           padding: 20,
                           borderWidth: 10,
                           borderColor: '#fff',
-                      }}>
+                      }}
+                      onPress={() => this.completeFilter()}
+                  >
                       <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>Применить</Text>
                   </Button>
                 {/*<TextInput style={{borderWidth: 1, padding: 10}} value={this.state.exponentPushToken}></TextInput>*/}
@@ -1531,17 +1543,13 @@ const styles = StyleSheet.create({
   },
   filterModalInput:
   {
-    padding: 20,
-    marginLeft: 20,
-    marginRight: 20,
     backgroundColor: '#F2F2F2',
+    zIndex: 100,
   },
   ava_img_small:
     {
-        width: 25,
         height: 25,
         borderRadius: 120,
-        marginRight: 10,
         justifyContent: 'center',
         alignContent: 'center',
         alignItems: 'center',
