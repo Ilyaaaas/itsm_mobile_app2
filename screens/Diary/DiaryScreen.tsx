@@ -24,6 +24,7 @@ import {
     View,
     Image,
     Platform,
+    Alert,
     TouchableOpacityComponent
 } from 'react-native';
 
@@ -139,6 +140,10 @@ class DiaryScreen extends React.Component
 
     UNSAFE_componentWillReceiveProps() {
         this._refreshPage();
+    }
+
+    saveProfileInfo = () => {
+        Alert.alert("Предупреждение!", 'На данный момент функция редактирования профиля дорабатывается. В следующем обновлении мы включим данную функцию.');
     }
 
     _renderContent  = (item) => {
@@ -328,7 +333,9 @@ class DiaryScreen extends React.Component
                                         borderWidth: 10,
                                         borderColor: '#E0E0E0',
                                         width: '100%',
-                                    }}>
+                                    }}
+                                    onPress={() => this.saveProfileInfo()}
+                                >
                                     <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>Сохранить</Text>
                                 </Button>
                             </View>

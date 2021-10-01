@@ -152,9 +152,10 @@ class HomeScreen extends React.Component{
       return null;
   }
 
-    // changeSelectedFilterState = (selectedFilerStateId) =>
-    //     this.setState({selectedFilerStateId: selectedFilerStateId});
-    // }
+    changeSelectedFilterState = (selectedFilerStateId) =>
+    {
+        this.setState({selectedFilerStateId: selectedFilerStateId});
+    }
 
   pagePagin = (currentPageNum) => {
     let content = [];
@@ -184,7 +185,7 @@ class HomeScreen extends React.Component{
         textColor = '#ffff';
       }
       content.push(
-          <TouchableOpacity key={i} onPress={() => this.changePage('http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id&page='+i)}
+          <TouchableOpacity key={i} onPress={() => this.changePage(API+'service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id&page='+i)}
                             style={{
                                     backgroundColor: `${backColor}`,
                                     // borderRadius: 20,
@@ -215,7 +216,7 @@ class HomeScreen extends React.Component{
   }
 
   _getDoctorList = async () => {
-    var url = 'http://api.smart24.kz/service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id';
+    var url = API+'service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id';
     if(this.state.currentPageLink != '0')
     {
         url = this.state.currentPageLink;
@@ -441,7 +442,15 @@ class HomeScreen extends React.Component{
   }
 
   completeFilter = () => {
-    alert('completeFilter');
+    // console.log(this.state.selectedFilerStateId);
+    // console.log(this.state.selectedFilerStateId);
+    // this.changePage(API+'service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id')
+    this.setState({ filterModal: false});
+      Toast.show({
+          text: 'На данный момент функция фильтра дорабатывается. В следующем обновлении мы включим данную функцию.',
+          type: 'warning',
+          duration: 3000
+      });
   }
 
   render() {
@@ -568,7 +577,7 @@ class HomeScreen extends React.Component{
                                   <View style={styles.nameContainer2}>
                                     <Image style={styles.ava_img_small} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
                                     {doc.clientUser != null ?
-                                            <View>
+                                            <View style={{paddingLeft: 5}}>
                                                 <Text style={styles.label}>Инициатор:</Text>
                                                 <Text style={styles.nameTxt}>{doc.clientUser.person_name}</Text>
                                             </View>
@@ -577,7 +586,7 @@ class HomeScreen extends React.Component{
                                     {doc.currentPerformerUser != null ?
                                   <View style={styles.nameContainer2}>
                                       <Image style={styles.ava_img_small} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
-                                        <View>
+                                        <View style={{paddingLeft: 5}}>
                                             <Text style={styles.label}>Исполнитель:</Text>
                                             <Text style={styles.nameTxt}>{doc.currentPerformerUser.person_name}</Text>
                                         </View>
@@ -1147,7 +1156,7 @@ class HomeScreen extends React.Component{
                     ]}
                     placeholder={'Не выбрано'}
                     containerStyle={{height: 40}}
-                    // onChangeItem={item => changeSelectedFilterState(item.value)}
+                    onChangeItem={item => this.changeSelectedFilterState(item.value)}
                     style={styles.filterModalInput}
                     dropDownStyle=
                                 {{
@@ -1548,6 +1557,7 @@ const styles = StyleSheet.create({
   },
   ava_img_small:
     {
+        width: 25,
         height: 25,
         borderRadius: 120,
         justifyContent: 'center',

@@ -113,7 +113,13 @@ export default class Notifications extends React.Component{
     }
 
     openNotif = (id) => {
-        this.setState({reqModal: true, currentNotifId: id});
+        this.setState({ filterModal: false});
+        Toast.show({
+            text: 'На данный момент функция уведомлений дорабатывается. В следующем обновлении мы включим данную функцию.',
+            type: 'warning',
+            duration: 3000
+        });
+        // this.setState({reqModal: true, currentNotifId: id});
     }
 
     render() {
