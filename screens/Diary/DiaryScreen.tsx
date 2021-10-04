@@ -27,6 +27,7 @@ import {
     Alert,
     TouchableOpacityComponent
 } from 'react-native';
+import {StackActions} from "@react-navigation/native";
 
 class DiaryScreen extends React.Component
 {
@@ -490,6 +491,34 @@ class DiaryScreen extends React.Component
 
     logout = () =>
     {
+        // const handleSubmit = async (onSaveLogin = false) => {
+        //     let data = {
+        //         method: 'POST',
+        //         credentials: 'same-origin',
+        //         mode: 'same-origin',
+        //         body: JSON.stringify({
+        //             // username: login,
+        //             // password: password,
+        //             // username: 'i.akhmetov@digital.sk.kz',
+        //             // password: 'Astana2022!',
+        //             // username: 'a.iskaliyev@skbs.kz',
+        //             // password: 'U7cXPraHSU',
+        //             username: 'b.rysbek@skbs.kz',
+        //             password: 'ec682c6',
+        //         }),
+        //         headers: {
+        //             'Accept':       'application/json',
+        //             'Content-Type': 'application/json',
+        //         }
+        //     }
+        //
+        //     fetch('http://api.smart24.kz/portal/v1/profile/logout', data)
+        //         .then(response => response.json())
+        //         .then(json => {
+        //                 this.props.navigation.navigate('Login');
+        //             }
+        //         )
+        // };
         this.props.navigation.navigate('Login');
     }
 

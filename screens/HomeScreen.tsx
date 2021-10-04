@@ -29,7 +29,8 @@ import {
   ScrollView,
   TextInput,
   Dimensions,
-  AppState
+  AppState,
+  Platform,
 } from 'react-native';
 import {API, getToken} from './constants';
 import DropDownPicker from "react-native-dropdown-picker";
@@ -561,9 +562,9 @@ class HomeScreen extends React.Component{
                               <View style={styles.row}>
                                 <View style={{width: 280,}}>
                                   <View style={{
-                                                  flexDirection: 'row',
-                                                  width: 270,
-                                                }}>
+                                      flexDirection: 'row',
+                                      width: 270,
+                                    }}>
                                     <Text style={styles.label}>Заявка </Text>
                                     <Text style={styles.nameTxt}>№{doc.id}</Text>
                                   </View>
@@ -803,224 +804,287 @@ class HomeScreen extends React.Component{
                 justifyContent: 'space-between',
                 padding: 20,
               }}>
-                <ScrollView style={{ paddingTop: 40, }}>
-                  <View>
-                    <View style={{flexDirection:'row', justifyContent:'space-between',
-                    }}>
-                      <View>
-                      {this.state.avaurl == null ?
-                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
-                          :
-                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
-                      }
-                      </View>
-                        <View style={{ justifyContent: 'center',
-                            alignItems: 'left',
-                            paddingLeft: 10,
-                            flex: 1,
-                        }}>
-                          {this.state.listGrade.clientUser != null ?
-                              <Text style={{fontSize: 16, }}>
-                                  {this.state.listGrade.clientUser.person_name}
-                              </Text>
-                              :
-                              null
-                          }
-                          {this.state.listGrade.clientUser != null ?
-                              <Text style={{fontSize: 12, color: '#717171', paddingTop: 5, textAlign: 'left'}}>
-                                  {this.state.listGrade.clientUser.company_name}
-                              </Text>
-                              :
-                              null
-                          }
-                      </View>
-                      <View style={{ justifyContent: 'center', //Centered horizontally
-                          alignItems: 'center', //Centered vertically
-                          flex:1}}>
-                          <FontAwesome
-                              name="refresh"
-                              size={24}
-                              style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
-                          />
+                  {Platform.OS === 'ios'
+                      ?
+                      <ScrollView style={{ paddingTop: 40, }}>
+                          <View>
+                              <View style={{flexDirection:'row', justifyContent:'space-between',
+                              }}>
+                                  <View>
+                                      {this.state.avaurl == null ?
+                                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
+                                          :
+                                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
+                                      }
+                                  </View>
+                                  <View style={{ justifyContent: 'center',
+                                      alignItems: 'left',
+                                      paddingLeft: 10,
+                                      flex: 1,
+                                  }}>
+                                      {this.state.listGrade.clientUser != null ?
+                                          <Text style={{fontSize: 16, }}>
+                                              {this.state.listGrade.clientUser.person_name}
+                                          </Text>
+                                          :
+                                          null
+                                      }
+                                      {this.state.listGrade.clientUser != null ?
+                                          <Text style={{fontSize: 12, color: '#717171', paddingTop: 5, textAlign: 'left'}}>
+                                              {this.state.listGrade.clientUser.company_name}
+                                          </Text>
+                                          :
+                                          null
+                                      }
+                                  </View>
+                                  <View style={{ justifyContent: 'center', //Centered horizontally
+                                      alignItems: 'center', //Centered vertically
+                                      flex:1}}>
+                                      <FontAwesome
+                                          name="refresh"
+                                          size={24}
+                                          style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                      />
 
-                          {this.state.listGrade.status != null ?
-                              <Text style={{fontSize: 12, color: '#5867dd'}}>
-                                  {this.state.listGrade.status.name}
-                              </Text>
-                              :
-                              null
-                          }
-                          {/*{this.state.listGrade.status != null ?*/}
-                          {/*{this.state.listGrade.status.name == 'Назначена' ?*/}
-                          {/*    <View>*/}
-                          {/*        <FontAwesome*/}
-                          {/*            name="arrow-right"*/}
-                          {/*            size={24}*/}
-                          {/*            style={{*/}
-                          {/*                justifyContent: 'center',*/}
-                          {/*                color: '#ffb822',*/}
-                          {/*                alignItems: 'center',*/}
-                          {/*                alignContent: 'center',*/}
-                          {/*                alignSelf: 'center'*/}
-                          {/*            }}*/}
-                          {/*        />*/}
-                          {/*        <Text*/}
-                          {/*            style={{*/}
-                          {/*                fontSize: 10,*/}
-                          {/*                color: '#ffb822',*/}
-                          {/*                fontWeight: "bold",*/}
-                          {/*                alignItems: 'center', alignContent: 'center', alignSelf: 'center',*/}
-                          {/*                justifyContent: 'center',*/}
-                          {/*            }}>{this.state.listGrade.status.name}*/}
-                          {/*        </Text>*/}
-                          {/*    </View>*/}
-                          {/*    :*/}
-                          {/*    this.state.listGrade.status.name == 'Закрыта' ?*/}
-                          {/*        <View>*/}
-                          {/*            <AntDesign*/}
-                          {/*                name="checkcircle"*/}
-                          {/*                size={24}*/}
-                          {/*                style={{*/}
-                          {/*                    justifyContent: 'center',*/}
-                          {/*                    color: '#0abb87',*/}
-                          {/*                    alignItems: 'center',*/}
-                          {/*                    alignContent: 'center',*/}
-                          {/*                    alignSelf: 'center'*/}
-                          {/*                }}*/}
-                          {/*            />*/}
-                          {/*            <Text*/}
-                          {/*                style={{*/}
-                          {/*                    fontSize: 10,*/}
-                          {/*                    color: '#0abb87',*/}
-                          {/*                    fontWeight: "bold",*/}
-                          {/*                    alignItems: 'center', alignContent: 'center', alignSelf: 'center',*/}
-                          {/*                    justifyContent: 'center',*/}
-                          {/*                }}>{this.state.listGrade.status.name}*/}
-                          {/*            </Text>*/}
-                          {/*        </View>*/}
-                          {/*        :*/}
-                          {/*        this.state.listGrade.status.name == 'На исполнении' ?*/}
-                          {/*            <View>*/}
-                          {/*                <FontAwesome*/}
-                          {/*                    name="refresh"*/}
-                          {/*                    size={24}*/}
-                          {/*                    style={{*/}
-                          {/*                        justifyContent: 'center',*/}
-                          {/*                        color: '#5867dd',*/}
-                          {/*                        alignItems: 'center',*/}
-                          {/*                        alignContent: 'center',*/}
-                          {/*                        alignSelf: 'center'*/}
-                          {/*                    }}*/}
-                          {/*                />*/}
-                          {/*                <Text*/}
-                          {/*                    style={{*/}
-                          {/*                        fontSize: 10,*/}
-                          {/*                        color: '#5867dd',*/}
-                          {/*                        fontWeight: "bold",*/}
-                          {/*                        alignItems: 'center', alignContent: 'center', alignSelf: 'center',*/}
-                          {/*                        justifyContent: 'center',*/}
-                          {/*                    }}>{this.state.listGrade.status.name}*/}
-                          {/*                </Text>*/}
-                          {/*            </View>*/}
-                          {/*            :*/}
-                          {/*            {*/}
-                          {/*                this.state.listGrade.status.name == 'Новая' ?*/}
+                                      {this.state.listGrade.status != null ?
+                                          <Text style={{fontSize: 12, color: '#5867dd'}}>
+                                              {this.state.listGrade.status.name}
+                                          </Text>
+                                          :
+                                          null
+                                      }
+                                  </View>
+                              </View>
+                              <Body style={{ paddingLeft: 10 }}>
+                                  <Text style={{ fontSize: 20, paddingVertical: 5 }}>
+                                      {this.state.author_name}
+                                  </Text>
+                                  {/*<Text style={{ fontSize: 12 }}>*/}
+                                  {/*  {this.state.company_name}*/}
+                                  {/*</Text>*/}
+                                  <Text style={{ fontSize: 12 }}>
+                                      {this.state.created_at}
+                                  </Text>
+                              </Body>
+                          </View>
+                          <View style={{backgroundColor: '#fff'}}>
+                              <Tabs style={{backgroundColor: '#fff'}}>
+                                  <Tab style={{backgroundColor: '#fff'}} heading={<TabHeading style={{backgroundColor: '#fff'}}>
+                                      <Text>Инфо</Text>
+                                  </TabHeading>}>
+                                      <View style={{padding: 10}}>
+                                          <View>
+                                              <Text style={styles.tabsContentLabel}>Услуга: </Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentLabel}>Описание: </Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentLabel}>Время обращения: </Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentText}>{this.state.listGrade.createdAt}</Text>
+                                          </View>
+                                      </View>
+                                  </Tab>
+                                  <Tab style={{backgroundColor: '#fff'}} heading={
+                                      <TabHeading style={{backgroundColor: '#fff'}}>
+                                          <Text>Журнал</Text>
+                                      </TabHeading>
+                                  }>
+                                      <View style={{ flexDirection: "column" }}>
+                                          {/*<Text style={{ fontSize: 16 }}>Журнал</Text>*/}
+                                          {/*<Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>дата</Text>*/}
+                                      </View>
+                                  </Tab>
+                                  <Tab heading={
+                                      <TabHeading style={{backgroundColor: '#fff'}}>
+                                          <Text style={{backgroundColor: '#fff'}}>Комментарии</Text>
+                                      </TabHeading>
+                                  }>
+                                      <View>
+                                          <TextInput
+                                              style={styles.textArea3}
+                                              underlineColorAndroid="transparent"
+                                              placeholder="Комментарий"
+                                              placeholderTextColor="grey"
+                                              numberOfLines={4}
+                                              multiline={true}
+                                              onChangeText={text => this.setState({ otziv: text})}
+                                          />
+                                          <TextInput
+                                              style={styles.textArea4}
+                                              underlineColorAndroid="transparent"
+                                              placeholder="Ваши контакты"
+                                              placeholderTextColor="grey"
+                                              onChangeText={text => this.setState({callPhone: text})}
+                                          />
+                                          <Button
+                                              success={true}
+                                              style={{
+                                                  backgroundColor: '#0abb87',
+                                                  borderRadius: 15,
+                                                  shadowColor: '#989898',
+                                                  width: '100%',
+                                                  height: 60,
+                                                  padding: 20,
+                                                  borderWidth: 10,
+                                                  borderColor: '#fff',
+                                              }}>
+                                              <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>отправить</Text>
+                                          </Button>
+                                      </View>
+                                  </Tab>
+                              </Tabs>
+                          </View>
+                      </ScrollView>
+                    :
+                      <ScrollView style={{ paddingTop: 40, }}>
+                          <View>
+                              <View style={{flexDirection:'row', justifyContent:'space-between',}}>
+                                  <View>
+                                      {this.state.avaurl == null ?
+                                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/img/default/ava_businessman_400.jpg'}}></Image>
+                                          :
+                                          <Image style={styles.message_img} source={{uri: 'https://smart24.kz/'+this.state.list.avaFile}}></Image>
+                                      }
+                                  </View>
+                                  <View style={{ justifyContent: 'center',
+                                      // alignItems: 'left',
+                                      paddingLeft: 10,
+                                      // flex: 1,
+                                  }}>
+                                      {this.state.listGrade.clientUser != null ?
+                                          <Text style={{fontSize: 16, }}>
+                                              {this.state.listGrade.clientUser.person_name}
+                                          </Text>
+                                          :
+                                          null
+                                      }
+                                      {this.state.listGrade.clientUser != null ?
+                                          <Text style={{fontSize: 12, color: '#717171', paddingTop: 5, textAlign: 'left'}}>
+                                              {this.state.listGrade.clientUser.company_name}
+                                          </Text>
+                                          :
+                                          null
+                                      }
+                                  </View>
+                                  <View style={{ justifyContent: 'center', //Centered horizontally
+                                      alignItems: 'center', //Centered vertically
+                                      flex:1}}>
+                                      <FontAwesome
+                                          name="refresh"
+                                          size={24}
+                                          style={{justifyContent: 'center', color: '#5867dd', alignItems: 'center', alignContent: 'center', alignSelf: 'center'}}
+                                      />
 
-                          {/*                    :*/}
-                          {/*                    null*/}
-                          {/*            }*/}
-                          {/*}*/}
-                      </View>
-                    </View>
-                    <Body style={{ paddingLeft: 10 }}>
-                      <Text style={{ fontSize: 20, paddingVertical: 5 }}>
-                        {this.state.author_name}
-                      </Text>
-                      {/*<Text style={{ fontSize: 12 }}>*/}
-                      {/*  {this.state.company_name}*/}
-                      {/*</Text>*/}
-                      <Text style={{ fontSize: 12 }}>
-                        {this.state.created_at}
-                      </Text>
-                    </Body>
-                  </View>
-                  <View style={{backgroundColor: '#fff'}}>
-                    <Tabs style={{backgroundColor: '#fff'}}>
-                      <Tab style={{backgroundColor: '#fff'}} heading={<TabHeading style={{backgroundColor: '#fff'}}>
-                                                                          <Text>Инфо</Text>
-                                                                        </TabHeading>}>
-                        <View style={{padding: 10}}>
-                            <View>
-                              <Text style={styles.tabsContentLabel}>Услуга: </Text>
-                            </View>
-                            <View>
-                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
-                            </View>
-                            <View>
-                              <Text style={styles.tabsContentLabel}>Описание: </Text>
-                            </View>
-                            <View>
-                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
-                            </View>
-                            <View>
-                              <Text style={styles.tabsContentLabel}>Время обращения: </Text>
-                            </View>
-                            <View>
-                              <Text style={styles.tabsContentText}>{this.state.listGrade.createdAt}</Text>
-                            </View>
-                        </View>
-                      </Tab>
-                      <Tab  style={{backgroundColor: '#fff'}} heading={
-                        <TabHeading style={{backgroundColor: '#fff'}}>
-                          <Text>Журнал</Text>
-                        </TabHeading>
-                      }>
-                            <View style={{ flexDirection: "column" }}>
-                              {/*<Text style={{ fontSize: 16 }}>Журнал</Text>*/}
-                              {/*<Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>дата</Text>*/}
-                            </View>
-                      </Tab>
-                      <Tab heading={
-                        <TabHeading style={{backgroundColor: '#fff'}}>
-                          <Text style={{backgroundColor: '#fff'}}>Комментарии</Text>
-                        </TabHeading>
-                      }>
-                        <View>
-                            <TextInput
-                                style={styles.textArea3}
-                                underlineColorAndroid="transparent"
-                                placeholder="Комментарий"
-                                placeholderTextColor="grey"
-                                numberOfLines={4}
-                                multiline={true}
-                                onChangeText={text => this.setState({ otziv: text})}
-                            />
-                            <TextInput
-                                style={styles.textArea4}
-                                underlineColorAndroid="transparent"
-                                placeholder="Ваши контакты"
-                                placeholderTextColor="grey"
-                                onChangeText={text => this.setState({callPhone: text})}
-                            />
-                            <Button
-                                success={true}
-                                style={{
-                                    backgroundColor: '#0abb87',
-                                    borderRadius: 15,
-                                    shadowColor: '#989898',
-                                    width: '100%',
-                                    height: 60,
-                                    padding: 20,
-                                    borderWidth: 10,
-                                    borderColor: '#fff',
-                            }}>
-                                <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>отправить</Text>
-                            </Button>
-                        </View>
-                      </Tab>
-                    </Tabs>
-                  </View>
-                </ScrollView>
+                                      {this.state.listGrade.status != null ?
+                                          <Text style={{fontSize: 12, color: '#5867dd'}}>
+                                              {this.state.listGrade.status.name}
+                                          </Text>
+                                          :
+                                          null
+                                      }
+                                  </View>
+                              </View>
+                              <Body style={{ paddingLeft: 10 }}>
+                                  <Text style={{ fontSize: 20, paddingVertical: 5 }}>
+                                      {this.state.author_name}
+                                  </Text>
+                                  {/*<Text style={{ fontSize: 12 }}>*/}
+                                  {/*  {this.state.company_name}*/}
+                                  {/*</Text>*/}
+                                  <Text style={{ fontSize: 12 }}>
+                                      {this.state.created_at}
+                                  </Text>
+                              </Body>
+                          </View>
+                          <View style={{backgroundColor: '#fff'}}>
+                              <Tabs
+                                  activeTabStyle={{backgroundColor: 'red'}} activeTextStyle={{color: '#fff722', fontWeight: 'normal'}}>
+                                  <Tab heading={
+                                  <TabHeading style={{backgroundColor: '#eeeeee'}}>
+                                      <Text>Инфо</Text>
+                                  </TabHeading>}>
+                                      <View style={{padding: 10}}>
+                                          <View>
+                                              <Text style={styles.tabsContentLabel}>Услуга: </Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentLabel}>Описание: </Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentLabel}>Время обращения: </Text>
+                                          </View>
+                                          <View>
+                                              <Text style={styles.tabsContentText}>{this.state.listGrade.createdAt}</Text>
+                                          </View>
+                                      </View>
+                                  </Tab>
+                                  <Tab heading={
+                                      <TabHeading style={{backgroundColor: '#eeeeee'}}>
+                                          <Text>Журнал</Text>
+                                      </TabHeading>
+                                  }>
+                                      <View style={{ flexDirection: "column" }}>
+                                          {/*<Text style={{ fontSize: 16 }}>Журнал</Text>*/}
+                                          {/*<Text style={{ fontSize: 12, marginTop: 5, color: '#6f6f6f' }}>дата</Text>*/}
+                                      </View>
+                                  </Tab>
+                                  <Tab heading={
+                                      <TabHeading style={{backgroundColor: '#eeeeee'}}>
+                                          <Text>Комментарии</Text>
+                                      </TabHeading>
+                                  }>
+                                      <View>
+                                          <TextInput
+                                              style={styles.textArea3}
+                                              underlineColorAndroid="transparent"
+                                              placeholder="Комментарий"
+                                              placeholderTextColor="grey"
+                                              numberOfLines={4}
+                                              multiline={true}
+                                              onChangeText={text => this.setState({ otziv: text})}
+                                          />
+                                          <TextInput
+                                              style={styles.textArea4}
+                                              underlineColorAndroid="transparent"
+                                              placeholder="Ваши контакты"
+                                              placeholderTextColor="grey"
+                                              onChangeText={text => this.setState({callPhone: text})}
+                                          />
+                                          <Button
+                                              success={true}
+                                              style={{
+                                                  backgroundColor: '#0abb87',
+                                                  borderRadius: 15,
+                                                  shadowColor: '#989898',
+                                                  width: '100%',
+                                                  height: 60,
+                                                  padding: 20,
+                                                  borderWidth: 10,
+                                                  borderColor: '#fff',
+                                              }}>
+                                              <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 16}}>отправить</Text>
+                                          </Button>
+                                      </View>
+                                  </Tab>
+                              </Tabs>
+                          </View>
+                      </ScrollView>
+                  }
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
@@ -1084,7 +1148,7 @@ class HomeScreen extends React.Component{
                                         borderWidth:0,
                                     }}
                                 >
-                                    <Text style={{ width: '100%', textAlign: "center", color: '#535353', fontSize: 14}}>начать исполнение</Text>
+                                    <Text style={{ width: '100%', textAlign: "center", color: '#fff', fontSize: 14}}>начать исполнение</Text>
                                 </Button>
                                 : null }
                             {this.state.listGrade.statusId == 2 ?

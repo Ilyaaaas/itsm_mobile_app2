@@ -134,7 +134,13 @@ export const LoginScreen = () => {
         .then(json => {
               if(json.accessToken === undefined)
               {
-                alert('Введен неправильный пароль или логин');
+                // alert('Введен неправильный пароль или логин');
+                Toast.show({
+                  text: 'Ошибка: Неправильный логин или пароль',
+                  buttonText: 'Ok',
+                  type: 'danger',
+                  duration: 3000,
+                });
               }
               else
               {
