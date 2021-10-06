@@ -109,14 +109,14 @@ export const LoginScreen = () => {
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
-        // username: login,
-        // password: password,
+        username: login,
+        password: password,
         // username: 'i.akhmetov@digital.sk.kz',
         // password: 'Astana2022!',
         // username: 'a.iskaliyev@skbs.kz',
         // password: 'U7cXPraHSU',
-        username: 'b.rysbek@skbs.kz',
-        password: 'ec682c6',
+        // username: 'b.rysbek@skbs.kz',
+        // password: 'ec682c6',
       }),
       headers: {
         'Accept':       'application/json',
