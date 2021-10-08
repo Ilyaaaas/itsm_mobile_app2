@@ -37,6 +37,7 @@ function About({ navigation, route }) {
                         imageStyle={{
                             borderBottomLeftRadius: 40,
                             borderBottomRightRadius: 40,
+                            borderTopWidth: 20,
                         }}
                         source={{
                             uri: 'https://smart24.kz/video/sci-fi.jpg',
@@ -55,7 +56,7 @@ function About({ navigation, route }) {
                             borderBottomRightRadius: 40,
                         }}/>
                         <Text style={{
-                            color: '#c9cae3',
+                            color: '#d7d8f3',
                             zIndex: 10,
                             fontSize: 40,
                             marginTop: 35,
@@ -85,7 +86,7 @@ function About({ navigation, route }) {
                     </ImageBackground>
                 </View>
             </View>
-            <Content style={{backgroundColor: '#d6d6d6'}}>
+            <Content style={{backgroundColor: '#ebebeb'}}>
                 <View>
                     <Text style={{
                         fontSize: 14,
@@ -111,6 +112,8 @@ function About({ navigation, route }) {
 const styles = StyleSheet.create({
     headerTop: {
         backgroundColor: '#1a192a',
+        borderBottomWidth: 2,
+        borderBottomColor: '#1a192a',
     },
     container: {
         alignSelf: 'center',
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
         height: 400,
         position: 'absolute',
         bottom: 0,
-        backgroundColor: '#d6d6d6',
+        backgroundColor: '#ebebeb',
     },
     image: {
         height: 160,

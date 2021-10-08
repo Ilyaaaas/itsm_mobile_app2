@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
-import { Root } from 'native-base';
+import { Root, Text } from 'native-base';
 import React, {useEffect, useRef, useState} from 'react';
 import {screensEnabled, ScreenContainer} from 'react-native-screens';
 import { Provider } from 'react-redux';

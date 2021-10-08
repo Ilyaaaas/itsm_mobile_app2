@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DiaryScreen from "./Diary/DiaryScreen";
 import HomeScreen from "./HomeScreen";
 import InfoScreen from "./Info/InfoScreen";
+import InfoScreenProducts from "./Info/InfoScreenProducts";
 import Notifications from "./Notifications";
 import OfferScreen from "../screens/Offer/OfferScreen";
 import {Root} from "native-base";
@@ -50,7 +51,8 @@ class MainITSMScreen extends React.Component{
                             tabBarIcon: ({ color }) => <Ionicons size={30} name="ios-person" color={color}/>,
                         }}
                     />
-                    <BottomTab.Screen name="Еще" component={InfoScreen}
+                    {/*<BottomTab.Screen name="Еще" component={InfoScreenProducts}*/}
+                    <BottomTab.Screen name="Еще" component={InfoScreenProducts}
                         options={{
                             tabBarIcon: ({ color }) => <Feather name="more-vertical" size={24}  color={color} />,
                         }}

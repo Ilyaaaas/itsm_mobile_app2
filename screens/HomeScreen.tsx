@@ -166,7 +166,31 @@ class HomeScreen extends React.Component{
     var textColor = '';
     if(this.state.totalPageCount == 0)
     {
-      return <Text>Загрузка...</Text>
+        return <Text>Загрузка...</Text>
+    }
+        else if(this.state.totalPageCount == 1)
+    {
+        return <TouchableOpacity key={1} onPress={() => this.changePage(API+'service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id&page='+1)}
+                                 style={{
+                                     backgroundColor: `${backColor}`,
+                                     padding: 6,
+                                     margin: 10,
+                                     justifyContent: 'center',
+                                     alignContent: 'center',
+                                     alignItems: 'center',
+                                     width: 2,
+                                     flex: 1,
+                                     borderColor: 'white',
+                                     borderWidth: 3,
+                                     borderRadius: 30,
+                                     overflow: 'hidden',
+                                     shadowColor: '#cdcdcd',
+                                     shadowRadius: 2,
+                                     shadowOpacity: 20,
+                                     shadowOffset: { width: 0, height: 2 },
+                                 }}>
+            <Text style={{color: `${textColor}`}}>{1}</Text>
+        </TouchableOpacity>
     }
 
     if(currentPageNum > 1)
@@ -218,6 +242,9 @@ class HomeScreen extends React.Component{
 
   _getDoctorList = async () => {
     var url = API+'service-requests/v1/request?access-token='+this.state.token+'&_format=json&expand=app,solution,currentPerformerUser,clientUser,status,product,type&sort=-id';
+    console.log('url')
+    console.log(url)
+    console.log('url')
     if(this.state.currentPageLink != '0')
     {
         url = this.state.currentPageLink;
@@ -227,19 +254,40 @@ class HomeScreen extends React.Component{
         if(value !== null){
           console.log('value.items');
           console.log(value);
-          this.setState({
-                                list: value.items,
-                                listWithoutFilter: value.items,
-                                currentPageLink: value._links.self.href,
-                                // prevPage: value._links.prev.href,
-                                nextPage: value._links.next.href,
-                                firstPage: value._links.first.href,
-                                lastPage: value._links.last.href,
-                                currentPage: value._meta.currentPage,
-                                totalPageCount: value._meta.pageCount,
-                                totalReqCount: value._meta.totalCount,
-                                reqCountInOnePage: value._meta.perPage,
-                        });
+          console.log('value.items.length')
+          console.log(value.items.length)
+          if(value.items.length > 20)
+          {
+              this.setState({
+                  list: value.items,
+                  listWithoutFilter: value.items,
+                  currentPageLink: value._links.self.href,
+                  prevPage: value._links.prev.href,
+                  nextPage: value._links.next.href,
+                  firstPage: value._links.first.href,
+                  lastPage: value._links.last.href,
+                  currentPage: value._meta.currentPage,
+                  totalPageCount: 0,
+                  totalReqCount: value._meta.totalCount,
+                  reqCountInOnePage: value.items.length,
+              });
+          }
+            else
+          {
+              this.setState({
+                  list: value.items,
+                  listWithoutFilter: value.items,
+                  currentPageLink: value._links.self.href,
+                  // prevPage: value._links.prev.href,
+                  // nextPage: value._links.next.href,
+                  firstPage: value._links.first.href,
+                  lastPage: value._links.last.href,
+                  currentPage: value._meta.currentPage,
+                  totalPageCount: value._meta.pageCount,
+                  totalReqCount: value._meta.totalCount,
+                  reqCountInOnePage: value.items.length,
+              });
+          }
         }
       }
     )
@@ -877,7 +925,11 @@ class HomeScreen extends React.Component{
                                               <Text style={styles.tabsContentLabel}>Услуга: </Text>
                                           </View>
                                           <View>
-                                              <Text style={styles.tabsContentText}>{this.state.listGrade.descr}</Text>
+                                              {this.state.listGrade.product != null ?
+                                                  <Text style={styles.tabsContentText}>{this.state.listGrade.product.subject}</Text>
+                                                  :
+                                                  <Text> </Text>
+                                              }
                                           </View>
                                           <View>
                                               <Text style={styles.tabsContentLabel}>Описание: </Text>

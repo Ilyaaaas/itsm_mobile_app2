@@ -2,7 +2,7 @@ import { useNavigation, StackActions } from '@react-navigation/native';
 import {Button, Form, Input, Item, Toast} from 'native-base';
 import * as React from 'react';
 import {useEffect, useState} from 'react';
-import {Alert, AsyncStorage, FlatList, Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, AsyncStorage, FlatList, Platform, StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, } from 'react-native';
 
 import { AuthScreenWrapper } from '../../components/AuthScreenWrapper';
 import { IdInput } from '../../components/IdInput';
@@ -109,14 +109,16 @@ export const LoginScreen = () => {
       credentials: 'same-origin',
       mode: 'same-origin',
       body: JSON.stringify({
-        username: login,
-        password: password,
-        // username: 'i.akhmetov@digital.sk.kz',
-        // password: 'Astana2022!',
+        // username: login,
+        // password: password,
+        username: 'i.akhmetov@digital.sk.kz',
+        password: 'Astana2023!',
         // username: 'a.iskaliyev@skbs.kz',
         // password: 'U7cXPraHSU',
         // username: 'b.rysbek@skbs.kz',
         // password: 'ec682c6',
+        // username: 'm.aliev@digital.sk.kz',
+        // password: 'Skbs7070',
       }),
       headers: {
         'Accept':       'application/json',
@@ -286,12 +288,13 @@ export const LoginScreen = () => {
           </TouchableOpacity>
         </Item>
       </Form>
-      <Button
-          transparent
-          block
-          onPress={() => navigation.navigate('RestorePassword')}>
-        <Text style={styles.secondaryButton}>Восстановить пароль</Text>
-      </Button>
+      <View style={{marginTop: 10, }}></View>
+      {/*<Button*/}
+      {/*    transparent*/}
+      {/*    block*/}
+      {/*    onPress={() => navigation.navigate('RestorePassword')}>*/}
+      {/*  <Text style={styles.secondaryButton}>Восстановить пароль</Text>*/}
+      {/*</Button>*/}
       {/*{passwordRecoveryIsVisible && (*/}
       {/*)}*/}
       <TouchableOpacity

@@ -1,6 +1,6 @@
 import { Container, Text } from 'native-base';
 import * as React from 'react';
-import {ImageBackground, Platform, StyleSheet, View, Linking,} from 'react-native';
+import {ImageBackground, Platform, StyleSheet, View, Linking, KeyboardAvoidingView} from 'react-native';
 
 const isIos = Platform.OS === 'ios';
 
@@ -38,13 +38,16 @@ export const AuthScreenWrapper = ({
             justifyContent: 'space-around',
             paddingHorizontal: 20,
           }}>
-          <View></View>
-          <View
-            style={{
-              marginTop: 80,
-            }}>
-            {children}
-          </View>
+          <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : null}
+              keyboardVerticalOffset={Platform.OS === "ios" ? 30 : 0}>
+            <View
+              style={{
+                marginTop: 200,
+              }}>
+              {children}
+            </View>
+          </KeyboardAvoidingView>
           <View>
             <Text
               style={authScreenStyles.textPhone}

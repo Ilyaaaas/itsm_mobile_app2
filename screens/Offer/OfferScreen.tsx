@@ -17,7 +17,9 @@ import {
     Right,
     Body,
     Footer,
-    Icon, Toast, Spinner,
+    Icon,
+    Toast,
+    Spinner,
 } from 'native-base';
 import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -390,11 +392,11 @@ export default function OfferScreen({ navigation }) {
                             <Text>Выберите каталог</Text>
                             {catalogs != undefined ?
                                 <DropDownPicker
-                                    style={{backgroundColor: '#F2F2F2', borderRadius: 10,}}
+                                    style={{backgroundColor: '#F2F2F2', borderRadius: 10, zIndex: 4}}
                                     items={catalogs.map(item=> ({label: item.name, value: item.id}))}
                                     // onChangeItem={item => setSelectedCatalog(item.value)}
                                     onChangeItem={item => changeSelectedCatalog(item.value)}
-                                    dropDownStyle={{backgroundColor: '#F2F2F2'}}
+                                    dropDownStyle={{backgroundColor: '#F2F2F2', zIndex: -10,}}
                                     zIndex={1000}
                                     placeholder={'Не выбрано'}
                                 />
@@ -405,11 +407,11 @@ export default function OfferScreen({ navigation }) {
                         <View style={{marginTop: 20}}>
                             <Text>Выберите услугу</Text>
                             {services != undefined ?
-                                <DropDownPicker style={{backgroundColor: '#F2F2F2', borderRadius: 10}}
+                                <DropDownPicker style={{backgroundColor: '#F2F2F2', borderRadius: 10, zIndex: -2,}}
                                                 items={services.map(item=> ({label: item.subject, value: item.id}))}
                                                 onChangeItem={item => setSelectedService(item.value)}
                                                 // onChangeItem={item => changeSelectedService(item.value)}
-                                                dropDownStyle={{backgroundColor: '#F2F2F2'}}
+                                                dropDownStyle={{backgroundColor: '#F2F2F2', zIndex: 1,}}
                                     // zIndex={1000}
                                                 placeholder={'Не выбрано'}
                                 />
