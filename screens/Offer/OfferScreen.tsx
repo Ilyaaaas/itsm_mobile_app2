@@ -25,6 +25,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as DocumentPicker from 'expo-document-picker';
+import RNPickerSelect from 'react-native-picker-select';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -52,7 +53,9 @@ export default function OfferScreen({ navigation }) {
     const [catalogs, setCatalogs] = useState();
     const [file, setFile] = useState();
     const [selectedService, setSelectedService] = useState();
+    const [selectedServiceName, setSelectedServiceName] = useState('Не выбрано');
     const [selectedCatalog, setSelectedCatalog] = useState();
+    const [selectedCatalogName, setSelectedCatalogName] = useState('Не выбрано');
     const [token, setToken] = useState('');
     const [userId, setUserId] = useState(0);
     const [personId, setPersonId] = useState(0);
@@ -193,10 +196,19 @@ export default function OfferScreen({ navigation }) {
         }
     }
 
-    function changeSelectedCatalog(selectedCatalogId)
+    function changeSelectedCatalog(selectedCatalogId, catalogName)
     {
         setSelectedCatalog(selectedCatalogId);
+        setSelectedCatalogName(catalogName);
         getServices(token, selectedCatalogId);
+    }
+
+    function changeSelectedService(selectedServiceId, serviceName)
+    {
+        console.log(services);
+        // alert(selectedServiceId+' '+serviceName);
+        setSelectedService(selectedServiceId);
+        setSelectedServiceName(serviceName);
     }
 
     async function chooseFiles()
@@ -365,6 +377,8 @@ export default function OfferScreen({ navigation }) {
             .finally()
     }
 
+    var localIndex = 0;
+    var localIndexCatalog = 0;
     return (
         <Container>
             <Header style={styles.headerTop}>
@@ -391,15 +405,30 @@ export default function OfferScreen({ navigation }) {
                         <View style={{zIndex: 1}}>
                             <Text>Выберите каталог</Text>
                             {catalogs != undefined ?
-                                <DropDownPicker
-                                    style={{backgroundColor: '#F2F2F2', borderRadius: 10, zIndex: 4}}
+                                <RNPickerSelect
+                                    onValueChange={(itemValue, index) => {
+                                        localIndexCatalog = index-1;
+                                        if(index == 0)
+                                        {
+                                            changeSelectedCatalog('', 'Не выбрано')
+                                        }
+                                        else
+                                        {
+                                            changeSelectedCatalog(itemValue, catalogs[localIndexCatalog].name)
+                                        }
+                                    }}
                                     items={catalogs.map(item=> ({label: item.name, value: item.id}))}
-                                    // onChangeItem={item => setSelectedCatalog(item.value)}
-                                    onChangeItem={item => changeSelectedCatalog(item.value)}
-                                    dropDownStyle={{backgroundColor: '#F2F2F2', zIndex: -10,}}
-                                    zIndex={1000}
-                                    placeholder={'Не выбрано'}
-                                />
+                                    placeholder={{
+                                        label: 'Не выбрано',
+                                        value: 0,
+                                    }}
+                                >
+                                    <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
+                                        <Text>
+                                            {selectedCatalogName}
+                                        </Text>
+                                    </View>
+                                </RNPickerSelect>
                                 :
                                 <Text>Загрузка...</Text>
                             }
@@ -407,14 +436,30 @@ export default function OfferScreen({ navigation }) {
                         <View style={{marginTop: 20}}>
                             <Text>Выберите услугу</Text>
                             {services != undefined ?
-                                <DropDownPicker style={{backgroundColor: '#F2F2F2', borderRadius: 10, zIndex: -2,}}
-                                                items={services.map(item=> ({label: item.subject, value: item.id}))}
-                                                onChangeItem={item => setSelectedService(item.value)}
-                                                // onChangeItem={item => changeSelectedService(item.value)}
-                                                dropDownStyle={{backgroundColor: '#F2F2F2', zIndex: 1,}}
-                                    // zIndex={1000}
-                                                placeholder={'Не выбрано'}
-                                />
+                                <RNPickerSelect
+                                    onValueChange={(itemValue, index) => {
+                                        localIndex = index-1;
+                                        if(index == 0)
+                                        {
+                                            changeSelectedService('', 'Не выбрано')
+                                        }
+                                            else
+                                        {
+                                            changeSelectedService(itemValue, services[localIndex].subject)
+                                        }
+                                    }}
+                                    items={services.map(item=> ({label: item.subject, value: item.id}))}
+                                    placeholder={{
+                                        label: 'Не выбрано',
+                                        value: 0,
+                                    }}
+                                >
+                                    <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
+                                        <Text>
+                                            {selectedServiceName}
+                                        </Text>
+                                    </View>
+                                </RNPickerSelect>
                                 :
                                 <Text>Загрузка...</Text>
                             }
