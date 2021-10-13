@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "945876432138",
+    "project_id": "smart24-20b5f",
+    "storage_bucket": "smart24-20b5f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945876432138:android:458139208c494d258eb6f3",
+        "android_client_info": {
+          "package_name": "kz.sk.smart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "945876432138-j69e98obg6qjifk5h48e21opv0gcphte.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMymaOYMnxXuftd12JGc1-W5pbP87JRFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945876432138-j69e98obg6qjifk5h48e21opv0gcphte.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
