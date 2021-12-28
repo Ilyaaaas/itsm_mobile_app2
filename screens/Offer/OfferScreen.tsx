@@ -25,7 +25,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as DocumentPicker from 'expo-document-picker';
-import RNPickerSelect from 'react-native-picker-select';
+// import RNPickerSelect from 'react-native-picker-select';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -405,30 +405,31 @@ export default function OfferScreen({ navigation }) {
                         <View style={{zIndex: 1}}>
                             <Text>Выберите каталог</Text>
                             {catalogs != undefined ?
-                                <RNPickerSelect
-                                    onValueChange={(itemValue, index) => {
-                                        localIndexCatalog = index-1;
-                                        if(index == 0)
-                                        {
-                                            changeSelectedCatalog('', 'Не выбрано')
-                                        }
-                                        else
-                                        {
-                                            changeSelectedCatalog(itemValue, catalogs[localIndexCatalog].name)
-                                        }
-                                    }}
-                                    items={catalogs.map(item=> ({label: item.name, value: item.id}))}
-                                    placeholder={{
-                                        label: 'Не выбрано',
-                                        value: 0,
-                                    }}
-                                >
-                                    <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
-                                        <Text>
-                                            {selectedCatalogName}
-                                        </Text>
-                                    </View>
-                                </RNPickerSelect>
+                                // <RNPickerSelect
+                                //     onValueChange={(itemValue, index) => {
+                                //         localIndexCatalog = index-1;
+                                //         if(index == 0)
+                                //         {
+                                //             changeSelectedCatalog('', 'Не выбрано')
+                                //         }
+                                //         else
+                                //         {
+                                //             changeSelectedCatalog(itemValue, catalogs[localIndexCatalog].name)
+                                //         }
+                                //     }}
+                                //     items={catalogs.map(item=> ({label: item.name, value: item.id}))}
+                                //     placeholder={{
+                                //         label: 'Не выбрано',
+                                //         value: 0,
+                                //     }}
+                                // >
+                                //     <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
+                                //         <Text>
+                                //             {selectedCatalogName}
+                                //         </Text>
+                                //     </View>
+                                // </RNPickerSelect>
+                                <Text>Загрузка...</Text>
                                 :
                                 <Text>Загрузка...</Text>
                             }
@@ -436,30 +437,31 @@ export default function OfferScreen({ navigation }) {
                         <View style={{marginTop: 20}}>
                             <Text>Выберите услугу</Text>
                             {services != undefined ?
-                                <RNPickerSelect
-                                    onValueChange={(itemValue, index) => {
-                                        localIndex = index-1;
-                                        if(index == 0)
-                                        {
-                                            changeSelectedService('', 'Не выбрано')
-                                        }
-                                            else
-                                        {
-                                            changeSelectedService(itemValue, services[localIndex].subject)
-                                        }
-                                    }}
-                                    items={services.map(item=> ({label: item.subject, value: item.id}))}
-                                    placeholder={{
-                                        label: 'Не выбрано',
-                                        value: 0,
-                                    }}
-                                >
-                                    <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
-                                        <Text>
-                                            {selectedServiceName}
-                                        </Text>
-                                    </View>
-                                </RNPickerSelect>
+                                // <RNPickerSelect
+                                //     onValueChange={(itemValue, index) => {
+                                //         localIndex = index-1;
+                                //         if(index == 0)
+                                //         {
+                                //             changeSelectedService('', 'Не выбрано')
+                                //         }
+                                //             else
+                                //         {
+                                //             changeSelectedService(itemValue, services[localIndex].subject)
+                                //         }
+                                //     }}
+                                //     items={services.map(item=> ({label: item.subject, value: item.id}))}
+                                //     placeholder={{
+                                //         label: 'Не выбрано',
+                                //         value: 0,
+                                //     }}
+                                // >
+                                //     <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
+                                //         <Text>
+                                //             {selectedServiceName}
+                                //         </Text>
+                                //     </View>
+                                // </RNPickerSelect>
+                                <Text>Загрузка...</Text>
                                 :
                                 <Text>Загрузка...</Text>
                             }

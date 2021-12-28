@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { AppLoading } from 'expo';
+// import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Root, Text } from 'native-base';
 import React, {useEffect, useRef, useState} from 'react';
@@ -44,7 +44,8 @@ export default () => {
     }, []);
 
     if (!isReady) {
-        return <AppLoading />;
+        // return <AppLoading />;
+        return <Text></Text>;
     }
 
     return (
