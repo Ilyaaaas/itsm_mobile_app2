@@ -26,6 +26,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import * as DocumentPicker from 'expo-document-picker';
 // import RNPickerSelect from 'react-native-picker-select';
+import { Dropdown } from 'react-native-element-dropdown';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -53,7 +54,7 @@ export default function OfferScreen({ navigation }) {
     const [catalogs, setCatalogs] = useState();
     const [file, setFile] = useState();
     const [selectedService, setSelectedService] = useState();
-    const [selectedServiceName, setSelectedServiceName] = useState('Не выбрано');
+    const [selectedServiceName, setSelectedServiceName] = useState('Нет услуг');
     const [selectedCatalog, setSelectedCatalog] = useState();
     const [selectedCatalogName, setSelectedCatalogName] = useState('Не выбрано');
     const [token, setToken] = useState('');
@@ -145,6 +146,8 @@ export default function OfferScreen({ navigation }) {
         )
             .then(response => response.json())
             .then(function(data){
+                // console.log('catalogs');
+                // console.log(data.items);
                 setCatalogs(data.items);
             })
             .catch(error => console.error(error))
@@ -159,7 +162,7 @@ export default function OfferScreen({ navigation }) {
         {
             usingToken = tokenParam
         }
-        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token='+usingToken+'&_format=json',
+        fetch('http://api.smart24.kz/service-catalog/v1/product?access-token='+usingToken+'&filter[catalog_id]='+catalogId+'&_format=json',
             {method:'GET',
                 headers: {
                     "Content-type": "application/json",
@@ -168,7 +171,18 @@ export default function OfferScreen({ navigation }) {
         )
             .then(response => response.json())
             .then(function(data){
-                setServices(data.items);
+                console.log('services');
+                console.log(data.items);
+                if(data.items.length > 0)
+                {
+                    setSelectedServiceName('Не выбрано');
+                    setServices(data.items);
+                }
+                    else
+                {
+                    setSelectedServiceName('Нет услуг');
+                    setServices(null);
+                }
             })
             .catch(error => console.error(error))
             .then()
@@ -200,6 +214,7 @@ export default function OfferScreen({ navigation }) {
     {
         setSelectedCatalog(selectedCatalogId);
         setSelectedCatalogName(catalogName);
+        console.log(services);
         getServices(token, selectedCatalogId);
     }
 
@@ -405,31 +420,31 @@ export default function OfferScreen({ navigation }) {
                         <View style={{zIndex: 1}}>
                             <Text>Выберите каталог</Text>
                             {catalogs != undefined ?
-                                // <RNPickerSelect
-                                //     onValueChange={(itemValue, index) => {
-                                //         localIndexCatalog = index-1;
-                                //         if(index == 0)
-                                //         {
-                                //             changeSelectedCatalog('', 'Не выбрано')
-                                //         }
-                                //         else
-                                //         {
-                                //             changeSelectedCatalog(itemValue, catalogs[localIndexCatalog].name)
-                                //         }
-                                //     }}
-                                //     items={catalogs.map(item=> ({label: item.name, value: item.id}))}
-                                //     placeholder={{
-                                //         label: 'Не выбрано',
-                                //         value: 0,
-                                //     }}
-                                // >
-                                //     <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
-                                //         <Text>
-                                //             {selectedCatalogName}
-                                //         </Text>
-                                //     </View>
-                                // </RNPickerSelect>
-                                <Text>Загрузка...</Text>
+                                <View style={{flex:1}}>
+                                    <Dropdown
+                                        data={catalogs.map(item=> ({label: item.name, value: item.id}))}
+                                        style={{flex:1}}
+                                        search
+                                        maxHeight={300}
+                                        labelField="label"
+                                        valueField="value"
+                                        placeholder={selectedCatalogName}
+                                        searchPlaceholder="поиск..."
+                                        onChange={item => {
+                                            changeSelectedCatalog(item.value, item.label);
+                                        }}
+                                        renderLeftIcon=
+                                        {
+                                            () => (
+                                                <AntDesign
+                                                color={'black'}
+                                                name="bars"
+                                                size={20}
+                                                />
+                                            )
+                                        }
+                                    />
+                                </View>
                                 :
                                 <Text>Загрузка...</Text>
                             }
@@ -437,33 +452,33 @@ export default function OfferScreen({ navigation }) {
                         <View style={{marginTop: 20}}>
                             <Text>Выберите услугу</Text>
                             {services != undefined ?
-                                // <RNPickerSelect
-                                //     onValueChange={(itemValue, index) => {
-                                //         localIndex = index-1;
-                                //         if(index == 0)
-                                //         {
-                                //             changeSelectedService('', 'Не выбрано')
-                                //         }
-                                //             else
-                                //         {
-                                //             changeSelectedService(itemValue, services[localIndex].subject)
-                                //         }
-                                //     }}
-                                //     items={services.map(item=> ({label: item.subject, value: item.id}))}
-                                //     placeholder={{
-                                //         label: 'Не выбрано',
-                                //         value: 0,
-                                //     }}
-                                // >
-                                //     <View style={{backgroundColor:'#F2F2F2', borderRadius: 10, padding: 10,}}>
-                                //         <Text>
-                                //             {selectedServiceName}
-                                //         </Text>
-                                //     </View>
-                                // </RNPickerSelect>
-                                <Text>Загрузка...</Text>
+                                <View style={{flex:1}}>
+                                    <Dropdown
+                                        data={services.map(item=> ({label: item.subject, value: item.id}))}
+                                        style={{flex:1}}
+                                        search
+                                        maxHeight={300}
+                                        labelField="label"
+                                        valueField="value"
+                                        placeholder={selectedServiceName}
+                                        searchPlaceholder="поиск..."
+                                        onChange={item => {
+                                            changeSelectedService(item.value, item.label);
+                                        }}
+                                        renderLeftIcon=
+                                            {
+                                                () => (
+                                                    <AntDesign
+                                                        color={'black'}
+                                                        name="customerservice"
+                                                        size={20}
+                                                    />
+                                                )
+                                            }
+                                    />
+                                </View>
                                 :
-                                <Text>Загрузка...</Text>
+                                <Text>Нет услуг</Text>
                             }
                         </View>
                         <View style={{zIndex: -10, marginTop: 20}}>

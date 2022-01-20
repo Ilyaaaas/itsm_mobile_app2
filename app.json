@@ -3,7 +3,7 @@
     "name": "Smart24",
     "description": "Мобильное приложение ITSM qazcloud",
     "slug": "Smart24",
-    "version": "19.0.0",
+    "version": "20.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo/logo-512.png",
     "platforms": [
@@ -35,7 +35,7 @@
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
       "package": "kz.sk.smart",
-      "versionCode": 19,
+      "versionCode": 20,
       "permissions": []
     }
   }

@@ -9,7 +9,7 @@ import {
   ScrollView,
   Linking,
 } from 'react-native';
-import AsyncStorage from "@react-native-community/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { authScreenStyles } from '../../components/AuthScreenWrapper';
 import { useTypedSelector } from '../../helpers/hooks/typed-selector.hook';

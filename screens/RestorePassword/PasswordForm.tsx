@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, StackActions } from '@react-navigation/native';
 import axios from 'axios';
 import { Button, Form, Input, Item, Toast, Text as NBText } from 'native-base';

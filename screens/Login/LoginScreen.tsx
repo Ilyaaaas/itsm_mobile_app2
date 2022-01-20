@@ -8,7 +8,7 @@ import { AuthScreenWrapper } from '../../components/AuthScreenWrapper';
 import { IdInput } from '../../components/IdInput';
 import { authService } from '../../services/auth.service';
 import { inputStyle } from '../../styles/input.style';
-import { Entypo } from "@expo/vector-icons";
+import {AntDesign, Entypo} from "@expo/vector-icons";
 import * as Permissions from "expo-permissions";
 import * as Notifications from "expo-notifications";
 import {useRef} from "react";
@@ -50,6 +50,7 @@ export const LoginScreen = () => {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
+  const [selectedOrgValue, changeOrgValue] = useState('Не выбрано');
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
@@ -112,7 +113,7 @@ export const LoginScreen = () => {
         username: login,
         password: password,
         // username: 'i.akhmetov@digital.sk.kz',
-        // password: 'Astana2023!',
+        // password: 'Astana2024!',
         // username: 'a.iskaliyev@skbs.kz',
         // password: 'U7cXPraHSU',
         // username: 'b.rysbek@skbs.kz',
@@ -238,18 +239,18 @@ export const LoginScreen = () => {
   }
 
   const getUserLogin = async () => {
-    const getLogin = await AsyncStorage.getItem('login_save');
-    let logineds = JSON.parse(getLogin);
-
-    if(getLogin !== null) {
-      setLogin(logineds.iin);
-      setPassword(logineds.pass);
-      setListLogins(logineds);
-    }
+    // const getLogin = await AsyncStorage.getItem('login_save');
+    // let logineds = JSON.parse(getLogin);
+    //
+    // if(getLogin !== null) {
+    //   setLogin(logineds.iin);
+    //   setPassword(logineds.pass);
+    //   setListLogins(logineds);
+    // }
   }
 
   useEffect(() => {
-    getUserLogin();
+    // getUserLogin();
   }, []);
 
   return (
